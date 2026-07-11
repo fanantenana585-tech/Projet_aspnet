@@ -1,0 +1,32 @@
+﻿using EmitScheduler.API.Data;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Configuration de la DB
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? "Host=localhost;Port=5432;Database=emitscheduler;Username=postgres;Password=postgres";
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString)
+);
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

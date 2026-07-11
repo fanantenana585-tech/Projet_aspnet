@@ -1,0 +1,47 @@
+﻿import { defineStore } from 'pinia'
+
+export const useCoursesStore = defineStore('courses', {
+  state: () => ({
+    courses: [
+      { id: 1, name: 'Développement Web', professorId: 1, room: 'Salle 1', mentionId: 'info', level: 'L2', path: 'DA2I', week: 1, day: 'Lundi', hour: 7, semester: 'Semestre 1' },
+      { id: 2, name: 'Développement Web', professorId: 1, room: 'Salle 1', mentionId: 'info', level: 'L2', path: 'DA2I', week: 1, day: 'Lundi', hour: 8, semester: 'Semestre 1' },
+      { id: 3, name: 'Base de Données', professorId: 2, room: 'Labo 2', mentionId: 'info', level: 'L3', path: 'CIGSI', week: 1, day: 'Mercredi', hour: 9, semester: 'Semestre 1' },
+      { id: 4, name: 'Management Stratégique', professorId: 3, room: 'Amphi A', mentionId: 'mgmt', level: 'M1', path: 'MD', week: 1, day: 'Mardi', hour: 10, semester: 'Semestre 1' },
+      { id: 5, name: 'Communication Digitale', professorId: 5, room: 'Salle 5', mentionId: 'rpm', level: 'L3', path: 'CM', week: 1, day: 'Mercredi', hour: 14, semester: 'Semestre 1' },
+      { id: 6, name: 'Algorithmique 1', professorId: 1, room: 'Amphi B', mentionId: 'info', level: 'L1', path: 'Info', week: 1, day: 'Jeudi', hour: 8, semester: 'Semestre 1' },
+      { id: 7, name: 'Algorithmique 1', professorId: 1, room: 'Amphi B', mentionId: 'info', level: 'L1', path: 'Info', week: 1, day: 'Jeudi', hour: 9, semester: 'Semestre 1' },
+      { id: 8, name: 'Économie Générale', professorId: 4, room: 'Salle 3', mentionId: 'mgmt', level: 'L1', path: 'AES', week: 1, day: 'Vendredi', hour: 10, semester: 'Semestre 1' },
+      { id: 9, name: 'Multimédia', professorId: 6, room: 'Studio 1', mentionId: 'rpm', level: 'L2', path: 'CM', week: 1, day: 'Lundi', hour: 15, semester: 'Semestre 1' },
+      { id: 10, name: 'Réseaux Informatiques', professorId: 2, room: 'Labo 1', mentionId: 'info', level: 'L3', path: 'DA2I', week: 1, day: 'Mardi', hour: 7, semester: 'Semestre 1' },
+      { id: 11, name: 'Réseaux Informatiques', professorId: 2, room: 'Labo 1', mentionId: 'info', level: 'L3', path: 'DA2I', week: 1, day: 'Mardi', hour: 8, semester: 'Semestre 1' },
+      { id: 12, name: 'Marketing', professorId: 3, room: 'Salle 2', mentionId: 'mgmt', level: 'L2', path: 'AES', week: 1, day: 'Jeudi', hour: 14, semester: 'Semestre 1' },
+      { id: 13, name: 'Relations Publiques', professorId: 5, room: 'Salle 4', mentionId: 'rpm', level: 'M1', path: 'RPC', week: 1, day: 'Vendredi', hour: 9, semester: 'Semestre 1' },
+      { id: 14, name: 'Systèmes d\'Information', professorId: 2, room: 'Salle 1', mentionId: 'info', level: 'M1', path: 'SIGD', week: 1, day: 'Mercredi', hour: 11, semester: 'Semestre 1' },
+      { id: 15, name: 'Projet Multimédia', professorId: 6, room: 'Studio 2', mentionId: 'rpm', level: 'M2', path: 'CMN', week: 1, day: 'Samedi', hour: 8, semester: 'Semestre 1' }
+    ]
+  }),
+  getters: {
+    getFilteredCourses: (state) => (filters) => {
+      return state.courses.filter(course => {
+        if (filters.mentionId && course.mentionId !== filters.mentionId) return false
+        if (filters.level && course.level !== filters.level) return false
+        if (filters.path && course.path !== filters.path) return false
+        if (filters.week && course.week !== filters.week) return false
+        if (filters.professorId && course.professorId !== filters.professorId) return false
+        if (filters.semester && course.semester !== filters.semester) return false
+        return true
+      })
+    }
+  },
+  actions: {
+    addCourse(course) {
+      this.courses.push({
+        id: Date.now(),
+        ...course
+      })
+    },
+    removeCourse(id) {
+      this.courses = this.courses.filter(c => c.id !== id)
+    }
+  }
+})

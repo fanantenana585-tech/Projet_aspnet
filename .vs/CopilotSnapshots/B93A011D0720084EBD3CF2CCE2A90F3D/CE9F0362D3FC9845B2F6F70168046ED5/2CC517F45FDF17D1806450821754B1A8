@@ -1,0 +1,93 @@
+﻿import { defineStore } from 'pinia'
+
+export const useEnseignantStore = defineStore('enseignant', {
+  state: () => ({
+    enseignants: [],
+    enseignantSelectionne: null,
+    filtres: {
+      search: '',
+      specialite: 'Toutes',
+      statut: 'Tous'
+    },
+    loading: false,
+    viewMode: 'grid' // 'grid' or 'list'
+  }),
+
+  getters: {
+    enseignantsFiltres: (state) => {
+      return state.enseignants.filter(e => {
+        const matchesSearch =
+          e.nom.toLowerCase().includes(state.filtres.search.toLowerCase()) ||
+          e.prenom.toLowerCase().includes(state.filtres.search.toLowerCase()) ||
+          e.email.toLowerCase().includes(state.filtres.search.toLowerCase()) ||
+          e.specialite.toLowerCase().includes(state.filtres.search.toLowerCase());
+
+        const matchesSpecialite = state.filtres.specialite === 'Toutes' || e.specialite === state.filtres.specialite;
+        const matchesStatut = state.filtres.statut === 'Tous' || e.statut === state.filtres.statut;
+
+        return matchesSearch && matchesSpecialite && matchesStatut;
+      });
+    },
+    totalEnseignants: (state) => state.enseignants.length
+  },
+
+  actions: {
+    async fetchEnseignants() {
+      this.loading = true;
+      // Simulation d'un délai réseau
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      this.enseignants = [
+        { id: 1, nom: 'RAKOTO', prenom: 'Jean', email: 'rakoto.jean@emit.mg', telephone: '034 00 000 01', specialite: 'Informatique', grade: 'Professeur', statut: 'Actif', nbHeures: 18, maxHeures: 25, matieres: ['Algorithmique', 'C++'], dateRecrutement: '2015-09-01' },
+        { id: 2, nom: 'RANAIVO', prenom: 'Marie', email: 'ranaivo.marie@emit.mg', telephone: '034 00 000 02', specialite: 'Management', grade: 'MCA', statut: 'Actif', nbHeures: 15, maxHeures: 20, matieres: ['Marketing', 'RH'], dateRecrutement: '2018-02-15' },
+        { id: 3, nom: 'ANDRIA', prenom: 'Faly', email: 'andria.faly@emit.mg', telephone: '034 00 000 03', specialite: 'Informatique', grade: 'MAA', statut: 'Actif', nbHeures: 22, maxHeures: 25, matieres: ['Web Design', 'VueJS'], dateRecrutement: '2020-10-10' },
+        { id: 4, nom: 'SOLO', prenom: 'Hery', email: 'solo.hery@emit.mg', telephone: '034 00 000 04', specialite: 'Mathématiques', grade: 'MCA', statut: 'Inactif', nbHeures: 0, maxHeures: 20, matieres: ['Analyse', 'Algèbre'], dateRecrutement: '2012-01-20' },
+        { id: 5, nom: 'VOARY', prenom: 'Lova', email: 'voary.lova@emit.mg', telephone: '034 00 000 05', specialite: 'Communication', grade: 'Assistant', statut: 'Actif', nbHeures: 12, maxHeures: 15, matieres: ['Anglais', 'Soft Skills'], dateRecrutement: '2022-03-01' },
+        { id: 6, nom: 'RASOA', prenom: 'Tina', email: 'rasoa.tina@emit.mg', telephone: '034 00 000 06', specialite: 'Réseaux', grade: 'MCA', statut: 'Actif', nbHeures: 20, maxHeures: 25, matieres: ['Cisco', 'Sécurité'], dateRecrutement: '2016-06-12' },
+        { id: 7, nom: 'RANDRIA', prenom: 'Mamy', email: 'randria.mamy@emit.mg', telephone: '034 00 000 07', specialite: 'Informatique', grade: 'Professeur', statut: 'Actif', nbHeures: 10, maxHeures: 20, matieres: ['IA', 'Data Science'], dateRecrutement: '2010-11-25' },
+        { id: 8, nom: 'LALA', prenom: 'Boby', email: 'lala.boby@emit.mg', telephone: '034 00 000 08', specialite: 'Economie', grade: 'MAA', statut: 'Actif', nbHeures: 14, maxHeures: 20, matieres: ['Microéconomie'], dateRecrutement: '2019-09-05' },
+        { id: 9, nom: 'PERE', prenom: 'Paul', email: 'pere.paul@emit.mg', telephone: '034 00 000 09', specialite: 'Management', grade: 'MCA', statut: 'Inactif', nbHeures: 0, maxHeures: 15, matieres: ['Comptabilité'], dateRecrutement: '2014-05-20' },
+        { id: 10, nom: 'MAMI', prenom: 'Zaza', email: 'mami.zaza@emit.mg', telephone: '034 00 000 10', specialite: 'Droit', grade: 'Assistant', statut: 'Actif', nbHeures: 8, maxHeures: 12, matieres: ['Droit Civil'], dateRecrutement: '2021-12-01' }
+      ];
+      this.loading = false;
+    },
+
+    ajouterEnseignant(data) {
+      const newEnseignant = {
+        id: this.enseignants.length + 1,
+        ...data,
+        nbHeures: 0,
+        matieres: data.matieres || [],
+        dateRecrutement: new Date().toISOString().split('T')[0]
+      };
+      this.enseignants.unshift(newEnseignant);
+    },
+
+    modifierEnseignant(id, data) {
+      const index = this.enseignants.findIndex(e => e.id === id);
+      if (index !== -1) {
+        this.enseignants[index] = { ...this.enseignants[index], ...data };
+      }
+    },
+
+    supprimerEnseignant(id) {
+      this.enseignants = this.enseignants.filter(e => e.id !== id);
+    },
+
+    setFiltre(key, value) {
+      this.filtres[key] = value;
+    },
+
+    resetFiltres() {
+      this.filtres = {
+        search: '',
+        specialite: 'Toutes',
+        statut: 'Tous'
+      };
+    },
+
+    toggleViewMode() {
+      this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
+    }
+  }
+})
