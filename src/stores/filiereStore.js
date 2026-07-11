@@ -1,0 +1,422 @@
+import { defineStore } from 'pinia';
+
+export const MOCK_MENTIONS = [
+  {
+    id: 'mention-info',
+    nom: 'Informatique',
+    couleur: '#38BDF8',
+    icone: '💻',
+    description: 'La Mention Informatique de l\'EMIT forme des spécialistes du numérique capables de concevoir, développer et gérer des systèmes d\'information complexes, des applications web/intranet et des projets de géomatique dans le contexte malgache et international.',
+    responsable: { id: 'ens-001', nom: 'Rakoto', prenom: 'Jean', initiales: 'JR', email: 'j.rakoto@emit.mg', titre: 'Professeur Titulaire' },
+    nbEtudiants: 312,
+    nbEnseignants: 18,
+    anneeCreation: 2012,
+    statut: 'active',
+    parcours: [
+      {
+        id: 'DA2I', code: 'DA2I',
+        nom: 'Développement d\'Application Internet/Intranet',
+        nomCourt: 'Dév. Web & Intranet',
+        mentionId: 'mention-info', mentionNom: 'Informatique',
+        couleur: '#0EA5E9', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '🌐',
+        description: 'Parcours orienté développement full-stack, APIs REST, applications web et intranet d\'entreprise. Forme des développeurs opérationnels pour les entreprises et les startups numériques malgaches.',
+        responsable: { id: 'ens-001', nom: 'Rakoto', prenom: 'Jean', initiales: 'JR', email: 'j.rakoto@emit.mg', titre: 'MCF' },
+        nbEtudiants: 98, nbMatieres: 28, nbEnseignants: 8,
+        anneeCreation: 2013, statut: 'active', accreditation: '2023-2028',
+        debouches: ['Développeur Full Stack', 'Intégrateur Web', 'Chef de projet IT', 'Freelance numérique'],
+        partenaires: ['Orange Madagascar', 'Telma', 'Blueline Madagascar'],
+        ouvertConcours: true, niveauConcours: 'L1',
+        cursus: {
+          L1: { S1: ['DA2I101','TRANS101','TRANS102','CIGSI101'], S2: ['DA2I102','DA2I103','TRANS201'] },
+          L2: { S3: ['DA2I201','DA2I202','CIGSI202'], S4: ['DA2I203','DA2I204','DA2I205'] },
+          L3: { S5: ['DA2I301','DA2I302','DA2I303'], S6: ['DA2I304','DA2I305','DA2I306'] }
+        }
+      },
+      {
+        id: 'CIGSI', code: 'CIGSI',
+        nom: 'Conception, Intégration et Gestion des Systèmes d\'Information',
+        nomCourt: 'SI & ERP',
+        mentionId: 'mention-info', mentionNom: 'Informatique',
+        couleur: '#38BDF8', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '🗃️',
+        description: 'Parcours centré sur la modélisation UML/Merise, la gestion des bases de données, l\'intégration ERP (Odoo, SAP) et le gouvernance des systèmes d\'information en entreprise.',
+        responsable: { id: 'ens-003', nom: 'Andry', prenom: 'Paul', initiales: 'PA', email: 'p.andry@emit.mg', titre: 'MCF' },
+        nbEtudiants: 87, nbMatieres: 25, nbEnseignants: 7,
+        anneeCreation: 2014, statut: 'active', accreditation: '2022-2027',
+        debouches: ['Analyste SI', 'Administrateur ERP', 'Consultant AMOA', 'Urbaniste SI'],
+        partenaires: ['JIRAMA', 'BNI Madagascar', 'CNAPS'],
+        ouvertConcours: false,
+        cursus: {
+          L1: { S1: ['CIGSI101','TRANS101','TRANS102'], S2: ['CIGSI102','CIGSI103','DA2I101'] },
+          L2: { S3: ['CIGSI201','CIGSI202','CIGSI203'], S4: ['CIGSI204','CIGSI205','CIGSI206'] },
+          L3: { S5: ['CIGSI301','CIGSI302','CIGSI303'], S6: ['CIGSI304','CIGSI305','CIGSI306'] }
+        }
+      },
+      {
+        id: 'SIGD', code: 'SIGD',
+        nom: 'Systèmes d\'Information, Géomatique et Décision',
+        nomCourt: 'SI Géomatique',
+        mentionId: 'mention-info', mentionNom: 'Informatique',
+        couleur: '#0284C7', niveau: 'Master', niveaux: ['M1','M2'],
+        icone: '🗺️',
+        description: 'Master spécialisé en géomatique, SIG (QGIS/ArcGIS), décisionnel (Business Intelligence) et gestion de l\'information géographique. Répond aux besoins des collectivités, ONG et institutions malgaches.',
+        responsable: { id: 'ens-005', nom: 'Noro', prenom: 'Soa', initiales: 'SN', email: 's.noro@emit.mg', titre: 'Professeur' },
+        nbEtudiants: 42, nbMatieres: 18, nbEnseignants: 6,
+        anneeCreation: 2016, statut: 'active', accreditation: '2024-2029',
+        debouches: ['Géomaticien', 'Chargé SIG ONG', 'Analyste données territoriales', 'Chercheur'],
+        partenaires: ['FTM Madagascar', 'ONE Madagascar', 'Université Paris-Saclay'],
+        ouvertConcours: false,
+        cursus: {
+          M1: { S7: ['SIGD501','SIGD502','SIGD503'], S8: ['SIGD504','SIGD505','SIGD506'] },
+          M2: { S9: ['SIGD601','SIGD602','SIGD603'], S10: ['SIGD604','SIGD605','SIGD606-MFE'] }
+        }
+      },
+      {
+        id: 'M2I', code: 'M2I',
+        nom: 'Modélisation et Ingénierie Informatique',
+        nomCourt: 'Modélisation & IA',
+        mentionId: 'mention-info', mentionNom: 'Informatique',
+        couleur: '#2563EB', niveau: 'Master', niveaux: ['M1','M2'],
+        icone: '🤖',
+        description: 'Master orienté intelligence artificielle, modélisation formelle, algorithmique avancée et ingénierie des systèmes complexes. Prépare aux métiers de la recherche et de l\'innovation technologique.',
+        responsable: { id: 'ens-001', nom: 'Rakoto', prenom: 'Jean', initiales: 'JR', email: 'j.rakoto@emit.mg', titre: 'Professeur Titulaire' },
+        nbEtudiants: 38, nbMatieres: 16, nbEnseignants: 7,
+        anneeCreation: 2017, statut: 'active', accreditation: '2023-2028',
+        debouches: ['Ingénieur IA/ML', 'Chercheur informatique', 'Architecte logiciel', 'Data Scientist'],
+        partenaires: ['IRD Madagascar', 'INRIA', 'Startup Academy Madagascar'],
+        ouvertConcours: false,
+        cursus: {
+          M1: { S7: ['M2I501','M2I502','M2I503'], S8: ['M2I504','M2I505','M2I506'] },
+          M2: { S9: ['M2I601','M2I602','M2I603'], S10: ['M2I604','M2I605','M2I606-MFE'] }
+        }
+      },
+      {
+        id: 'GEO', code: 'GEO',
+        nom: 'Géomatique et Cartographie Numérique',
+        nomCourt: 'Géomatique & Carto',
+        mentionId: 'mention-info', mentionNom: 'Informatique',
+        couleur: '#6D28D9', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '🛰️',
+        description: 'Nouveau parcours alliant SIG, télédétection par drone, cartographie participative et aménagement durable du territoire malgache. Formation unique dans la région.',
+        responsable: { id: 'ens-005', nom: 'Noro', prenom: 'Soa', initiales: 'SN', email: 's.noro@emit.mg', titre: 'Professeur' },
+        nbEtudiants: 47, nbMatieres: 20, nbEnseignants: 5,
+        anneeCreation: 2021, statut: 'active', accreditation: '2024-2029',
+        debouches: ['Géomaticien terrain', 'Cartographe numérique', 'Opérateur drone', 'Urbaniste SIG'],
+        partenaires: ['FTM Madagascar', 'GIZ Madagascar', 'BNCM'],
+        ouvertConcours: false,
+        cursus: {
+          L1: { S1: ['GEO101','TRANS101','TRANS102'], S2: ['GEO102','GEO103','DA2I101'] },
+          L2: { S3: ['GEO201','GEO202','GEO203'], S4: ['GEO204','GEO205','GEO206'] },
+          L3: { S5: ['GEO301','GEO302','GEO303'], S6: ['GEO304','GEO305','GEO306'] }
+        }
+      }
+    ]
+  },
+  {
+    id: 'mention-mgt',
+    nom: 'Management',
+    couleur: '#059669',
+    icone: '📊',
+    description: 'La Mention Management forme des managers et économistes capables d\'analyser les environnements économiques, de piloter des organisations et de prendre des décisions stratégiques dans le contexte des entreprises et institutions malgaches.',
+    responsable: { id: 'ens-006', nom: 'Rabe', prenom: 'Haja', initiales: 'HR', email: 'h.rabe@emit.mg', titre: 'MCF' },
+    nbEtudiants: 198,
+    nbEnseignants: 11,
+    anneeCreation: 2013,
+    statut: 'active',
+    parcours: [
+      {
+        id: 'AES', code: 'AES',
+        nom: 'Administration Économique et Sociale',
+        nomCourt: 'Admin Éco & Sociale',
+        mentionId: 'mention-mgt', mentionNom: 'Management',
+        couleur: '#10B981', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '⚖️',
+        description: 'Parcours interdisciplinaire mêlant économie, droit, sociologie et gestion des organisations publiques et privées. Ouvert au concours L1, il prépare aux métiers de l\'administration et de la gestion sociale.',
+        responsable: { id: 'ens-006', nom: 'Rabe', prenom: 'Haja', initiales: 'HR', email: 'h.rabe@emit.mg', titre: 'MCF' },
+        nbEtudiants: 132, nbMatieres: 30, nbEnseignants: 9,
+        anneeCreation: 2013, statut: 'active', accreditation: '2022-2027',
+        debouches: ['Gestionnaire RH', 'Chargé de mission', 'Fonctionnaire', 'Consultant junior', 'Assistant de direction'],
+        partenaires: ['Chambre de Commerce de Fianarantsoa', 'BNI Madagascar', 'Ministère des Finances Madagascar'],
+        ouvertConcours: true, niveauConcours: 'L1',
+        cursus: {
+          L1: { S1: ['AES101','AES101B','TRANS101'], S2: ['AES102','AES103','TRANS201'] },
+          L2: { S3: ['AES201','AES202','AES203'], S4: ['AES204','AES205','AES206'] },
+          L3: { S5: ['AES301','AES302','AES303'], S6: ['AES304','AES305','AES306'] }
+        }
+      },
+      {
+        id: 'MD', code: 'MD',
+        nom: 'Management Décisionnel',
+        nomCourt: 'Management Décisionnel',
+        mentionId: 'mention-mgt', mentionNom: 'Management',
+        couleur: '#059669', niveau: 'Master', niveaux: ['M1','M2'],
+        icone: '🎯',
+        description: 'Master centré sur le management stratégique, le contrôle de gestion, la finance d\'entreprise et l\'aide à la décision par les outils quantitatifs. Prépare aux postes de direction et de conseil.',
+        responsable: { id: 'ens-007', nom: 'Vola', prenom: 'Aina', initiales: 'AV', email: 'a.vola@emit.mg', titre: 'Professeur' },
+        nbEtudiants: 66, nbMatieres: 18, nbEnseignants: 7,
+        anneeCreation: 2015, statut: 'active', accreditation: '2023-2028',
+        debouches: ['Manager', 'Directeur financier', 'Contrôleur de gestion', 'Consultant stratégique'],
+        partenaires: ['HEC Madagascar', 'BOA Madagascar', 'Groupe Axian'],
+        ouvertConcours: false,
+        cursus: {
+          M1: { S7: ['MD501','MD502','MD503'], S8: ['MD504','MD505','MD506'] },
+          M2: { S9: ['MD601','MD602','MD603'], S10: ['MD604','MD605','MD606-MFE'] }
+        }
+      }
+    ]
+  },
+  {
+    id: 'mention-rpm',
+    nom: 'Relations Publiques et Multimédia',
+    couleur: '#EC4899',
+    icone: '📢',
+    description: 'La Mention Relations Publiques et Multimédia forme des professionnels de la communication, du journalisme numérique, du multimédia et des relations publiques. Elle répond à la demande croissante en compétences communicationnelles dans les organisations malgaches.',
+    responsable: { id: 'ens-010', nom: 'Mamy', prenom: 'Zo', initiales: 'ZM', email: 'z.mamy@emit.mg', titre: 'MCF' },
+    nbEtudiants: 176,
+    nbEnseignants: 9,
+    anneeCreation: 2015,
+    statut: 'active',
+    parcours: [
+      {
+        id: 'CM', code: 'CM',
+        nom: 'Communication Multimédia',
+        nomCourt: 'Communication Multimédia',
+        mentionId: 'mention-rpm', mentionNom: 'Relations Publiques et Multimédia',
+        couleur: '#F472B6', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '🎬',
+        description: 'Parcours centré sur la production audiovisuelle, le design graphique, l\'infographie et la communication numérique. Forme des créatifs polyvalents maîtrisant les outils de production multimédia.',
+        responsable: { id: 'ens-010', nom: 'Mamy', prenom: 'Zo', initiales: 'ZM', email: 'z.mamy@emit.mg', titre: 'MCF' },
+        nbEtudiants: 56, nbMatieres: 22, nbEnseignants: 6,
+        anneeCreation: 2015, statut: 'active', accreditation: '2023-2028',
+        debouches: ['Designer graphique', 'Monteur vidéo', 'Responsable communication', 'Community Manager'],
+        partenaires: ['MBC Madagascar', 'RFI Madagascar', 'Iris Studio'],
+        ouvertConcours: false,
+        cursus: {
+          L1: { S1: ['CM101','RPCO101','TRANS101'], S2: ['CM102','CM103','ICM101'] },
+          L2: { S3: ['CM201','CM202','CM203'], S4: ['CM204','CM205','CM206'] },
+          L3: { S5: ['CM301','CM302','CM303'], S6: ['CM304','CM305','CM306'] }
+        }
+      },
+      {
+        id: 'RPCO', code: 'RPCO',
+        nom: 'Relations Publiques et Communication Organisationnelle',
+        nomCourt: 'Relations Publiques',
+        mentionId: 'mention-rpm', mentionNom: 'Relations Publiques et Multimédia',
+        couleur: '#EC4899', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '🤝',
+        description: 'Parcours axé sur les relations presse, la communication institutionnelle, la gestion de la réputation et le lobbying. Prépare aux métiers des RP dans les ONG, entreprises et institutions gouvernementales.',
+        responsable: { id: 'ens-010', nom: 'Mamy', prenom: 'Zo', initiales: 'ZM', email: 'z.mamy@emit.mg', titre: 'MCF' },
+        nbEtudiants: 48, nbMatieres: 20, nbEnseignants: 5,
+        anneeCreation: 2016, statut: 'active', accreditation: '2022-2027',
+        debouches: ['Attaché de presse', 'Chargé RP', 'Porte-parole', 'Coordinateur évènementiel'],
+        partenaires: ['L\'Express de Madagascar', 'Fondation TELMA', 'PNUD Madagascar'],
+        ouvertConcours: false,
+        cursus: {
+          L1: { S1: ['RPCO101','RPCO102','TRANS101'], S2: ['RPCO103','RPCO104','CM101'] },
+          L2: { S3: ['RPCO201','RPCO202','RPCO203'], S4: ['RPCO204','RPCO205','RPCO206'] },
+          L3: { S5: ['RPCO301','RPCO302','RPCO303'], S6: ['RPCO304','RPCO305','RPCO306'] }
+        }
+      },
+      {
+        id: 'CMN', code: 'CMN',
+        nom: 'Communications et Médias Numériques',
+        nomCourt: 'Médias Numériques',
+        mentionId: 'mention-rpm', mentionNom: 'Relations Publiques et Multimédia',
+        couleur: '#DB2777', niveau: 'Master', niveaux: ['M1','M2'],
+        icone: '📱',
+        description: 'Master ciblant la stratégie de présence numérique, le journalisme en ligne, le marketing de contenu et l\'analyse des audiences digitales. Prépare aux métiers des médias de demain.',
+        responsable: { id: 'ens-010', nom: 'Mamy', prenom: 'Zo', initiales: 'ZM', email: 'z.mamy@emit.mg', titre: 'MCF' },
+        nbEtudiants: 34, nbMatieres: 14, nbEnseignants: 5,
+        anneeCreation: 2018, statut: 'active', accreditation: '2024-2029',
+        debouches: ['Directeur de la communication digitale', 'Journaliste numérique', 'Social Media Manager'],
+        partenaires: ['Gasy Net', 'RFI Afrique', 'Agence Malagasy de la Francophonie'],
+        ouvertConcours: false,
+        cursus: {
+          M1: { S7: ['CMN501','CMN502','CMN503'], S8: ['CMN504','CMN505','CMN506'] },
+          M2: { S9: ['CMN601','CMN602','CMN603'], S10: ['CMN604','CMN605','CMN606-MFE'] }
+        }
+      },
+      {
+        id: 'RPC', code: 'RPC',
+        nom: 'Relations Publiques et Communications',
+        nomCourt: 'RP & Communications',
+        mentionId: 'mention-rpm', mentionNom: 'Relations Publiques et Multimédia',
+        couleur: '#BE185D', niveau: 'Master', niveaux: ['M1','M2'],
+        icone: '🌍',
+        description: 'Master avancé en stratégie de relations publiques, diplomatie d\'entreprise, gestion de crise médiatique et communication interculturelle pour les grandes organisations.',
+        responsable: { id: 'ens-010', nom: 'Mamy', prenom: 'Zo', initiales: 'ZM', email: 'z.mamy@emit.mg', titre: 'MCF' },
+        nbEtudiants: 22, nbMatieres: 14, nbEnseignants: 4,
+        anneeCreation: 2019, statut: 'active', accreditation: '2024-2029',
+        debouches: ['Directeur RP', 'Consultant en communication', 'Chargé d\'affaires diplomatiques'],
+        partenaires: ['Alliance Française Madagascar', 'Institut Français de Madagascar'],
+        ouvertConcours: false,
+        cursus: {
+          M1: { S7: ['RPC501','RPC502','RPC503'], S8: ['RPC504','RPC505','RPC506'] },
+          M2: { S9: ['RPC601','RPC602','RPC603'], S10: ['RPC604','RPC605','RPC606-MFE'] }
+        }
+      },
+      {
+        id: 'ICM', code: 'ICM',
+        nom: 'Information et Communication Multimédia',
+        nomCourt: 'Info & Comm Multimédia',
+        mentionId: 'mention-rpm', mentionNom: 'Relations Publiques et Multimédia',
+        couleur: '#F43F5E', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '📰',
+        description: 'Parcours ouvert au concours L1, formant des professionnels polyvalents de l\'information et de la communication multimédia, capables de produire des contenus pour tous les supports (web, presse, audiovisuel).',
+        responsable: { id: 'ens-010', nom: 'Mamy', prenom: 'Zo', initiales: 'ZM', email: 'z.mamy@emit.mg', titre: 'MCF' },
+        nbEtudiants: 16, nbMatieres: 20, nbEnseignants: 5,
+        anneeCreation: 2023, statut: 'active', accreditation: '2024-2029',
+        debouches: ['Journaliste multimédia', 'Rédacteur web', 'Chargé de communication', 'Producteur de contenu'],
+        partenaires: ['MBC', 'Midi Madagascar', 'Tribune de Madagascar'],
+        ouvertConcours: true, niveauConcours: 'L1',
+        cursus: {
+          L1: { S1: ['ICM101','ICM102','TRANS101'], S2: ['ICM103','ICM104','RPCO101'] },
+          L2: { S3: ['ICM201','ICM202','ICM203'], S4: ['ICM204','ICM205','ICM206'] },
+          L3: { S5: ['ICM301','ICM302','ICM303'], S6: ['ICM304','ICM305','ICM306'] }
+        }
+      },
+      {
+        id: 'CNGP', code: 'CNGP',
+        nom: 'Communication Numérique et Gestion de Projet',
+        nomCourt: 'Comm. Numérique & GP',
+        mentionId: 'mention-rpm', mentionNom: 'Relations Publiques et Multimédia',
+        couleur: '#E11D48', niveau: 'Licence', niveaux: ['L1','L2','L3'],
+        icone: '📋',
+        description: 'Nouveau parcours alliant communication numérique et compétences en gestion de projet (Agile/Scrum). Répond aux besoins des organisations cherchant des profils hybrides commu-manager/chef de projet.',
+        responsable: { id: 'ens-007', nom: 'Vola', prenom: 'Aina', initiales: 'AV', email: 'a.vola@emit.mg', titre: 'Professeur' },
+        nbEtudiants: 0, nbMatieres: 18, nbEnseignants: 4,
+        anneeCreation: 2024, statut: 'active', accreditation: '2024-2029',
+        debouches: ['Chef de projet digital', 'Responsable transformation numérique', 'Coordinateur projets communication'],
+        partenaires: ['PMI Madagascar', 'Agility Madagascar', 'Instat Madagascar'],
+        ouvertConcours: false,
+        cursus: {
+          L1: { S1: ['CNGP101','RPCO101','TRANS101'], S2: ['CNGP102','CNGP103','ICM101'] },
+          L2: { S3: ['CNGP201','CNGP202','CNGP203'], S4: ['CNGP204','CNGP205','CNGP206'] },
+          L3: { S5: ['CNGP301','CNGP302','CNGP303'], S6: ['CNGP304','CNGP305','CNGP306'] }
+        }
+      }
+    ]
+  }
+];
+
+export const MOCK_PARCOURS = MOCK_MENTIONS.flatMap(m => m.parcours.map(p => ({
+  ...p,
+  mentionCouleur: m.couleur,
+  mentionIcone: m.icone
+})));
+
+export const useFiliereStore = defineStore('filiere', {
+  state: () => ({
+    mentions: MOCK_MENTIONS,
+    parcours: MOCK_PARCOURS,
+    backendFilieres: [],
+    parcoursSelectionne: null,
+    mentionSelectionnee: null,
+    filtres: {
+      search: '',
+      mention: 'toutes',
+      niveau: 'tous',
+      statut: 'toutes',
+      ouvertConcours: false
+    },
+    loading: false,
+    modeVue: 'mentions', // 'cartes' | 'liste' | 'cursus' | 'mentions'
+    drawerOuvert: false,
+    modalOuverte: false,
+    parcoursEnEdition: null,
+    stepModal: 1
+  }),
+  getters: {
+    parcoursFiltres: (state) => {
+      return state.parcours.filter(p => {
+        const matchSearch = p.nom.toLowerCase().includes(state.filtres.search.toLowerCase()) ||
+                          p.code.toLowerCase().includes(state.filtres.search.toLowerCase()) ||
+                          p.nomCourt.toLowerCase().includes(state.filtres.search.toLowerCase());
+        const matchMention = state.filtres.mention === 'toutes' || p.mentionId === state.filtres.mention;
+        const matchNiveau = state.filtres.niveau === 'tous' || p.niveau === state.filtres.niveau;
+        const matchConcours = !state.filtres.ouvertConcours || p.ouvertConcours === true;
+        return matchSearch && matchMention && matchNiveau && matchConcours;
+      });
+    },
+    statsGlobales: (state) => {
+      return {
+        totalMentions: 3,
+        totalParcours: state.parcours.length,
+        totalEtudiants: state.parcours.reduce((acc, p) => acc + p.nbEtudiants, 0),
+        totalLicences: state.parcours.filter(p => p.niveau === 'Licence').length,
+        totalMasters: state.parcours.filter(p => p.niveau === 'Master').length,
+      };
+    }
+  },
+  actions: {
+    ouvrirDetail(p) {
+      this.parcoursSelectionne = p;
+      this.drawerOuvert = true;
+    },
+    fermerDetail() {
+      this.drawerOuvert = false;
+    },
+    ouvrirModal(p = null) {
+      this.parcoursEnEdition = p ? { ...p } : null;
+      this.modalOuverte = true;
+      this.stepModal = 1;
+    },
+    fermerModal() {
+      this.modalOuverte = false;
+    }
+    ,
+    async fetchFilieresFromApi() {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/filieres');
+        if (!res.ok) throw new Error('Erreur fetch filieres');
+        this.backendFilieres = await res.json();
+        // si on a des filieres depuis le backend, les mapper vers la structure utilisée par le frontend
+        if (Array.isArray(this.backendFilieres) && this.backendFilieres.length > 0) {
+          this.mentions = this.backendFilieres.map(f => ({
+            id: `mention-${f.id}`,
+            nom: f.nom || `Filière ${f.id}`,
+            couleur: '#38BDF8',
+            icone: '📚',
+            description: f.description || '',
+            responsable: { id: `resp-${f.id}`, nom: f.responsable || '' , prenom: '' , initiales: '' , email: '' , titre: ''},
+            nbEtudiants: f.nbEtudiants || 0,
+            nbEnseignants: f.nbEnseignants || 0,
+            anneeCreation: 0,
+            statut: 'active',
+            parcours: []
+          }));
+
+          this.parcours = this.backendFilieres.flatMap(f =>
+            (f.parcours || []).map((p, idx) => ({
+              id: p.id ?? `p-${f.id}-${idx}`,
+              code: p.code ?? p.nom?.slice(0,6) ?? `P${idx}`,
+              nom: p.nom ?? p.code ?? 'Parcours',
+              nomCourt: p.nomCourt ?? p.nom ?? '',
+              mentionId: `mention-${f.id}`,
+              mentionNom: f.nom,
+              couleur: '#0EA5E9',
+              niveau: p.niveau ?? 'Licence',
+              niveaux: p.niveaux ?? ['L1','L2','L3'],
+              icone: p.icone ?? '📘',
+              description: p.description ?? '',
+              responsable: p.responsable ?? this.mentions.find(m => m.id === `mention-${f.id}`)?.responsable,
+              nbEtudiants: p.nbEtudiants ?? 0,
+              nbMatieres: p.nbMatieres ?? 0,
+              nbEnseignants: p.nbEnseignants ?? 0,
+              anneeCreation: p.anneeCreation ?? 0,
+              statut: p.statut ?? 'active',
+              accreditation: p.accreditation ?? null,
+              debouches: p.debouches ?? [],
+              partenaires: p.partenaires ?? [],
+              ouvertConcours: p.ouvertConcours ?? false,
+              cursus: p.cursus ?? {}
+            }))
+          );
+        }
+      } catch (err) {
+        console.error('fetchFilieresFromApi', err);
+      }
+    }
+  }
+});

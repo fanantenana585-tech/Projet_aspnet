@@ -1,0 +1,41 @@
+:root {
+  /* Identité EMIT */
+  --color-primary       : #0D1B3E;   /* Bleu marine profond */
+  --color-accent        : #1D9E75;   /* Vert émeraude */
+  --color-bg-main       : #F7F9FC;   /* Fond clair cassé */
+  --color-card          : #FFFFFF;   /* Blanc pur */
+
+  /* Couleurs Mentions */
+  --color-info          : #185FA5;
+  --color-mgmt          : #533AB7;
+  --color-rpm           : #993C1D;
+
+  /* Textes */
+  --color-text-primary  : #1A202C;
+  --color-text-secondary: #4A5568;
+  --color-text-muted    : #A0AEC0;
+  --color-text-white    : #FFFFFF;
+
+  /* Statuts */
+  --color-success       : #1D9E75;
+  --color-warning       : #ED8936;
+  --color-error         : #E53E3E;
+  --color-blocked       : #ED8936; /* Orange pour semaines bloquées */
+
+  /* Espacements */
+  --spacing-xs  : 4px;
+  --spacing-sm  : 8px;
+  --spacing-md  : 16px;
+  --spacing-lg  : 24px;
+  --spacing-xl  : 32px;
+
+  /* Border radius */
+  --radius-sm   : 4px;
+  --radius-md   : 8px;
+  --radius-lg   : 12px;
+  --radius-full : 9999px;
+
+  /* Typographie */
+  --font-body   : 'Inter', sans-serif;
+  --font-title  : 'Poppins', sans-serif;
+}
