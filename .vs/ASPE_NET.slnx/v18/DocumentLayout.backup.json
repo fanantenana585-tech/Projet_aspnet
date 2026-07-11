@@ -3,22 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\courses.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\stores\\courses.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\enseignantStore.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\stores\\enseignantStore.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Data\\ApplicationDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Data\\ApplicationDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Models\\Filiere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Models\\Filiere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -37,6 +21,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Models\\Course.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Models\\Course.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Models\\Filiere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Models\\Filiere.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Data\\ApplicationDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\Data\\ApplicationDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Controllers\\EnseignantsController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -63,6 +55,14 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backend\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\enseignantStore.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\stores\\enseignantStore.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\courses.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\stores\\courses.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\filiereStore.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\stores\\filiereStore.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -82,7 +82,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Document",
@@ -94,7 +94,8 @@
               "RelativeToolTip": "package.json",
               "ViewState": "AgIAAAsAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-06T14:41:56.627Z"
+              "WhenOpened": "2026-07-06T14:41:56.627Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -106,7 +107,8 @@
               "RelativeToolTip": ".env",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-07-06T14:39:04.149Z"
+              "WhenOpened": "2026-07-06T14:39:04.149Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -118,59 +120,64 @@
               "RelativeToolTip": "src\\stores\\filiereStore.js",
               "ViewState": "AgIAAKABAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-07-06T14:38:58.53Z"
+              "WhenOpened": "2026-07-06T14:38:58.53Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 14,
               "Title": "courses.js",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\courses.js",
               "RelativeDocumentMoniker": "src\\stores\\courses.js",
               "ToolTip": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\courses.js",
               "RelativeToolTip": "src\\stores\\courses.js",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAABYAAABFAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-07-06T14:38:48.343Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 13,
               "Title": "enseignantStore.js",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\enseignantStore.js",
               "RelativeDocumentMoniker": "src\\stores\\enseignantStore.js",
               "ToolTip": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\src\\stores\\enseignantStore.js",
               "RelativeToolTip": "src\\stores\\enseignantStore.js",
-              "ViewState": "AgIAAFIAAAAAAAAAAIBZwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFUAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2026-07-06T14:38:29.999Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "backend\\Data\\ApplicationDbContext.cs",
               "ToolTip": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Data\\ApplicationDbContext.cs",
               "RelativeToolTip": "backend\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:28:32.8Z"
+              "WhenOpened": "2026-07-06T14:28:32.8Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Filiere.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Models\\Filiere.cs",
               "RelativeDocumentMoniker": "backend\\Models\\Filiere.cs",
               "ToolTip": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Models\\Filiere.cs",
               "RelativeToolTip": "backend\\Models\\Filiere.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:28:24.839Z"
+              "WhenOpened": "2026-07-06T14:28:24.839Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 4,
               "Title": "Course.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Models\\Course.cs",
               "RelativeDocumentMoniker": "backend\\Models\\Course.cs",
@@ -178,11 +185,12 @@
               "RelativeToolTip": "backend\\Models\\Course.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:28:17.956Z"
+              "WhenOpened": "2026-07-06T14:28:17.956Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
               "Title": "Enseignant.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Models\\Enseignant.cs",
               "RelativeDocumentMoniker": "backend\\Models\\Enseignant.cs",
@@ -190,11 +198,12 @@
               "RelativeToolTip": "backend\\Models\\Enseignant.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:28:11.944Z"
+              "WhenOpened": "2026-07-06T14:28:11.944Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Program.cs",
               "RelativeDocumentMoniker": "backend\\Program.cs",
@@ -202,22 +211,25 @@
               "RelativeToolTip": "backend\\Program.cs",
               "ViewState": "AgIAACwAAAAAAAAAAIBJwC4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:28:01.902Z"
+              "WhenOpened": "2026-07-06T14:28:01.902Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\appsettings.json",
               "RelativeDocumentMoniker": "backend\\appsettings.json",
               "ToolTip": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\appsettings.json",
               "RelativeToolTip": "backend\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-07-06T14:27:54.314Z"
+              "WhenOpened": "2026-07-06T14:27:54.314Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 7,
               "Title": "EnseignantsController.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Controllers\\EnseignantsController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\EnseignantsController.cs",
@@ -225,11 +237,12 @@
               "RelativeToolTip": "backend\\Controllers\\EnseignantsController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:28:44.069Z"
+              "WhenOpened": "2026-07-06T14:28:44.069Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 8,
               "Title": "CoursesController.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Controllers\\CoursesController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\CoursesController.cs",
@@ -237,11 +250,12 @@
               "RelativeToolTip": "backend\\Controllers\\CoursesController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:29:00.391Z"
+              "WhenOpened": "2026-07-06T14:29:00.391Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "EmitScheduler.API.csproj",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\EmitScheduler.API.csproj",
               "RelativeDocumentMoniker": "backend\\EmitScheduler.API.csproj",
@@ -249,11 +263,12 @@
               "RelativeToolTip": "backend\\EmitScheduler.API.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-07-06T14:27:48.67Z"
+              "WhenOpened": "2026-07-06T14:27:48.67Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 12,
               "Title": "README.md",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\README.md",
               "RelativeDocumentMoniker": "backend\\README.md",
@@ -261,11 +276,12 @@
               "RelativeToolTip": "backend\\README.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-07-06T14:30:02.656Z"
+              "WhenOpened": "2026-07-06T14:30:02.656Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 11,
               "Title": "ApplicationDbContextModelSnapshot.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Migrations\\ApplicationDbContextModelSnapshot.cs",
               "RelativeDocumentMoniker": "backend\\Migrations\\ApplicationDbContextModelSnapshot.cs",
@@ -273,11 +289,12 @@
               "RelativeToolTip": "backend\\Migrations\\ApplicationDbContextModelSnapshot.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:29:53.504Z"
+              "WhenOpened": "2026-07-06T14:29:53.504Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 10,
               "Title": "20260706_InitialCreate.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Migrations\\20260706_InitialCreate.cs",
               "RelativeDocumentMoniker": "backend\\Migrations\\20260706_InitialCreate.cs",
@@ -285,11 +302,12 @@
               "RelativeToolTip": "backend\\Migrations\\20260706_InitialCreate.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAFIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:29:36.303Z"
+              "WhenOpened": "2026-07-06T14:29:36.303Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 9,
               "Title": "FilieresController.cs",
               "DocumentMoniker": "C:\\Users\\BOTSOKAYA\\3D Objects\\ASPE_NET\\backend\\Controllers\\FilieresController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\FilieresController.cs",
@@ -297,7 +315,8 @@
               "RelativeToolTip": "backend\\Controllers\\FilieresController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-06T14:29:14.387Z"
+              "WhenOpened": "2026-07-06T14:29:14.387Z",
+              "EditorCaption": ""
             }
           ]
         }
