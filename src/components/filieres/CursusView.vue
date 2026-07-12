@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { useFiliereStore, MOCK_MENTIONS, MOCK_PARCOURS } from '@/stores/filiereStore';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useFiliereStore } from '@/stores/filiereStore';
 import { useMatiereStore } from '@/stores/matiereStore';
 import {
   ChevronRight, BookOpen, GraduationCap,
@@ -10,13 +10,42 @@ import {
 const filiereStore = useFiliereStore();
 const matiereStore = useMatiereStore();
 
-const selectedMentionId = ref('mention-info');
-const selectedParcoursId = ref('DA2I');
+const selectedMentionId = ref('');
+const selectedParcoursId = ref('');
 
-const selectedMention = computed(() => MOCK_MENTIONS.find(m => m.id === selectedMentionId.value));
+const selectedMention = computed(() => filiereStore.mentions.find(m => m.id === selectedMentionId.value));
 const filteredParcours = computed(() => selectedMention.value?.parcours || []);
+const currentParcours = computed(() => filiereStore.parcours.find(p => p.id === selectedParcoursId.value));
 
-const currentParcours = computed(() => MOCK_PARCOURS.find(p => p.id === selectedParcoursId.value));
+const initializeSelection = () => {
+  if (!selectedMentionId.value && filiereStore.mentions.length > 0) {
+    selectedMentionId.value = filiereStore.mentions[0].id;
+  }
+  if (!selectedParcoursId.value && filteredParcours.value.length > 0) {
+    selectedParcoursId.value = filteredParcours.value[0].id;
+  }
+};
+
+watch(
+  () => filiereStore.mentions,
+  () => {
+    initializeSelection();
+  },
+  { immediate: true }
+);
+
+watch(
+  filteredParcours,
+  () => {
+    if (!selectedParcoursId.value && filteredParcours.value.length > 0) {
+      selectedParcoursId.value = filteredParcours.value[0].id;
+    }
+  }
+);
+
+onMounted(() => {
+  initializeSelection();
+});
 
 const getMatieresBySemestre = (semestre) => {
   return matiereStore.matieres.filter(m =>
@@ -33,7 +62,7 @@ const levels = computed(() => currentParcours.value?.niveau === 'Master' ? ['M1'
     <!-- Mention Selector -->
     <div class="flex gap-4 p-2 bg-white rounded-[2rem] border border-[#BFDBFE] w-fit mx-auto shadow-sm">
       <button
-        v-for="m in MOCK_MENTIONS" :key="m.id"
+        v-for="m in filiereStore.mentions" :key="m.id"
         @click="selectedMentionId = m.id; selectedParcoursId = m.parcours[0]?.id"
         class="px-8 py-3.5 rounded-[1.5rem] flex items-center gap-3 transition-all duration-500"
         :style="{

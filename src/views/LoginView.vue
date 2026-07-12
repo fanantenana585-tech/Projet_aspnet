@@ -144,14 +144,13 @@ const handleLogin = async () => {
   if (!validate()) return
 
   isLoading.value = true
-  await new Promise(resolve => setTimeout(resolve, 800))
 
-  const success = authStore.login(form.email, form.password)
+  const success = await authStore.login(form.email, form.password)
 
   if (success) {
     router.push('/dashboard')
   } else {
-    errors.general = 'Identifiants invalides (admin@emit.mg / password123)'
+    errors.general = 'Identifiants invalides ou problème de serveur.'
   }
   isLoading.value = false
 }

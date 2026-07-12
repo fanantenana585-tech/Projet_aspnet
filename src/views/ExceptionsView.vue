@@ -1,11 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useExceptionsStore } from '@/stores/exceptions'
-import { useProfessorsStore } from '@/stores/professors'
+import { useEnseignantStore } from '@/stores/enseignantStore'
 import { AlertTriangle, Trash2, Plus, Calendar, ShieldAlert } from 'lucide-vue-next'
 
 const exceptionsStore = useExceptionsStore()
-const professorsStore = useProfessorsStore()
+const enseignantStore = useEnseignantStore()
 
 const newException = ref({
   professorId: null,
@@ -13,28 +13,34 @@ const newException = ref({
   reason: ''
 })
 
+onMounted(async () => {
+  await enseignantStore.fetchEnseignants()
+  await exceptionsStore.fetchExceptions()
+})
+
 const exceptionsList = computed(() => {
   return exceptionsStore.exceptions.map(e => ({
     ...e,
-    professor: professorsStore.getProfessorById(e.professorId)
+    professor: enseignantStore.enseignants.find(p => p.id === e.enseignantId)
   }))
 })
 
-const handleAddException = () => {
+const handleAddException = async () => {
   if (!newException.value.professorId || !newException.value.week) return
 
-  exceptionsStore.addException({ ...newException.value })
+  await exceptionsStore.addException({ ...newException.value })
   newException.value = { professorId: null, week: 1, reason: '' }
 }
 
-const handleDelete = (id) => {
-  const index = exceptionsStore.exceptions.findIndex(e => e.id === id)
-  if (index !== -1) exceptionsStore.exceptions.splice(index, 1)
+const handleDelete = async (id) => {
+  if (confirm("Supprimer cette exception ?")) {
+    await exceptionsStore.deleteException(id)
+  }
 }
 </script>
 
 <template>
-  <div class="flex-1 overflow-y-auto bg-[#0C2340] p-8 custom-scrollbar">
+  <div class="flex-1 overflow-y-auto bg-[#0C2340] p-8 custom-scrollbar min-h-screen">
     <div class="max-w-[1400px] mx-auto animate-in fade-in duration-500">
       
       <!-- Header -->
@@ -64,7 +70,7 @@ const handleDelete = (id) => {
                 <label class="text-xs font-black text-white uppercase tracking-widest ml-1">Professeur</label>
                 <select v-model="newException.professorId" class="w-full bg-white border border-gray-300 text-black font-bold rounded-2xl p-4 outline-none focus:ring-2 focus:ring-emit-blue/50 appearance-none">
                   <option :value="null">Choisir un professeur</option>
-                  <option v-for="p in professorsStore.professors" :key="p.id" :value="p.id">{{ p.nom }} {{ p.prenom }}</option>
+                  <option v-for="p in enseignantStore.enseignants" :key="p.id" :value="p.id">{{ p.nom }} {{ p.prenom }}</option>
                 </select>
               </div>
 
@@ -105,7 +111,7 @@ const handleDelete = (id) => {
                 <div>
                   <h3 class="font-black text-white text-lg">{{ ex.professor?.nom }} {{ ex.professor?.prenom }}</h3>
                   <div class="flex items-center gap-3 mt-1.5">
-                    <span class="px-3 py-1 bg-orange-500 text-white rounded-lg text-[10px] font-black uppercase tracking-widest">Semaine {{ ex.week }}</span>
+                    <span class="px-3 py-1 bg-orange-500 text-white rounded-lg text-[10px] font-black uppercase tracking-widest">Semaine {{ ex.weekNumber }}</span>
                     <span class="text-sm text-gray-400 font-medium" v-if="ex.reason">{{ ex.reason }}</span>
                   </div>
                 </div>

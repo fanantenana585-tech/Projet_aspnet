@@ -45,24 +45,75 @@ export const useParametresStore = defineStore('parametres', {
   }),
 
   actions: {
+    async fetchSettings() {
+      this.loading = true
+      try {
+        const keys = ['profil', 'preferences', 'notifications', 'systeme']
+        for (const key of keys) {
+          const res = await fetch(`/api/settings/${key}`)
+          if (res.ok) {
+            this[key] = await res.json()
+          }
+        }
+      } catch (err) {
+        console.error('fetchSettings error', err)
+      } finally {
+        this.loading = false
+      }
+    },
     async updateProfil(data) {
       this.loading = true
-      await new Promise(resolve => setTimeout(resolve, 800))
-      this.profil = { ...this.profil, ...data }
-      this.loading = false
+      try {
+        const res = await fetch('/api/settings/profil', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+        if (res.ok) {
+          this.profil = { ...this.profil, ...data }
+        }
+      } finally {
+        this.loading = false
+      }
     },
     async updatePreferences(data) {
-      this.preferences = { ...this.preferences, ...data }
+      const res = await fetch('/api/settings/preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      if (res.ok) {
+        this.preferences = { ...this.preferences, ...data }
+      }
     },
     async updateNotifications(data) {
-      this.notifications = { ...this.notifications, ...data }
+      const res = await fetch('/api/settings/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      if (res.ok) {
+        this.notifications = { ...this.notifications, ...data }
+      }
     },
     async updateSysteme(data) {
-      this.systeme = { ...this.systeme, ...data }
+      const res = await fetch('/api/settings/systeme', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      if (res.ok) {
+        this.systeme = { ...this.systeme, ...data }
+      }
     },
     async changerMotDePasse(ancien, nouveau) {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      return true
+      // Logic for password change would typically go to AuthController
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ancien, nouveau })
+      })
+      return res.ok
     }
   }
 })

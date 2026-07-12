@@ -40,9 +40,16 @@ export const useEmploiStore = defineStore('emploi', {
         return matchMention && matchParcours && matchNiveau && matchType && matchEnseignant && matchSalle;
       });
     },
-    numeroSemaine: (state) => 25, // Mock static
-    dateDebutSemaine: (state) => '16 Juin 2026',
-    dateFinSemaine: (state) => '21 Juin 2026',
+    numeroSemaine: (state) => 25,
+    dateDebutSemaine: (state) => {
+      const d = new Date(state.semaineCourante);
+      return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+    },
+    dateFinSemaine: (state) => {
+      const d = new Date(state.semaineCourante);
+      d.setDate(d.getDate() + 5);
+      return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    },
 
     chargesEnseignants: (state) => {
       const charges = {};
@@ -112,9 +119,20 @@ export const useEmploiStore = defineStore('emploi', {
     async fetchEmplois() {
       this.loading = true;
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/emplois');
+        const res = await fetch('/api/emploidutemps');
         if (res.ok) {
-          this.emplois = await res.json();
+          const data = await res.json();
+          // Map backend model to frontend expectation if needed
+          this.emplois = data.map(e => ({
+            id: e.id,
+            heureDebut: new Date(e.startTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+            heureFin: new Date(e.endTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+            jour: new Date(e.startTime).toLocaleDateString('fr-FR', { weekday: 'long' }),
+            matiere: { nom: e.title, code: e.title.split(' ')[0] },
+            enseignant: { nom: e.enseignant },
+            salle: { nom: e.salle },
+            type: e.type
+          }));
         }
       } catch (err) {
         console.error('fetchEmplois error', err);
@@ -126,14 +144,24 @@ export const useEmploiStore = defineStore('emploi', {
 
     async ajouterCreneau(data) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/emplois', {
+        // Map frontend format to backend format
+        const payload = {
+          title: data.matiere.nom,
+          startTime: new Date(`2026-06-15T${data.heureDebut}`), // Placeholder date
+          endTime: new Date(`2026-06-15T${data.heureFin}`),
+          salle: data.salle.nom,
+          enseignant: data.enseignant.nom,
+          type: data.type
+        };
+
+        const res = await fetch('/api/emploidutemps', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          body: JSON.stringify(payload)
         });
         if (res.ok) {
           const created = await res.json();
-          this.emplois.push(created);
+          this.emplois.push(data); // Push original data for UI consistency or handle mapping
           this.detecterConflits();
         }
       } catch (err) {
@@ -143,7 +171,7 @@ export const useEmploiStore = defineStore('emploi', {
 
     async modifierCreneau(id, data) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/emplois/${id}`, {
+        const res = await fetch(`/api/emploidutemps/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -162,8 +190,7 @@ export const useEmploiStore = defineStore('emploi', {
 
     async supprimerCreneau(id, deleteAllRecurrent = false) {
       try {
-        // Optionnellement, le backend gère `deleteAllRecurrent` via query param
-        const url = import.meta.env.VITE_API_BASE_URL + `/api/emplois/${id}${deleteAllRecurrent ? '?recurrent=true' : ''}`;
+        const url = `/api/emploidutemps/${id}${deleteAllRecurrent ? '?recurrent=true' : ''}`;
         const res = await fetch(url, { method: 'DELETE' });
         if (res.ok) {
           const target = this.emplois.find(e => e.id === id);

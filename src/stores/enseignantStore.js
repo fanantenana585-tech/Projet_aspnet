@@ -36,13 +36,16 @@ export const useEnseignantStore = defineStore('enseignant', {
       this.loading = true;
       this.error = null;
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/enseignants');
-        if (!res.ok) throw new Error('Échec du chargement des enseignants');
+        const res = await fetch('/api/enseignants');
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.Detailed || errorData.Message || 'Échec du chargement des enseignants');
+        }
         this.enseignants = await res.json();
       } catch (err) {
         console.error('fetchEnseignants', err);
-        this.error = 'Impossible de se connecter à la base de données.';
-        this.enseignants = []; // Fallback to empty
+        this.error = `Erreur backend: ${err.message}`;
+        this.enseignants = [];
       } finally {
         this.loading = false;
       }
@@ -50,7 +53,7 @@ export const useEnseignantStore = defineStore('enseignant', {
 
     async ajouterEnseignant(data) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/enseignants', {
+        const res = await fetch('/api/enseignants', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -66,7 +69,7 @@ export const useEnseignantStore = defineStore('enseignant', {
 
     async modifierEnseignant(id, data) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/enseignants/${id}`, {
+        const res = await fetch(`/api/enseignants/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -84,7 +87,7 @@ export const useEnseignantStore = defineStore('enseignant', {
 
     async supprimerEnseignant(id) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/enseignants/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/enseignants/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error('Erreur suppression');
         this.enseignants = this.enseignants.filter(e => e.id !== id);
       } catch (err) {

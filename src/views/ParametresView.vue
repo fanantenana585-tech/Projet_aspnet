@@ -1,5 +1,5 @@
 <script setup>
-import { ref, markRaw } from 'vue'
+import { ref, markRaw, onMounted } from 'vue'
 import {
   User, Lock, Palette, Bell, GraduationCap, Settings,
   Database, Info, ChevronRight, Camera
@@ -14,6 +14,10 @@ import AcademicTab from '../components/parametres/AcademicTab.vue'
 import SystemeTab from '../components/parametres/SystemeTab.vue'
 
 const store = useParametresStore()
+
+onMounted(() => {
+  store.fetchSettings()
+})
 
 const tabs = [
   { id: 'profil', label: 'Mon Profil', icon: markRaw(User), component: markRaw(ProfilTab) },

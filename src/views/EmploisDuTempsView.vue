@@ -13,7 +13,7 @@ import {
 const store = useEmploiStore();
 
 onMounted(() => {
-  // logic to fetch if needed
+  store.fetchEmplois();
 });
 </script>
 

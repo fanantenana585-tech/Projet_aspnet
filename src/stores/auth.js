@@ -2,30 +2,50 @@ import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null,
-    isAuthenticated: false,
-    role: null // 'admin' or 'enseignant'
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    token: localStorage.getItem('token') || null,
+    isAuthenticated: !!localStorage.getItem('token'),
+    role: localStorage.getItem('role') || null // 'Admin' or 'User'
   }),
   actions: {
-    login(email, password) {
-      // Mocked login logic
-      if (email === 'admin@emit.mg' && password === 'password123') {
-        this.user = { email, name: 'Administrateur' }
+    async login(email, password) {
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        })
+
+        if (!res.ok) {
+          const error = await res.json()
+          throw new Error(error.message || 'Échec de connexion')
+        }
+
+        const data = await res.json()
+
+        this.token = data.token
+        this.user = { email: data.email, id: data.userId }
+        this.role = data.role
         this.isAuthenticated = true
-        this.role = 'admin'
+
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('user', JSON.stringify(this.user))
+        localStorage.setItem('role', data.role)
+
         return true
-      } else if (email === 'enseignant@emit.mg' && password === 'password123') {
-        this.user = { email, name: 'Enseignant' }
-        this.isAuthenticated = true
-        this.role = 'enseignant'
-        return true
+      } catch (err) {
+        console.error('Login error:', err)
+        return false
       }
-      return false
     },
     logout() {
       this.user = null
+      this.token = null
       this.isAuthenticated = false
       this.role = null
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      localStorage.removeItem('role')
     }
   }
 })

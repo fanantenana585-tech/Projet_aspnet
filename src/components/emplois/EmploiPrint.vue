@@ -1,15 +1,16 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useEmploiStore } from '@/stores/emploiStore';
-import { MOCK_MENTIONS, MOCK_PARCOURS } from '@/stores/filiereStore';
+import { useFiliereStore } from '@/stores/filiereStore';
 import { FileDown, X, Check, Loader2, Printer, Layout, FileText } from 'lucide-vue-next';
 
 const store = useEmploiStore();
+const filiereStore = useFiliereStore();
 const isGenerating = ref(false);
 
 const printForm = ref({
-  mention: 'mention-info',
-  parcours: 'DA2I',
+  mention: '',
+  parcours: '',
   niveau: 'L1',
   format: 'A4 Paysage',
   style: 'Standard',
@@ -19,8 +20,28 @@ const printForm = ref({
 });
 
 const filteredParcours = computed(() => {
-  return MOCK_PARCOURS.filter(p => p.mentionId === printForm.value.mention);
+  return filiereStore.parcours.filter(p => p.mentionId === printForm.value.mention);
 });
+
+watch(
+  () => filiereStore.mentions,
+  () => {
+    if (filiereStore.mentions.length > 0 && !printForm.value.mention) {
+      printForm.value.mention = filiereStore.mentions[0].id;
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  filteredParcours,
+  () => {
+    if (filteredParcours.value.length > 0 && !printForm.value.parcours) {
+      printForm.value.parcours = filteredParcours.value[0].id;
+    }
+  },
+  { immediate: true }
+);
 
 const handleMentionChange = () => {
   const firstP = filteredParcours.value[0];
@@ -69,7 +90,7 @@ const generatePDF = () => {
              <div class="space-y-2">
                 <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Mention</label>
                 <select v-model="printForm.mention" @change="handleMentionChange" class="w-full bg-white border-2 border-[#BFDBFE] rounded-xl px-4 py-3 font-bold text-sm outline-none focus:border-[#38BDF8]">
-                   <option v-for="m in MOCK_MENTIONS" :key="m.id" :value="m.id">{{ m.icone }} {{ m.nom }}</option>
+                   <option v-for="m in filiereStore.mentions" :key="m.id" :value="m.id">{{ m.icone }} {{ m.nom }}</option>
                 </select>
              </div>
              <div class="space-y-2">

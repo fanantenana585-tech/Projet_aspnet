@@ -1,20 +1,25 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useMatiereStore, MENTIONS_EMIT } from '@/stores/matiereStore';
 import { useFiliereStore } from '@/stores/filiereStore';
 import MatiereCard from '@/components/matieres/MatiereCard.vue';
+import MatiereModal from '@/components/matieres/MatiereModal.vue';
+import MatiereDetail from '@/components/matieres/MatiereDetail.vue';
 import {
   BookOpen, Plus, Search, Filter, X,
   Grid, List, BarChart3, RotateCcw,
   LayoutGrid, Table as TableIcon,
-  ChevronDown
+  ChevronDown, Eye, Pencil, Trash2
 } from 'lucide-vue-next';
 
 const store = useMatiereStore();
 const filiereStore = useFiliereStore();
 
-const search = ref('');
 const selectedView = ref('grid'); // 'grid' | 'list' | 'dashboard'
+
+onMounted(() => {
+  store.fetchMatieres();
+});
 
 const stats = computed(() => store.statsGlobales);
 
@@ -268,6 +273,10 @@ const availableParcours = computed(() => {
         </tbody>
       </table>
     </div>
+
+    <!-- Modals -->
+    <MatiereModal />
+    <MatiereDetail />
   </div>
 </template>
 

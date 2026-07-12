@@ -1,14 +1,15 @@
 <script setup>
 import { computed } from 'vue';
-import { useEmploiStore, ENS, SALLES } from '@/stores/emploiStore';
-import { MOCK_MENTIONS, MOCK_PARCOURS } from '@/stores/filiereStore';
+import { useEmploiStore } from '@/stores/emploiStore';
+import { useFiliereStore } from '@/stores/filiereStore';
 import { RotateCcw, LayoutGrid, List, Calendar, Grid } from 'lucide-vue-next';
 
 const store = useEmploiStore();
+const filiereStore = useFiliereStore();
 
 const filteredParcours = computed(() => {
-  if (store.filtres.mention === 'toutes') return MOCK_PARCOURS;
-  return MOCK_PARCOURS.filter(p => p.mentionId === store.filtres.mention);
+  if (store.filtres.mention === 'toutes') return filiereStore.parcours;
+  return filiereStore.parcours.filter(p => p.mentionId === store.filtres.mention);
 });
 
 const reset = () => {
@@ -39,7 +40,7 @@ const activeFiltersCount = computed(() => {
         class="bg-[#F0F9FF] border-2 border-[#BFDBFE] rounded-xl px-4 py-2.5 text-sm font-bold text-[#0C2340] outline-none focus:border-[#38BDF8] cursor-pointer"
       >
         <option value="toutes">Toutes les mentions</option>
-        <option v-for="m in MOCK_MENTIONS" :key="m.id" :value="m.id">
+        <option v-for="m in filiereStore.mentions" :key="m.id" :value="m.id">
           {{ m.icone }} {{ m.nom }}
         </option>
       </select>

@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { useFiliereStore, MOCK_MENTIONS } from '@/stores/filiereStore';
+import { ref, computed, onMounted } from 'vue';
+import { useFiliereStore } from '@/stores/filiereStore';
 import FiliereCard from '@/components/filieres/FiliereCard.vue';
 import FiliereModal from '@/components/filieres/FiliereModal.vue';
 import {
@@ -11,7 +11,12 @@ import {
 
 const store = useFiliereStore();
 
+onMounted(() => {
+  store.fetchFilieres();
+});
+
 const stats = computed(() => store.statsGlobales);
+const notification = computed(() => store.notification);
 
 const resetFilters = () => {
   store.filtres = { search: '', mention: 'toutes', niveau: 'tous', statut: 'toutes', ouvertConcours: false };
@@ -19,9 +24,9 @@ const resetFilters = () => {
 
 const handleView = (p) => store.ouvrirDetail(p);
 const handleEdit = (p) => store.ouvrirModal(p);
-const handleDelete = (id) => {
+const handleDelete = async (id) => {
   if (confirm("Supprimer ce parcours ? Les données associées seront perdues.")) {
-    // Action in store
+    await store.supprimerParcours(id);
   }
 };
 
@@ -29,9 +34,9 @@ const filteredParcours = computed(() => store.parcoursFiltres);
 
 const sections = computed(() => {
   if (store.filtres.mention !== 'toutes') {
-    return MOCK_MENTIONS.filter(m => m.id === store.filtres.mention);
+    return store.mentions.filter(m => m.id === store.filtres.mention);
   }
-  return MOCK_MENTIONS;
+  return store.mentions;
 });
 
 const getParcoursForMention = (mentionId) => {
@@ -64,6 +69,10 @@ const getParcoursForMention = (mentionId) => {
       </button>
     </header>
 
+    <div v-if="notification.text" :class="notification.type === 'success' ? 'bg-emerald-500/10 border-emerald-500 text-emerald-900 rounded-3xl border px-6 py-4 font-medium' : 'bg-red-500/10 border-red-500 text-red-900 rounded-3xl border px-6 py-4 font-medium' ">
+      {{ notification.text }}
+    </div>
+
     <!-- Stats -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
       <div v-for="(val, label, idx) in { 'Mentions': 3, 'Parcours': stats.totalParcours, 'Licences': stats.totalLicences, 'Masters': stats.totalMasters, 'Étudiants': stats.totalEtudiants }" :key="label"
@@ -88,7 +97,7 @@ const getParcoursForMention = (mentionId) => {
        <div class="flex items-center gap-4">
           <select v-model="store.filtres.mention" class="bg-[#F8FBFF] border-2 border-[#BFDBFE] p-3.5 rounded-2xl font-bold text-[#0C2340] outline-none focus:border-[#38BDF8]">
              <option value="toutes">Toutes les mentions</option>
-             <option v-for="m in MOCK_MENTIONS" :key="m.id" :value="m.id">{{ m.icone }} {{ m.nom }}</option>
+             <option v-for="m in store.mentions" :key="m.id" :value="m.id">{{ m.icone }} {{ m.nom }}</option>
           </select>
 
           <div class="flex bg-[#F8FBFF] p-1.5 rounded-2xl border-2 border-[#BFDBFE]">

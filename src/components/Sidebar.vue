@@ -1,7 +1,6 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
 import {
   LayoutDashboard,
   Users,
@@ -22,7 +21,6 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 const route = useRoute()
 const router = useRouter()
-const authStore = useAuthStore()
 
 const menuItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -107,28 +105,11 @@ const isActive = (path) => route.path === path
       </router-link>
     </nav>
 
-    <!-- Bottom User Section -->
+    <!-- Bottom Section (Simplified) -->
     <div class="p-6 border-t border-[#F0F7FF] bg-gradient-to-b from-white to-[#F0F9FF]">
-      <div class="flex items-center gap-4 mb-6" :class="{ 'justify-center': !isOpen }">
-        <div class="w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br from-[#38BDF8] to-[#0EA5E9] p-[2px] shadow-lg">
-          <div class="w-full h-full rounded-[0.9rem] bg-white flex items-center justify-center">
-            <span class="text-[#0284C7] font-black text-lg">{{ authStore.user?.name?.charAt(0) || 'A' }}</span>
-          </div>
-        </div>
-        <div v-if="isOpen" class="flex flex-col min-w-0">
-          <span class="text-sm font-black text-[#0C2340] truncate leading-none mb-1">{{ authStore.user?.name }}</span>
-          <span class="text-[9px] font-black text-[#64A8CC] uppercase tracking-widest">{{ authStore.role }}</span>
-        </div>
+      <div v-if="isOpen" class="text-center">
+        <span class="text-[9px] font-black text-[#64A8CC] uppercase tracking-[0.2em]">EMIT Timeline v1.0</span>
       </div>
-
-      <button
-        @click="handleLogout"
-        class="w-full flex items-center h-12 px-4 rounded-2xl text-[#DC2626] hover:bg-red-50 transition-all duration-300 group"
-        :class="{ 'justify-center': !isOpen }"
-      >
-        <LogOut :size="20" class="shrink-0 transition-transform group-hover:rotate-12" />
-        <span v-if="isOpen" class="ml-4 text-xs font-black uppercase tracking-[0.2em]">Quitter</span>
-      </button>
     </div>
   </aside>
 </template>

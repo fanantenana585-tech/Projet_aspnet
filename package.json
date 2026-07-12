@@ -7,9 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start:backend": "dotnet run --project ../ASPE_NET/backend/BackendApi.csproj",
+    "start:backend": "dotnet run --project backend/BackendApi.csproj",
     "start:frontend": "vite",
-    "start:all": "concurrently \"dotnet run --project ../ASPE_NET/backend/BackendApi.csproj\" \"vite\""
+    "start:all": "concurrently \"dotnet run --project backend/BackendApi.csproj\" \"vite\""
   },
   "dependencies": {
     "chart.js": "^4.5.1",

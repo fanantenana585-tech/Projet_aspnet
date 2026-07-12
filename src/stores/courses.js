@@ -20,7 +20,8 @@ export const useCoursesStore = defineStore('courses', {
   actions: {
     async fetchCourses() {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/courses');
+        const base = import.meta.env.VITE_API_BASE_URL ?? '';
+        const res = await fetch(base + '/api/courses');
         if (res.ok) {
           this.courses = await res.json();
         }
@@ -31,7 +32,8 @@ export const useCoursesStore = defineStore('courses', {
 
     async addCourse(course) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/courses', {
+        const base = import.meta.env.VITE_API_BASE_URL ?? '';
+        const res = await fetch(base + '/api/courses', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(course)
@@ -47,7 +49,8 @@ export const useCoursesStore = defineStore('courses', {
 
     async removeCourse(id) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/courses/${id}`, { method: 'DELETE' });
+        const base = import.meta.env.VITE_API_BASE_URL ?? '';
+        const res = await fetch(base + `/api/courses/${id}`, { method: 'DELETE' });
         if (res.ok) {
           this.courses = this.courses.filter(c => c.id !== id);
         }

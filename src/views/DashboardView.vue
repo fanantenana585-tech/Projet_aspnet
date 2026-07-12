@@ -1,26 +1,40 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useAuthStore } from '../stores/auth'
+import { ref, onMounted, computed } from 'vue'
+import { useMatiereStore } from '../stores/matiereStore'
+import { useEnseignantStore } from '../stores/enseignantStore'
+import { useSalleStore } from '../stores/salleStore'
+import { useEmploiStore } from '../stores/emploiStore'
 import StatCard from '../components/StatCard.vue'
-import ChartWidget from '../components/ChartWidget.vue'
-import RecentActivity from '../components/RecentActivity.vue'
-import { statsData, activitiesData, todayCourses, chartData } from '../data/mockData'
-import { Clock, MapPin, User, GraduationCap, ChevronRight, Activity, Calendar as CalendarIcon } from 'lucide-vue-next'
+import { Clock, MapPin, User, GraduationCap, ChevronRight, Activity, Calendar as CalendarIcon, BookOpen, Users, Building2 } from 'lucide-vue-next'
 
-const authStore = useAuthStore()
+const matiereStore = useMatiereStore()
+const enseignantStore = useEnseignantStore()
+const salleStore = useSalleStore()
+const emploiStore = useEmploiStore()
+
 const isLoading = ref(true)
 
-onMounted(() => {
-  setTimeout(() => {
-    isLoading.value = false
-  }, 1000)
+onMounted(async () => {
+  await Promise.all([
+    matiereStore.fetchMatieres(),
+    enseignantStore.fetchEnseignants(),
+    salleStore.fetchSalles(),
+    emploiStore.fetchEmplois()
+  ])
+  isLoading.value = false
 })
+
+const statsData = computed(() => [
+  { label: 'Matières', value: matiereStore.matieres.length, icon: BookOpen, color: '#38BDF8', trend: '+2 cette semaine' },
+  { label: 'Enseignants', value: enseignantStore.enseignants.length, icon: Users, color: '#059669', trend: 'Actifs' },
+  { label: 'Salles', value: salleStore.salles.length, icon: Building2, color: '#F59E0B', trend: `${salleStore.stats.disponible} libres` },
+  { label: 'Cours aujourd\'hui', value: emploiStore.emplois.length, icon: Clock, color: '#EC4899', trend: 'Planning' }
+])
 
 const getStatusClass = (status) => {
   switch (status) {
     case 'En cours': return 'bg-emerald-100 text-emerald-700 border-emerald-200'
     case 'À venir': return 'bg-blue-100 text-blue-700 border-blue-200'
-    case 'Terminé': return 'bg-gray-100 text-gray-700 border-gray-200'
     default: return 'bg-gray-100 text-gray-700'
   }
 }
@@ -34,7 +48,7 @@ const getStatusClass = (status) => {
       <div>
         <div class="flex items-center gap-4 mb-3">
           <h1 class="text-4xl font-black text-[#0C2340] tracking-tight">
-            Bonjour, <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#38BDF8] to-[#0EA5E9]">{{ authStore.user?.name || 'Admin' }}</span> 👋
+            Bonjour, <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#38BDF8] to-[#0EA5E9]">Administrateur</span> 👋
           </h1>
         </div>
         <div class="flex items-center gap-4 text-[#1E5F8E]">
@@ -59,7 +73,7 @@ const getStatusClass = (status) => {
           <Activity :size="18" class="text-[#38BDF8]" />
           Rapports
         </button>
-        <button class="bg-gradient-to-r from-[#38BDF8] to-[#0EA5E9] hover:brightness-110 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest transition-all shadow-xl shadow-[#38BDF8]/20 text-xs">
+        <button @click="emploiStore.ouvrirModal()" class="bg-gradient-to-r from-[#38BDF8] to-[#0EA5E9] hover:brightness-110 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest transition-all shadow-xl shadow-[#38BDF8]/20 text-xs">
           Nouveau Cours
         </button>
       </div>
@@ -74,25 +88,6 @@ const getStatusClass = (status) => {
       />
     </section>
 
-    <!-- SECTION 3: Charts & Activity -->
-    <section class="grid grid-cols-1 xl:grid-cols-3 gap-10 items-stretch animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-      <div class="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <ChartWidget
-          type="donut"
-          title="Répartition par filière"
-          :data="chartData.distribution"
-        />
-        <ChartWidget
-          type="bar"
-          title="Charge horaire (h/semaine)"
-          :data="chartData.workload"
-        />
-      </div>
-      <div class="h-full">
-        <RecentActivity :activities="activitiesData" />
-      </div>
-    </section>
-
     <!-- SECTION 4: Today's Schedule -->
     <section class="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
       <div class="flex items-center justify-between mb-8 px-2">
@@ -105,14 +100,18 @@ const getStatusClass = (status) => {
             <p class="text-xs text-[#64A8CC] font-bold uppercase tracking-widest mt-0.5">Planning temps réel</p>
           </div>
         </div>
-        <button class="text-xs font-black uppercase tracking-widest text-[#1E5F8E] hover:text-[#38BDF8] flex items-center gap-2 transition-colors group">
+        <router-link to="/emplois-du-temps" class="text-xs font-black uppercase tracking-widest text-[#1E5F8E] hover:text-[#38BDF8] flex items-center gap-2 transition-colors group">
           Emploi du temps complet <ChevronRight :size="18" class="group-hover:translate-x-1 transition-transform" />
-        </button>
+        </router-link>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-6 overflow-x-auto pb-6 custom-scrollbar">
+      <div v-if="emploiStore.emplois.length === 0" class="bg-white p-12 rounded-[2.5rem] border border-[#BFDBFE] text-center">
+         <p class="text-[#64A8CC] font-bold uppercase tracking-widest text-xs">Aucun cours prévu pour aujourd'hui</p>
+      </div>
+
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-6 overflow-x-auto pb-6 custom-scrollbar">
         <div
-          v-for="course in todayCourses"
+          v-for="course in emploiStore.emplois"
           :key="course.id"
           class="bg-white p-6 rounded-[2rem] border border-[#BFDBFE] shadow-xl hover:shadow-[0_20px_50px_rgba(14,165,233,0.1)] hover:border-[#38BDF8] transition-all flex flex-col justify-between min-w-[300px] relative overflow-hidden group"
         >
@@ -120,32 +119,26 @@ const getStatusClass = (status) => {
           <div class="absolute top-0 right-0 w-24 h-24 bg-[#F0F9FF] rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110"></div>
 
           <div class="flex justify-between items-start mb-6 relative z-10">
-            <span class="text-[10px] font-black text-[#38BDF8] bg-[#F0F9FF] px-3 py-1.5 rounded-xl border border-[#BFDBFE] uppercase tracking-widest">{{ course.time }}</span>
-            <span :class="['text-[9px] font-black px-3 py-1.5 rounded-xl border uppercase tracking-widest', getStatusClass(course.status)]">
-              {{ course.status }}
+            <span class="text-[10px] font-black text-[#38BDF8] bg-[#F0F9FF] px-3 py-1.5 rounded-xl border border-[#BFDBFE] uppercase tracking-widest">{{ course.heureDebut }}</span>
+            <span :class="['text-[9px] font-black px-3 py-1.5 rounded-xl border uppercase tracking-widest', getStatusClass('À venir')]">
+              À venir
             </span>
           </div>
 
-          <h3 class="text-xl font-black text-[#0C2340] mb-6 line-clamp-1 relative z-10">{{ course.subject }}</h3>
+          <h3 class="text-xl font-black text-[#0C2340] mb-6 line-clamp-1 relative z-10">{{ course.matiere.nom }}</h3>
 
           <div class="space-y-4 relative z-10">
             <div class="flex items-center gap-3 text-sm text-[#1E5F8E]">
               <div class="w-8 h-8 rounded-lg bg-[#F8FBFF] flex items-center justify-center text-[#64A8CC] border border-[#F0F7FF]">
                 <User :size="14" />
               </div>
-              <span class="font-bold truncate">{{ course.teacher }}</span>
+              <span class="font-bold truncate">{{ course.enseignant.nom }}</span>
             </div>
             <div class="flex items-center gap-3 text-sm text-[#1E5F8E]">
               <div class="w-8 h-8 rounded-lg bg-[#F8FBFF] flex items-center justify-center text-[#64A8CC] border border-[#F0F7FF]">
                 <MapPin :size="14" />
               </div>
-              <span class="font-bold">{{ course.room }}</span>
-            </div>
-            <div class="flex items-center gap-3 text-sm text-[#1E5F8E]">
-              <div class="w-8 h-8 rounded-lg bg-[#F8FBFF] flex items-center justify-center text-[#64A8CC] border border-[#F0F7FF]">
-                <GraduationCap :size="14" />
-              </div>
-              <span class="font-black text-[#38BDF8] text-xs uppercase tracking-widest">{{ course.branch }}</span>
+              <span class="font-bold">{{ course.salle.nom }}</span>
             </div>
           </div>
         </div>

@@ -3,94 +3,124 @@ import { defineStore } from 'pinia';
 export const useFiliereStore = defineStore('filiere', {
   state: () => ({
     mentions: [],
-    parcours: [],
+    parcours: [], // Flattened list for searching and filtering
     loading: false,
     error: null,
-    backendFilieres: []
+    notification: { type: '', text: '' },
+    filtres: {
+      search: '',
+      mention: 'toutes',
+      niveau: 'tous',
+      statut: 'toutes',
+      ouvertConcours: false
+    },
+    modeVue: 'mentions',
+    modalOuverte: false,
+    parcoursEnEdition: null
   }),
 
   getters: {
-    // Liste des mentions (Informatique, Économie, etc.)
-    getMentions: (state) => state.mentions,
-
-    // Liste complète de tous les parcours
-    getAllParcours: (state) => state.parcours,
-
-    // Obtenir les parcours d'une mention spécifique
-    getParcoursByMention: (state) => (mentionId) => {
-      return state.parcours.filter(p => p.mentionId === mentionId);
+    parcoursFiltres: (state) => {
+      return state.parcours.filter(p => {
+        const matchSearch = p.nom.toLowerCase().includes(state.filtres.search.toLowerCase()) ||
+                            p.code.toLowerCase().includes(state.filtres.search.toLowerCase());
+        const matchMention = state.filtres.mention === 'toutes' || p.mentionId === state.filtres.mention;
+        const matchConcours = !state.filtres.ouvertConcours || p.ouvertConcours;
+        const matchStatut = state.filtres.statut === 'toutes' ||
+          (state.filtres.statut === 'actif' && p.actif) ||
+          (state.filtres.statut === 'inactif' && !p.actif);
+        return matchSearch && matchMention && matchConcours && matchStatut;
+      });
     },
-
-    // Total des étudiants
-    totalEtudiants: (state) => {
-      return state.parcours.reduce((total, p) => total + (p.nbEtudiants || 0), 0);
-    },
-
-    // Total des parcours
-    totalParcours: (state) => state.parcours.length
+    statsGlobales: (state) => {
+      const totalEtudiants = state.parcours.reduce((acc, p) => acc + (p.nbEtudiants || 0), 0);
+      const totalParcours = state.parcours.length;
+      const totalLicences = state.parcours.filter(p => p.niveau === 'Licence').length;
+      const totalMasters = state.parcours.filter(p => p.niveau === 'Master').length;
+      return { totalEtudiants, totalParcours, totalLicences, totalMasters };
+    }
   },
 
   actions: {
-    async fetchFilieresFromApi() {
+    ouvrirModal(p = null) {
+      this.parcoursEnEdition = p;
+      this.modalOuverte = true;
+    },
+    fermerModal() {
+      this.modalOuverte = false;
+    },
+    async fetchFilieres() {
       this.loading = true;
-      this.error = null;
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/filieres');
-        if (!res.ok) throw new Error('Échec du chargement des filières');
-        const data = await res.json();
-        
-        if (data.mentions) this.mentions = data.mentions;
-        if (data.parcours) this.parcours = data.parcours;
+        const res = await fetch('/api/filieres');
+        if (res.ok) {
+          const data = await res.json();
+          this.mentions = data;
+          // Flatten parcours for the list/grid views
+          const allParcours = [];
+          data.forEach(m => {
+            m.parcours.forEach(p => {
+              allParcours.push({
+                ...p,
+                actif: p.actif ?? true,
+                mentionNom: m.nom,
+                mentionIcone: m.icone,
+                mentionCouleur: m.couleur,
+                responsable: { nom: m.responsableNom, prenom: m.responsablePrenom },
+                couleur: m.couleur // Use mention color as default for parcours
+              });
+            });
+          });
+          this.parcours = allParcours;
+        }
       } catch (err) {
-        console.error('fetchFilieresFromApi', err);
-        this.error = 'Impossible de se connecter à la base de données.';
-        this.mentions = [];
-        this.parcours = [];
+        console.error(err);
+        this.error = "Erreur de chargement des filières";
       } finally {
         this.loading = false;
       }
     },
-    async ajouterFiliere(data) {
-      try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/filieres', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        if (!res.ok) throw new Error('Erreur création');
-        const created = await res.json();
-        this.parcours.unshift(created);
-      } catch (err) {
-        console.error('ajouterFiliere error:', err);
-        throw err;
-      }
+    setNotification(type, text) {
+      this.notification = { type, text };
     },
-    async modifierFiliere(id, data) {
-      try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/filieres/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        if (!res.ok) throw new Error('Erreur modification');
-        const index = this.parcours.findIndex(p => p.id === id);
-        if (index !== -1) {
-          this.parcours[index] = { ...this.parcours[index], ...data };
+    async ajouterParcours(data) {
+        try {
+            const res = await fetch('/api/filieres/parcours', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const body = await res.json().catch(() => null);
+            if (res.ok) {
+                this.setNotification('success', 'Parcours ajouté avec succès.');
+                await this.fetchFilieres();
+                this.fermerModal();
+                return true;
+            }
+            // Gestion des erreurs de validation du backend (400)
+            if (res.status === 400) {
+                const errorMessage = body || 'Erreur de validation';
+                this.setNotification('error', errorMessage);
+                return false;
+            }
+            const errorMessage = body?.title || body?.message || JSON.stringify(body) || res.statusText;
+            this.setNotification('error', `Erreur : ${errorMessage}`);
+            return false;
+        } catch (err) {
+            console.error(err);
+            this.setNotification('error', 'Erreur réseau lors de l’ajout du parcours.');
+            return false;
         }
-      } catch (err) {
-        console.error('modifierFiliere error:', err);
-        throw err;
-      }
     },
-    async supprimerFiliere(id) {
-      try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/filieres/${id}`, { method: 'DELETE' });
-        if (!res.ok) throw new Error('Erreur suppression');
-        this.parcours = this.parcours.filter(p => p.id !== id);
-      } catch (err) {
-        console.error('supprimerFiliere error:', err);
-        throw err;
-      }
+    async supprimerParcours(id) {
+        try {
+            const res = await fetch(`/api/filieres/parcours/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                await this.fetchFilieres();
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
   }
 });

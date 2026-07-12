@@ -7,10 +7,18 @@ import { Plus, Trash2, GripVertical, Calendar as CalendarIcon, Clock } from 'luc
 
 const store = useParametresStore()
 const systeme = reactive({ ...store.systeme })
+
+const save = async () => {
+    await store.updateSysteme(systeme)
+    alert('Paramètres académiques enregistrés !')
+}
 </script>
 
 <template>
   <div class="space-y-8 animate-in fade-in duration-500">
+    <div class="flex justify-end">
+        <button @click="save" class="bg-emit-blue text-white px-6 py-2 rounded-xl font-bold hover:brightness-110 transition-all shadow-lg shadow-emit-blue/20">Enregistrer les modifications</button>
+    </div>
     <!-- Academic Year Section -->
     <section class="bg-[#1E293B] rounded-3xl border border-gray-800 p-8 shadow-xl">
       <h3 class="text-xl font-black text-white mb-8">Année scolaire</h3>

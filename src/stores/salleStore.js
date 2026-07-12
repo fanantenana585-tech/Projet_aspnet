@@ -43,7 +43,7 @@ export const useSalleStore = defineStore('salle', {
       this.loading = true;
       this.error = null;
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/salles');
+        const res = await fetch('/api/salles');
         if (!res.ok) throw new Error('Échec du chargement des salles');
         this.salles = await res.json();
       } catch (err) {
@@ -57,7 +57,7 @@ export const useSalleStore = defineStore('salle', {
 
     async ajouterSalle(data) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/salles', {
+        const res = await fetch('/api/salles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -73,7 +73,7 @@ export const useSalleStore = defineStore('salle', {
 
     async modifierSalle(id, data) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/salles/${id}`, {
+        const res = await fetch(`/api/salles/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -91,7 +91,7 @@ export const useSalleStore = defineStore('salle', {
 
     async supprimerSalle(id) {
       try {
-        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/salles/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/salles/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error('Erreur suppression');
         this.salles = this.salles.filter(s => s.id !== id);
       } catch (err) {
