@@ -40,22 +40,22 @@ const changeSemaine = (val) => {
           <div class="flex bg-gray-50 p-1.5 rounded-2xl border border-gray-100 shadow-inner">
              <button @click="currentView = 'grid'"
                      class="px-8 py-3 rounded-xl text-xs font-bold transition-all"
-                     :class="currentView === 'grid' ? 'bg-[#0D1B3E] text-white shadow-xl' : 'text-gray-400 hover:text-gray-600'">
+                     :class="currentView === 'grid' ? 'bg-[#0D1B3E] text-white shadow-xl' : 'text-[#0C2340] hover:text-gray-600'">
                Grille hebdomadaire
              </button>
              <button @click="currentView = 'exceptions'"
                      class="px-8 py-3 rounded-xl text-xs font-bold transition-all"
-                     :class="currentView === 'exceptions' ? 'bg-[#0D1B3E] text-white shadow-xl' : 'text-gray-400 hover:text-gray-600'">
+                     :class="currentView === 'exceptions' ? 'bg-[#0D1B3E] text-white shadow-xl' : 'text-[#0C2340] hover:text-gray-600'">
                Semaines bloquées
              </button>
           </div>
 
           <div v-if="currentView === 'grid'" class="flex items-center gap-3">
-             <button @click="changeSemaine(-1)" class="w-10 h-10 rounded-xl bg-white border border-gray-100 text-gray-400 hover:text-[#0D1B3E] transition-all flex items-center justify-center"><i class="fas fa-chevron-left"></i></button>
+             <button @click="changeSemaine(-1)" class="w-10 h-10 rounded-xl bg-white border border-gray-100 text-[#0C2340] hover:text-[#0D1B3E] transition-all flex items-center justify-center"><i class="fas fa-chevron-left"></i></button>
              <div class="bg-white px-6 py-2.5 rounded-xl border border-gray-100 font-bold text-[#0D1B3E] shadow-sm min-w-[140px] text-center">
                 Semaine {{ currentSemaine }}
              </div>
-             <button @click="changeSemaine(1)" class="w-10 h-10 rounded-xl bg-white border border-gray-100 text-gray-400 hover:text-[#0D1B3E] transition-all flex items-center justify-center"><i class="fas fa-chevron-right"></i></button>
+             <button @click="changeSemaine(1)" class="w-10 h-10 rounded-xl bg-white border border-gray-100 text-[#0C2340] hover:text-[#0D1B3E] transition-all flex items-center justify-center"><i class="fas fa-chevron-right"></i></button>
           </div>
         </div>
 
@@ -64,7 +64,7 @@ const changeSemaine = (val) => {
              <button v-for="p in promotions" :key="p"
                      @click="selectedPromotion = p"
                      class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
-                     :class="selectedPromotion === p ? 'bg-white text-[#0D1B3E] shadow-md' : 'text-gray-400 hover:text-gray-600'">
+                     :class="selectedPromotion === p ? 'bg-white text-[#0D1B3E] shadow-md' : 'text-[#0C2340] hover:text-gray-600'">
                {{ p }}
              </button>
            </div>
@@ -81,7 +81,7 @@ const changeSemaine = (val) => {
           <div v-if="currentView === 'grid'" key="grid" class="flex-1 flex flex-col min-h-0">
              <div class="mb-10 animate-in fade-in slide-in-from-left-4">
                 <h1 class="text-4xl font-poppins font-black text-[#0D1B3E] tracking-tight">Emploi du Temps <span class="text-[#1D9E75]">EMIT</span></h1>
-                <p class="text-gray-400 font-medium mt-1">Gestion académique de la promotion {{ selectedPromotion }}</p>
+                <p class="text-[#0C2340] font-medium mt-1">Gestion académique de la promotion {{ selectedPromotion }}</p>
              </div>
              <MainGrid
                :promotion="selectedPromotion"

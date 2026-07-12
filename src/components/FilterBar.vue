@@ -30,7 +30,7 @@ const handleLevelChange = (lvl) => {
   <div class="bg-white border-b border-gray-200 p-4 flex flex-wrap items-center gap-4">
     <!-- Mention -->
     <div class="flex flex-col gap-1">
-      <label class="text-xs font-bold text-gray-500 uppercase">Mention</label>
+      <label class="text-xs font-bold text-gray-700 uppercase">Mention</label>
       <select
         :value="filters.mentionId"
         @change="handleMentionChange($event.target.value)"
@@ -43,7 +43,7 @@ const handleLevelChange = (lvl) => {
 
     <!-- Niveau -->
     <div class="flex flex-col gap-1">
-      <label class="text-xs font-bold text-gray-500 uppercase">Niveau</label>
+      <label class="text-xs font-bold text-gray-700 uppercase">Niveau</label>
       <select
         :value="filters.level"
         @change="handleLevelChange($event.target.value)"
@@ -56,7 +56,7 @@ const handleLevelChange = (lvl) => {
 
     <!-- Parcours -->
     <div class="flex flex-col gap-1">
-      <label class="text-xs font-bold text-gray-500 uppercase">Parcours</label>
+      <label class="text-xs font-bold text-gray-700 uppercase">Parcours</label>
       <select
         :value="filters.path"
         @change="emit('updateFilters', { ...filters, path: $event.target.value })"
@@ -70,7 +70,7 @@ const handleLevelChange = (lvl) => {
 
     <!-- Semestre -->
     <div class="flex flex-col gap-1">
-      <label class="text-xs font-bold text-gray-500 uppercase">Semestre</label>
+      <label class="text-xs font-bold text-gray-700 uppercase">Semestre</label>
       <select
         :value="filters.semester"
         @change="emit('updateFilters', { ...filters, semester: $event.target.value })"
@@ -86,7 +86,7 @@ const handleLevelChange = (lvl) => {
         <ChevronLeft :size="20" />
       </button>
       <div class="text-center min-w-[100px]">
-        <span class="text-xs font-bold text-gray-500 uppercase block leading-tight">Semaine</span>
+        <span class="text-xs font-bold text-gray-700 uppercase block leading-tight">Semaine</span>
         <span class="text-lg font-title font-bold text-[#0D1B3E]">{{ currentWeek }}</span>
       </div>
       <button @click="emit('updateWeek', currentWeek + 1)" class="p-2 hover:bg-gray-100 rounded-full transition-colors">

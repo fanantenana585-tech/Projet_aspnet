@@ -36,9 +36,9 @@ const toggleCell = (day, hour) => {
         <div class="p-8 border-b border-gray-100 flex items-center justify-between bg-[#F7F9FC]">
           <div>
             <h2 class="text-2xl font-poppins font-bold text-[#0D1B3E]">Saisie des disponibilités</h2>
-            <p class="text-sm text-gray-500 mt-1">Déclarez vos heures de présence pour la semaine {{ currentSemaine }}</p>
+            <p class="text-sm text-gray-700 mt-1">Déclarez vos heures de présence pour la semaine {{ currentSemaine }}</p>
           </div>
-          <button @click="emit('close')" class="w-12 h-12 rounded-2xl bg-white text-gray-400 hover:text-red-500 transition-colors shadow-sm flex items-center justify-center">
+          <button @click="emit('close')" class="w-12 h-12 rounded-2xl bg-white text-[#0C2340] hover:text-red-500 transition-colors shadow-sm flex items-center justify-center">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -46,7 +46,7 @@ const toggleCell = (day, hour) => {
         <!-- Filters & Status -->
         <div class="px-8 py-6 bg-white border-b border-gray-100 flex items-center justify-between">
            <div class="flex items-center gap-4">
-              <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Enseignant</label>
+              <label class="text-xs font-black uppercase text-[#0C2340] tracking-widest">Enseignant</label>
               <select v-model="selectedProfId" class="bg-gray-50 border-none rounded-xl text-sm font-bold focus:ring-0 px-4 py-2.5 min-w-[200px]">
                 <option v-for="p in professorsStore.professors" :key="p.id" :value="p.id">{{ p.prenom }} {{ p.nom }}</option>
               </select>

@@ -9,6 +9,8 @@ import {
 import EnseignantCard from '../components/enseignants/EnseignantCard.vue'
 import EnseignantModal from '../components/enseignants/EnseignantModal.vue'
 import EnseignantDetail from '../components/enseignants/EnseignantDetail.vue'
+import EnseignantsTable from '../components/enseignants/EnseignantsTable.vue'
+import FeedbackToast from '../components/ui/FeedbackToast.vue'
 
 const store = useEnseignantStore()
 
@@ -18,6 +20,8 @@ const isDetailOpen = ref(false)
 const selectedEnseignant = ref(null)
 const showDeleteConfirm = ref(false)
 const idToDelete = ref(null)
+const showToast = ref(false)
+const toastMessage = ref('')
 
 const specialites = ['Toutes', 'Informatique', 'Mathématiques', 'Management', 'Communication', 'Economie', 'Réseaux', 'Droit']
 
@@ -42,12 +46,21 @@ const openDetail = (enseignant) => {
 }
 
 const saveEnseignant = (data) => {
-  if (selectedEnseignant.value) {
+  const isEditing = !!selectedEnseignant.value;
+  if (isEditing) {
     store.modifierEnseignant(selectedEnseignant.value.id, data)
+    toastMessage.value = 'Enseignant modifié avec succès'
   } else {
     store.ajouterEnseignant(data)
+    toastMessage.value = 'Enseignant ajouté avec succès'
   }
   isModalOpen.value = false
+  
+  // Show toast
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 3000)
 }
 
 const confirmDelete = (id) => {
@@ -147,72 +160,83 @@ const executeDelete = () => {
       </div>
     </div>
 
-    <!-- Grid View -->
-    <div v-if="store.viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <TransitionGroup
-        enter-active-class="transition duration-500 ease-out"
-        enter-from-class="opacity-0 translate-y-12"
-        enter-to-class="opacity-100 translate-y-0"
-      >
-        <EnseignantCard
-          v-for="e in store.enseignantsFiltres"
-          :key="e.id"
-          :enseignant="e"
-          @view="openDetail"
-          @edit="openEditModal"
-          @delete="confirmDelete"
-        />
-      </TransitionGroup>
+    <!-- Error State -->
+    <div v-if="store.error" class="bg-red-50 text-red-600 p-6 rounded-2xl border border-red-200 text-center font-bold shadow-sm animate-in fade-in duration-500">
+      {{ store.error }}
     </div>
 
-    <!-- List View -->
-    <div v-else class="bg-white rounded-[2.5rem] border border-[#BFDBFE] overflow-hidden shadow-2xl animate-in fade-in duration-700">
-      <table class="w-full text-left">
-        <thead>
-          <tr class="bg-[#F8FBFF] border-b border-[#BFDBFE]">
-            <th class="px-10 py-6 text-[10px] font-black text-[#1E5F8E] uppercase tracking-[0.2em]">Enseignant</th>
-            <th class="px-10 py-6 text-[10px] font-black text-[#1E5F8E] uppercase tracking-[0.2em]">Spécialité</th>
-            <th class="px-10 py-6 text-[10px] font-black text-[#1E5F8E] uppercase tracking-[0.2em]">Grade</th>
-            <th class="px-10 py-6 text-[10px] font-black text-[#1E5F8E] uppercase tracking-[0.2em]">Statut</th>
-            <th class="px-10 py-6 text-[10px] font-black text-[#1E5F8E] uppercase tracking-[0.2em] text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-[#F0F7FF]">
-          <tr v-for="e in store.enseignantsFiltres" :key="e.id" class="hover:bg-[#F0F9FF]/50 transition-colors group">
-            <td class="px-10 py-6">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#38BDF8] to-[#0EA5E9] flex items-center justify-center text-white font-black shadow-lg">
-                  {{ e.prenom.charAt(0) }}{{ e.nom.charAt(0) }}
-                </div>
-                <div>
-                  <p class="text-sm font-black text-[#0C2340]">{{ e.prenom }} {{ e.nom }}</p>
-                  <p class="text-[10px] font-bold text-[#64A8CC] uppercase tracking-widest">{{ e.email }}</p>
-                </div>
-              </div>
-            </td>
-            <td class="px-10 py-6">
-              <span class="px-3 py-1.5 bg-[#F0F9FF] text-[#0284C7] rounded-full text-[10px] font-black uppercase tracking-widest border border-[#BFDBFE]">
-                {{ e.specialite }}
-              </span>
-            </td>
-            <td class="px-10 py-6 text-sm font-bold text-[#1E5F8E]">{{ e.grade }}</td>
-            <td class="px-10 py-6">
-              <div :class="['px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border inline-flex items-center gap-2',
-                e.statut === 'Actif' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-red-50 text-red-600 border-red-100']">
-                <div :class="['w-1.5 h-1.5 rounded-full', e.statut === 'Actif' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500']"></div>
-                {{ e.statut }}
-              </div>
-            </td>
-            <td class="px-10 py-6 text-right">
-              <div class="flex justify-end gap-3">
-                <button @click="openDetail(e)" class="p-2.5 text-[#64A8CC] hover:text-[#38BDF8] transition-colors"><Eye :size="20" /></button>
-                <button @click="openEditModal(e)" class="p-2.5 text-[#64A8CC] hover:text-orange-500 transition-colors"><Edit2 :size="20" /></button>
-                <button @click="confirmDelete(e.id)" class="p-2.5 text-[#64A8CC] hover:text-red-500 transition-colors"><Trash2 :size="20" /></button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Loading Skeleton -->
+    <div v-else-if="store.loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-for="n in 6" :key="n" class="bg-white rounded-[2.5rem] border border-[#BFDBFE] p-8 shadow-xl animate-pulse">
+        <div class="flex justify-between items-start mb-8">
+          <div class="w-16 h-16 rounded-[1.25rem] bg-gray-200"></div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="w-16 h-4 bg-gray-200 rounded-full"></div>
+            <div class="w-24 h-4 bg-gray-200 rounded-full"></div>
+          </div>
+        </div>
+        <div class="mb-8 space-y-2">
+          <div class="h-6 bg-gray-200 rounded-full w-3/4"></div>
+          <div class="h-3 bg-gray-200 rounded-full w-1/2"></div>
+        </div>
+        <div class="space-y-4 mb-8">
+          <div class="h-4 bg-gray-200 rounded-full w-full"></div>
+          <div class="h-4 bg-gray-200 rounded-full w-5/6"></div>
+          <div class="h-4 bg-gray-200 rounded-full w-4/6"></div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex-1 h-12 bg-gray-200 rounded-2xl"></div>
+          <div class="flex-1 h-12 bg-gray-200 rounded-2xl"></div>
+          <div class="flex-1 h-12 bg-gray-200 rounded-2xl"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid View -->
+    <div v-else-if="store.viewMode === 'grid'">
+      <!-- Empty State -->
+      <div v-if="store.enseignantsFiltres.length === 0" class="flex flex-col items-center justify-center py-20 text-center bg-white rounded-[2.5rem] border border-[#BFDBFE] shadow-xl animate-in fade-in duration-500">
+        <div class="w-24 h-24 bg-[#F0F9FF] rounded-full flex items-center justify-center mb-6 text-[#38BDF8] shadow-inner">
+          <Search v-if="store.enseignants.length > 0" :size="48" />
+          <Users v-else :size="48" />
+        </div>
+        <h3 class="text-xl font-black text-[#0C2340] mb-2 uppercase tracking-tight">
+          {{ store.enseignants.length > 0 ? 'Aucun enseignant ne correspond à votre recherche' : 'Aucun enseignant enregistré pour le moment' }}
+        </h3>
+        <p class="text-[#64A8CC] font-bold mb-8">
+          {{ store.enseignants.length > 0 ? 'Essayez de modifier vos filtres ou termes de recherche.' : 'Commencez par ajouter un nouvel enseignant dans le système.' }}
+        </p>
+        <button v-if="store.enseignants.length === 0" @click="openAddModal" class="bg-gradient-to-r from-[#38BDF8] to-[#0EA5E9] text-white px-8 py-4 rounded-[2rem] font-black uppercase tracking-widest text-xs flex items-center gap-3 shadow-xl hover:brightness-110 transition-all">
+          <Plus :size="18" /> Ajouter un enseignant
+        </button>
+      </div>
+
+      <!-- Grid Content -->
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <TransitionGroup
+          enter-active-class="transition duration-500 ease-out"
+          enter-from-class="opacity-0 translate-y-12"
+          enter-to-class="opacity-100 translate-y-0"
+        >
+          <EnseignantCard
+            v-for="e in store.enseignantsFiltres"
+            :key="e.id"
+            :enseignant="e"
+            @view="openDetail"
+            @edit="openEditModal"
+            @delete="confirmDelete"
+          />
+        </TransitionGroup>
+      </div>
+    </div>
+
+    <!-- List View (Dark Theme Table) -->
+    <div v-else class="animate-in fade-in duration-700">
+      <EnseignantsTable 
+        :enseignants="store.enseignantsFiltres"
+        @edit="openEditModal"
+        @delete="confirmDelete"
+      />
     </div>
 
     <!-- Modals & Detail -->
@@ -243,5 +267,8 @@ const executeDelete = () => {
         </div>
       </div>
     </Transition>
+
+    <!-- Toast Notification -->
+    <FeedbackToast :show="showToast" :message="toastMessage" />
   </div>
 </template>

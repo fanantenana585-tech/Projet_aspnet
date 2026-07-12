@@ -101,7 +101,7 @@ const exportProgress = ref(0);
           <i class="fas fa-file-pdf"></i>
         </div>
         <h3 class="text-xl font-black text-slate-900 mb-2">Génération du PDF multi-pages</h3>
-        <p class="text-slate-500 text-sm mb-6 font-bold uppercase tracking-widest">Veuillez patienter pendant la capture des {{ store.niveauxVisibles.length }} niveaux...</p>
+        <p class="text-gray-700 text-sm mb-6 font-bold uppercase tracking-widest">Veuillez patienter pendant la capture des {{ store.niveauxVisibles.length }} niveaux...</p>
 
         <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden mb-2">
           <div
@@ -116,7 +116,7 @@ const exportProgress = ref(0);
     <div class="sticky top-[144px] z-[50] bg-[#0F172A] text-white p-4 shadow-xl border-b border-slate-700 flex items-center justify-between">
       <div class="flex items-center gap-6">
         <div class="text-center px-4 border-r border-slate-700">
-          <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Période actuelle</p>
+          <p class="text-[10px] text-[#0C2340] font-bold uppercase tracking-widest">Période actuelle</p>
           <p class="text-xs font-bold">Semaine {{ store.numeroSemaine }} — du {{ store.dateDebutSemaine.split('202')[0] }} au {{ store.dateFinSemaine }}</p>
         </div>
 
@@ -163,7 +163,7 @@ const exportProgress = ref(0);
         <button
           v-if="store.filtreRapideEnseignant !== 'tous' || store.filtreRapideSalle !== 'toutes'"
           @click="store.filtreRapideEnseignant = 'tous'; store.filtreRapideSalle = 'toutes'"
-          class="text-slate-400 hover:text-red-400 transition-colors"
+          class="text-[#0C2340] hover:text-red-400 transition-colors"
           title="Réinitialiser les filtres"
         >
           <span class="text-lg">✕</span>
@@ -172,7 +172,7 @@ const exportProgress = ref(0);
         <div class="h-8 w-[1px] bg-slate-700 mx-2"></div>
 
         <div class="flex flex-col items-end mr-2">
-           <span class="text-[10px] text-slate-400 font-bold uppercase">{{ store.niveauxVisibles.length }} / 5 affichés</span>
+           <span class="text-[10px] text-[#0C2340] font-bold uppercase">{{ store.niveauxVisibles.length }} / 5 affichés</span>
            <button
              @click="handleExportAll"
              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded text-[11px] font-bold flex items-center gap-2 transition-all shadow-lg active:scale-95"

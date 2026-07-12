@@ -32,7 +32,7 @@ const activeTab = ref(tabs[0])
     <!-- Header -->
     <header class="mb-12 animate-in fade-in slide-in-from-left-4 duration-700">
       <h1 class="text-4xl font-black text-white tracking-tight mb-2">Paramètres</h1>
-      <p class="text-gray-400 font-bold">Gérez votre compte, vos préférences et la configuration du système.</p>
+      <p class="text-[#0C2340] font-bold">Gérez votre compte, vos préférences et la configuration du système.</p>
     </header>
 
     <div class="flex flex-col lg:flex-row gap-12 items-start">
@@ -45,12 +45,12 @@ const activeTab = ref(tabs[0])
               <div class="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-emit-blue to-emit-purple flex items-center justify-center text-3xl font-black text-white shadow-2xl">
                 {{ store.profil.prenom.charAt(0) }}{{ store.profil.nom.charAt(0) }}
               </div>
-              <div class="absolute -bottom-2 -right-2 p-2 bg-gray-900 border border-gray-700 rounded-xl text-gray-400 cursor-pointer hover:text-white transition-all shadow-xl">
+              <div class="absolute -bottom-2 -right-2 p-2 bg-gray-900 border border-gray-700 rounded-xl text-[#0C2340] cursor-pointer hover:text-white transition-all shadow-xl">
                 <Camera :size="16" />
               </div>
             </div>
             <h2 class="text-lg font-black text-white">{{ store.profil.prenom }} {{ store.profil.nom }}</h2>
-            <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">{{ store.profil.role }}</p>
+            <p class="text-xs text-gray-700 font-bold uppercase tracking-widest mt-1">{{ store.profil.role }}</p>
           </div>
 
           <!-- Nav Items -->
@@ -60,12 +60,12 @@ const activeTab = ref(tabs[0])
               :key="tab.id"
               @click="activeTab = tab"
               class="w-full flex items-center justify-between p-4 rounded-2xl transition-all group"
-              :class="activeTab.id === tab.id ? 'bg-white text-gray-900 shadow-2xl' : 'text-gray-500 hover:bg-gray-800/50 hover:text-gray-300'"
+              :class="activeTab.id === tab.id ? 'bg-white text-gray-900 shadow-2xl' : 'text-gray-700 hover:bg-gray-800/50 hover:text-[#0C2340]'"
             >
               <div class="flex items-center gap-4">
                 <div
                   class="p-2 rounded-xl transition-colors"
-                  :class="activeTab.id === tab.id ? 'bg-gray-900 text-white' : 'bg-gray-800 text-gray-500 group-hover:text-white'"
+                  :class="activeTab.id === tab.id ? 'bg-gray-900 text-white' : 'bg-gray-800 text-gray-700 group-hover:text-white'"
                 >
                   <component :is="tab.icon" :size="18" />
                 </div>

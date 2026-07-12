@@ -58,7 +58,7 @@ const isAvailable = (profId) => {
 
         <div class="flex-1 min-w-0">
           <p class="font-bold text-sm text-[#0D1B3E] truncate">{{ prof.nom }} {{ prof.prenom }}</p>
-          <p class="text-xs text-gray-500 truncate">{{ prof.specialite }}</p>
+          <p class="text-xs text-gray-700 truncate">{{ prof.specialite }}</p>
         </div>
       </div>
     </div>

@@ -190,7 +190,7 @@ const close = () => {
               </div>
               <div>
                 <p class="font-bold text-sm text-[#0D1B3E]">{{ prof.nom }} {{ prof.prenom }}</p>
-                <p class="text-xs text-gray-500">{{ prof.specialite }}</p>
+                <p class="text-xs text-gray-700">{{ prof.specialite }}</p>
               </div>
             </div>
           </div>
@@ -199,14 +199,14 @@ const close = () => {
         <!-- Step 3: Availability Grid -->
         <div v-if="step === 3" class="space-y-4">
           <h3 class="font-bold text-[#0D1B3E]">Choisir un créneau</h3>
-          <p class="text-xs text-gray-500">Seuls les créneaux en vert sont disponibles pour {{ selectedProfessor?.nom }}.</p>
+          <p class="text-xs text-gray-700">Seuls les créneaux en vert sont disponibles pour {{ selectedProfessor?.nom }}.</p>
 
           <div class="grid grid-cols-7 gap-1 bg-gray-50 p-2 rounded-lg">
             <div class="h-8"></div>
-            <div v-for="d in days" :key="d" class="text-[10px] font-bold text-center uppercase text-gray-400">{{ d.substring(0,3) }}</div>
+            <div v-for="d in days" :key="d" class="text-[10px] font-bold text-center uppercase text-[#0C2340]">{{ d.substring(0,3) }}</div>
 
             <template v-for="h in hours" :key="h">
-              <div class="text-[10px] font-bold flex items-center justify-center text-gray-400 h-10">{{ h }}h</div>
+              <div class="text-[10px] font-bold flex items-center justify-center text-[#0C2340] h-10">{{ h }}h</div>
               <div
                 v-for="d in days"
                 :key="`${d}-${h}`"
@@ -227,10 +227,10 @@ const close = () => {
         <div v-if="step === 4" class="space-y-4">
           <h3 class="font-bold text-[#0D1B3E]">Détails du cours</h3>
           <div class="bg-gray-50 p-4 rounded-lg border border-gray-100 mb-6">
-            <p class="text-xs font-bold text-gray-400 uppercase mb-2">Récapitulatif</p>
+            <p class="text-xs font-bold text-[#0C2340] uppercase mb-2">Récapitulatif</p>
             <p class="text-sm font-bold text-[#0D1B3E]">{{ formData.path }} — {{ formData.level }}</p>
             <p class="text-xs text-[#1D9E75] font-medium">{{ selectedProfessor?.nom }}</p>
-            <p class="text-xs text-gray-500 mt-1">{{ formData.day }} à {{ formData.hour }}h00</p>
+            <p class="text-xs text-gray-700 mt-1">{{ formData.day }} à {{ formData.hour }}h00</p>
           </div>
 
           <div>

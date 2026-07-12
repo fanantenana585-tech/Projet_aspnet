@@ -65,7 +65,7 @@ const getProfessorName = (id) => {
 
         <div class="space-y-6">
           <div>
-            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Professeur concerné</label>
+            <label class="block text-[10px] font-black text-[#0C2340] uppercase tracking-widest mb-2 ml-1">Professeur concerné</label>
             <select v-model="newException.professeurId" class="w-full px-5 py-3.5 rounded-xl border border-gray-200 focus:border-[#F39C12] outline-none transition-all font-medium text-sm">
               <option v-for="prof in professorsStore.professors" :key="prof.id" :value="prof.id">
                 {{ prof.prenom }} {{ prof.nom }} ({{ prof.specialite }})
@@ -74,19 +74,19 @@ const getProfessorName = (id) => {
           </div>
 
           <div>
-            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Sélection du calendrier (Max 2 semaines)</label>
+            <label class="block text-[10px] font-black text-[#0C2340] uppercase tracking-widest mb-2 ml-1">Sélection du calendrier (Max 2 semaines)</label>
             <div class="grid grid-cols-6 gap-1.5 max-h-48 overflow-y-auto p-2 border border-gray-100 rounded-xl bg-gray-50/50">
               <button v-for="w in weeks" :key="w"
                       @click="toggleWeek(w)"
                       class="h-9 rounded-lg text-xs font-bold transition-all border flex items-center justify-center"
-                      :class="newException.semaines.includes(w) ? 'bg-[#F39C12] text-white border-[#F39C12] shadow-md' : 'bg-white text-gray-400 border-gray-100 hover:border-gray-200'">
+                      :class="newException.semaines.includes(w) ? 'bg-[#F39C12] text-white border-[#F39C12] shadow-md' : 'bg-white text-[#0C2340] border-gray-100 hover:border-gray-200'">
                 S{{ w }}
               </button>
             </div>
           </div>
 
           <div>
-            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Motif de l'absence / Raison</label>
+            <label class="block text-[10px] font-black text-[#0C2340] uppercase tracking-widest mb-2 ml-1">Motif de l'absence / Raison</label>
             <textarea v-model="newException.raison" placeholder="Ex: Mission, Congé maladie, Séminaire..." class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:border-[#F39C12] outline-none transition-all h-24 text-sm font-medium"></textarea>
           </div>
         </div>
@@ -104,7 +104,7 @@ const getProfessorName = (id) => {
          <span class="bg-gray-100 text-gray-600 text-xs px-2.5 py-0.5 rounded-full font-sans">{{ exceptionsStore.exceptions.length }}</span>
       </h3>
 
-      <div v-if="exceptionsStore.exceptions.length === 0" class="bg-white p-16 rounded-3xl border border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400">
+      <div v-if="exceptionsStore.exceptions.length === 0" class="bg-white p-16 rounded-3xl border border-dashed border-gray-200 flex flex-col items-center justify-center text-[#0C2340]">
         <i class="fas fa-calendar-times text-5xl mb-4 opacity-20"></i>
         <p class="font-medium text-sm">Aucune exception enregistrée pour le moment.</p>
       </div>
@@ -116,12 +116,12 @@ const getProfessorName = (id) => {
         </div>
         <div class="flex-1">
           <p class="font-bold text-[#0D1B3E]">{{ getProfessorName(exc.professeurId) }}</p>
-          <p class="text-xs text-gray-500 mt-0.5 font-medium"><i class="far fa-comment-alt mr-1"></i> {{ exc.raison || 'Sans motif spécifié' }}</p>
+          <p class="text-xs text-gray-700 mt-0.5 font-medium"><i class="far fa-comment-alt mr-1"></i> {{ exc.raison || 'Sans motif spécifié' }}</p>
         </div>
         <div class="flex flex-wrap gap-1.5 max-w-[200px] justify-end">
           <span v-for="w in exc.semaines" :key="w" class="px-3 py-1 bg-orange-100 rounded-lg text-[10px] font-bold text-[#F39C12]">Semaine {{ w }}</span>
         </div>
-        <button @click="exceptionsStore.deleteException(exc.id)" class="text-gray-300 hover:text-red-500 transition-colors p-2">
+        <button @click="exceptionsStore.deleteException(exc.id)" class="text-[#0C2340] hover:text-red-500 transition-colors p-2">
           <i class="fas fa-trash-alt"></i>
         </button>
       </div>

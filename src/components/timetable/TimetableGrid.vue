@@ -114,7 +114,7 @@ defineExpose({ resetSelection })
       <tbody>
         <!-- Matin -->
         <tr v-for="h in coursesStore.matin" :key="h">
-          <td class="p-4 border-b border-r border-gray-50 bg-gray-50/30 text-xs font-bold text-gray-400 text-center">
+          <td class="p-4 border-b border-r border-gray-50 bg-gray-50/30 text-xs font-bold text-[#0C2340] text-center">
             <span class="block text-[#0D1B3E]">{{ formatHour(h) }}</span>
           </td>
           <td v-for="jour in coursesStore.jours" :key="jour"
@@ -167,17 +167,17 @@ defineExpose({ resetSelection })
 
         <!-- Pause Méridienne -->
         <tr class="bg-gray-100/80">
-          <td class="p-3 border-b border-r border-gray-200 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-center">
+          <td class="p-3 border-b border-r border-gray-200 text-[10px] font-black text-[#0C2340] uppercase tracking-[0.2em] text-center">
             Midi
           </td>
-          <td :colspan="6" class="p-3 border-b border-gray-200 text-center text-[11px] font-bold text-gray-500 uppercase tracking-[0.5em] italic">
+          <td :colspan="6" class="p-3 border-b border-gray-200 text-center text-[11px] font-bold text-gray-700 uppercase tracking-[0.5em] italic">
             — Pause Méridienne —
           </td>
         </tr>
 
         <!-- Après-Midi -->
         <tr v-for="h in coursesStore.apresMidi" :key="h">
-          <td class="p-4 border-b border-r border-gray-50 bg-gray-50/30 text-xs font-bold text-gray-400 text-center">
+          <td class="p-4 border-b border-r border-gray-50 bg-gray-50/30 text-xs font-bold text-[#0C2340] text-center">
             <span class="block text-[#0D1B3E]">{{ formatHour(h) }}</span>
           </td>
           <td v-for="jour in coursesStore.jours" :key="jour"

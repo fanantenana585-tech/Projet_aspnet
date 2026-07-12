@@ -170,15 +170,62 @@ export const useMatiereStore = defineStore('matiere', {
     fermerModal() {
       this.modalOuverte = false;
     },
-    ajouterMatiere(data) {
-      this.matieres.push({ id: 'mat-' + Date.now(), ...data });
+    async fetchMatieres() {
+      this.loading = true;
+      this.error = null;
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/matieres');
+        if (!res.ok) throw new Error('Échec du chargement des matières');
+        this.matieres = await res.json();
+      } catch (err) {
+        console.error('fetchMatieres', err);
+        this.error = 'Impossible de se connecter à la base de données.';
+        this.matieres = [];
+      } finally {
+        this.loading = false;
+      }
     },
-    modifierMatiere(id, data) {
-      const index = this.matieres.findIndex(m => m.id === id);
-      if (index !== -1) this.matieres[index] = { ...this.matieres[index], ...data };
+    async ajouterMatiere(data) {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/matieres', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Erreur création');
+        const created = await res.json();
+        this.matieres.unshift(created);
+      } catch (err) {
+        console.error('ajouterMatiere', err);
+        throw err;
+      }
     },
-    supprimerMatiere(id) {
-      this.matieres = this.matieres.filter(m => m.id !== id);
+    async modifierMatiere(id, data) {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/matieres/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Erreur modification');
+        const index = this.matieres.findIndex(m => m.id === id);
+        if (index !== -1) {
+          this.matieres[index] = { ...this.matieres[index], ...data };
+        }
+      } catch (err) {
+        console.error('modifierMatiere', err);
+        throw err;
+      }
+    },
+    async supprimerMatiere(id) {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/matieres/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Erreur suppression');
+        this.matieres = this.matieres.filter(m => m.id !== id);
+      } catch (err) {
+        console.error('supprimerMatiere', err);
+        throw err;
+      }
     }
   }
 });

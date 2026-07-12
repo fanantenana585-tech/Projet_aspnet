@@ -20,7 +20,7 @@ const getMentionName = (mentionId) => {
     <div class="max-w-6xl mx-auto">
       <header class="mb-8">
         <h1 class="text-2xl font-bold text-[#0D1B3E]">Gestion des Professeurs</h1>
-        <p class="text-gray-500">Liste des enseignants de l'EMIT par mention et spécialité.</p>
+        <p class="text-gray-700">Liste des enseignants de l'EMIT par mention et spécialité.</p>
       </header>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -48,15 +48,15 @@ const getMentionName = (mentionId) => {
 
           <div class="space-y-3 pt-4 border-t border-gray-100">
             <div class="flex items-center gap-3 text-sm text-gray-600">
-              <BookOpen :size="16" class="text-gray-400" />
+              <BookOpen :size="16" class="text-[#0C2340]" />
               <span>{{ prof.specialite }}</span>
             </div>
             <div class="flex items-center gap-3 text-sm text-gray-600">
-              <GraduationCap :size="16" class="text-gray-400" />
+              <GraduationCap :size="16" class="text-[#0C2340]" />
               <span>Enseignant Titulaire</span>
             </div>
             <div class="flex items-center gap-3 text-sm text-gray-600">
-              <Mail :size="16" class="text-gray-400" />
+              <Mail :size="16" class="text-[#0C2340]" />
               <span class="truncate">{{ prof.nom.toLowerCase() }}@emit.mg</span>
             </div>
           </div>

@@ -31,7 +31,7 @@ const isBlocked = (profId) => {
       <button
         @click="emit('select-prof', null)"
         class="w-full flex items-center p-3 rounded-2xl transition-all"
-        :class="!selectedProfId ? 'bg-blue-50 text-[#0D1B3E]' : 'hover:bg-gray-50 text-gray-500'"
+        :class="!selectedProfId ? 'bg-blue-50 text-[#0D1B3E]' : 'hover:bg-gray-50 text-gray-700'"
       >
         <div class="w-10 h-10 rounded-full bg-[#0D1B3E] text-white flex items-center justify-center font-bold mr-3 shadow-sm">
           <i class="fas fa-users text-xs"></i>
@@ -49,7 +49,7 @@ const isBlocked = (profId) => {
         :key="prof.id"
         @click="emit('select-prof', prof.id)"
         class="w-full flex items-center p-3 rounded-2xl transition-all group"
-        :class="selectedProfId === prof.id ? 'bg-[#0D1B3E] text-white shadow-xl' : 'hover:bg-gray-50 text-gray-500'"
+        :class="selectedProfId === prof.id ? 'bg-[#0D1B3E] text-white shadow-xl' : 'hover:bg-gray-50 text-gray-700'"
       >
         <div class="relative">
           <div class="w-10 h-10 rounded-full bg-gray-100 text-[#0D1B3E] flex items-center justify-center font-poppins font-bold border-2 border-white shadow-sm transition-colors"

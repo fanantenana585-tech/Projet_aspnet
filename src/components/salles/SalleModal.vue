@@ -94,60 +94,83 @@ const handleSubmit = async () => {
       <div class="relative bg-[#1E293B] w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-700 overflow-hidden animate-in zoom-in-95 duration-300">
         <!-- Header -->
         <div class="p-6 border-b border-gray-800 flex items-center justify-between">
-          <h2 class="text-xl font-bold text-white">
-            {{ salle ? 'Modifier la salle' : 'Ajouter une salle' }}
-          </h2>
-          <button @click="emit('close')" class="p-2 text-gray-400 hover:text-white rounded-full hover:bg-gray-800 transition-colors">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-emit-blue/10 rounded-lg text-emit-blue">
+              <Edit2 v-if="salle" :size="20" />
+              <Plus v-else :size="20" />
+            </div>
+            <h2 class="text-xl font-bold text-white">
+              {{ salle ? 'Modifier la salle' : 'Ajouter une salle' }}
+            </h2>
+          </div>
+          <button @click="emit('close')" class="p-2 text-[#0C2340] hover:text-white rounded-full hover:bg-gray-800 transition-colors">
             <X :size="24" />
           </button>
         </div>
 
         <!-- Form Content -->
-        <form @submit.prevent="handleSubmit" class="p-8 space-y-8 max-h-[75vh] overflow-y-auto custom-scrollbar">
+        <form @submit.prevent="handleSubmit" class="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Colonne 1 -->
+            <div class="space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Nom de la salle <span class="text-red-500">*</span></label>
+                <input v-model="form.nom" type="text" placeholder="Ex: Salle A101" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]" />
+              </div>
 
-          <!-- Identification -->
-          <section class="space-y-4">
-            <h3 class="text-xs font-bold text-emit-blue uppercase tracking-widest">Identification</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-1.5">
-                <label class="text-xs font-medium text-gray-400">Nom de la salle</label>
-                <input v-model="form.nom" type="text" placeholder="Ex: Salle A101" class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-emit-blue/50" />
-              </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-medium text-gray-400">Type de salle</label>
-                <select v-model="form.type" class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-emit-blue/50 appearance-none">
-                  <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
-                </select>
-              </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-medium text-gray-400">Bâtiment</label>
-                <select v-model="form.batiment" class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-emit-blue/50">
+                <label class="text-sm font-medium text-white">Bâtiment <span class="text-red-500">*</span></label>
+                <select v-model="form.batiment" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
+                  <option value="" disabled>Choisir un bâtiment</option>
                   <option v-for="b in batiments" :key="b" :value="b">{{ b }}</option>
                 </select>
               </div>
+
+              <div class="space-y-1.5 flex-1">
+                <label class="text-sm font-medium text-white">Capacité maximale</label>
+                <div class="flex items-center gap-3 bg-white border border-gray-300 rounded-xl p-1 focus-within:ring-2 focus-within:ring-emit-blue/50 transition-all">
+                  <button type="button" @click="form.capacite--" class="p-2 text-[#0C2340] hover:text-gray-600"><Minus :size="20" /></button>
+                  <input v-model.number="form.capacite" type="number" class="flex-1 bg-transparent text-center text-black font-bold outline-none" />
+                  <button type="button" @click="form.capacite++" class="p-2 text-[#0C2340] hover:text-gray-600"><Plus :size="20" /></button>
+                </div>
+              </div>
+              
+              <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-2xl border border-gray-800">
+                <label class="text-sm font-medium text-white">Statut de la salle</label>
+                <button
+                  type="button"
+                  @click="form.statut = form.statut === 'disponible' ? 'maintenance' : 'disponible'"
+                  class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-emit-blue/50"
+                  :class="form.statut === 'disponible' ? 'bg-emerald-500' : 'bg-orange-500'"
+                >
+                  <span
+                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
+                    :class="form.statut === 'disponible' ? 'translate-x-6' : 'translate-x-1'"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <!-- Colonne 2 -->
+            <div class="space-y-4">
               <div class="space-y-1.5">
-                <label class="text-xs font-medium text-gray-400">Étage</label>
-                <select v-model="form.etage" class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-emit-blue/50">
+                <label class="text-sm font-medium text-white">Type de salle <span class="text-red-500">*</span></label>
+                <select v-model="form.type" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
+                  <option value="" disabled>Choisir un type</option>
+                  <option v-for="t in types" :key="t" :value="t">{{ t }}</option>
+                </select>
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Étage <span class="text-red-500">*</span></label>
+                <select v-model="form.etage" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
                   <option v-for="e in etages" :key="e.value" :value="e.value">{{ e.label }}</option>
                 </select>
               </div>
-            </div>
-          </section>
 
-          <!-- Capacité -->
-          <section class="space-y-4">
-            <h3 class="text-xs font-bold text-emit-blue uppercase tracking-widest">Capacité et disposition</h3>
-            <div class="flex flex-col md:flex-row gap-8">
               <div class="space-y-1.5 flex-1">
-                <label class="text-xs font-medium text-gray-400">Capacité maximale</label>
-                <div class="flex items-center gap-3 bg-emit-bg/50 border border-gray-700 rounded-xl p-1">
-                  <button type="button" @click="form.capacite--" class="p-2 text-gray-400 hover:text-white"><Minus :size="20" /></button>
-                  <input v-model.number="form.capacite" type="number" class="flex-1 bg-transparent text-center text-white font-bold outline-none" />
-                  <button type="button" @click="form.capacite++" class="p-2 text-gray-400 hover:text-white"><Plus :size="20" /></button>
-                </div>
-              </div>
-              <div class="flex-1">
-                <label class="text-xs font-medium text-gray-400 block mb-2">Disposition</label>
+                <label class="text-sm font-medium text-white block mb-1">Disposition</label>
                 <div class="flex flex-wrap gap-2">
                   <button
                     v-for="d in dispositions"
@@ -155,18 +178,18 @@ const handleSubmit = async () => {
                     type="button"
                     @click="form.disposition = d.value"
                     :class="['px-3 py-2 rounded-xl text-xs font-bold border transition-all',
-                      form.disposition === d.value ? 'bg-emit-blue text-white border-emit-blue shadow-lg shadow-emit-blue/20' : 'bg-gray-800 text-gray-400 border-gray-700']"
+                      form.disposition === d.value ? 'bg-emit-blue text-white border-emit-blue shadow-lg shadow-emit-blue/20' : 'bg-white text-black border-gray-300 hover:bg-gray-100']"
                   >
                     {{ d.icon }} {{ d.label }}
                   </button>
                 </div>
               </div>
             </div>
-          </section>
+          </div>
 
-          <!-- Équipements -->
-          <section class="space-y-4">
-            <h3 class="text-xs font-bold text-emit-blue uppercase tracking-widest">Équipements</h3>
+          <!-- Équipements Section -->
+          <div class="space-y-3">
+            <label class="text-sm font-medium text-white">Équipements de la salle</label>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <button
                 v-for="eq in equipmentOptions"
@@ -174,42 +197,24 @@ const handleSubmit = async () => {
                 type="button"
                 @click="toggleEquipment(eq.name)"
                 :class="['flex items-center gap-3 p-3 rounded-2xl border transition-all text-left',
-                  form.equipements.includes(eq.name) ? 'bg-emit-blue/10 border-emit-blue text-emit-blue' : 'bg-[#0F172A] border-gray-800 text-gray-500']"
+                  form.equipements.includes(eq.name) ? 'bg-emit-blue/10 border-emit-blue text-emit-blue' : 'bg-gray-800/30 border-gray-800 text-gray-400 hover:bg-gray-800/50 hover:text-white']"
               >
                 <component :is="eq.icon" :size="18" />
                 <span class="text-xs font-bold">{{ eq.name }}</span>
               </button>
             </div>
-          </section>
-
-          <!-- Statut -->
-          <section class="space-y-4">
-            <h3 class="text-xs font-bold text-emit-blue uppercase tracking-widest">Statut</h3>
-            <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-2xl border border-gray-800">
-              <div>
-                <p class="text-sm font-bold text-white">{{ form.statut === 'maintenance' ? 'En Maintenance' : 'Disponible' }}</p>
-                <p class="text-xs text-gray-500">Définit si la salle peut être réservée</p>
-              </div>
-              <button
-                type="button"
-                @click="form.statut = form.statut === 'maintenance' ? 'disponible' : 'maintenance'"
-                :class="['relative h-7 w-12 rounded-full transition-colors', form.statut !== 'maintenance' ? 'bg-emerald-500' : 'bg-orange-500']"
-              >
-                <div :class="['absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform', form.statut === 'maintenance' ? 'translate-x-5' : '']"></div>
-              </button>
-            </div>
-          </section>
+          </div>
         </form>
 
         <!-- Footer -->
         <div class="p-6 border-t border-gray-800 flex justify-end gap-4 bg-gray-800/10">
-          <button @click="emit('close')" class="px-6 py-2.5 rounded-xl border border-gray-700 text-gray-400 font-bold text-sm hover:bg-gray-800 transition-all">
+          <button @click="emit('close')" class="px-6 py-2.5 rounded-xl border border-gray-700 text-[#0C2340] hover:bg-gray-800 transition-all text-sm font-medium">
             Annuler
           </button>
           <button
             @click="handleSubmit"
             :disabled="isSubmitting"
-            class="px-8 py-2.5 rounded-xl bg-gradient-to-r from-emit-blue to-emit-purple text-white font-bold text-sm shadow-lg shadow-emit-blue/20 hover:brightness-110 flex items-center gap-2"
+            class="px-8 py-2.5 rounded-xl bg-gradient-to-r from-emit-blue to-emit-purple text-white font-bold text-sm shadow-lg shadow-emit-blue/20 hover:brightness-110 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
           >
             <Save v-if="!isSubmitting" :size="18" />
             <div v-else class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

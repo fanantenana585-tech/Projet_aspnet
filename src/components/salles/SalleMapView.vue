@@ -26,7 +26,7 @@ const getStatusColor = (statut) => {
     case 'disponible': return 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
     case 'occupée': return 'bg-red-500/20 border-red-500 text-red-400'
     case 'maintenance': return 'bg-orange-500/20 border-orange-500 text-orange-400'
-    default: return 'bg-gray-800 border-gray-700 text-gray-500'
+    default: return 'bg-gray-800 border-gray-700 text-gray-700'
   }
 }
 </script>
@@ -42,7 +42,7 @@ const getStatusColor = (statut) => {
           :key="b"
           @click="currentBatiment = b"
           class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all"
-          :class="currentBatiment === b ? 'bg-emit-blue text-white' : 'text-gray-500 hover:text-gray-300'"
+          :class="currentBatiment === b ? 'bg-emit-blue text-white' : 'text-gray-700 hover:text-[#0C2340]'"
         >
           {{ b }}
         </button>
@@ -54,7 +54,7 @@ const getStatusColor = (statut) => {
           :key="e.value"
           @click="currentEtage = e.value"
           class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all"
-          :class="currentEtage === e.value ? 'bg-emit-purple text-white' : 'text-gray-500 hover:text-gray-300'"
+          :class="currentEtage === e.value ? 'bg-emit-purple text-white' : 'text-gray-700 hover:text-[#0C2340]'"
         >
           {{ e.label }}
         </button>
@@ -97,15 +97,15 @@ const getStatusColor = (statut) => {
     <div class="flex flex-wrap items-center justify-center gap-8 pt-4 border-t border-gray-800/50 text-[10px] font-bold uppercase tracking-widest">
       <div class="flex items-center gap-2">
         <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-        <span class="text-gray-400">Disponible</span>
+        <span class="text-[#0C2340]">Disponible</span>
       </div>
       <div class="flex items-center gap-2">
         <div class="w-3 h-3 rounded-full bg-red-500"></div>
-        <span class="text-gray-400">Occupée</span>
+        <span class="text-[#0C2340]">Occupée</span>
       </div>
       <div class="flex items-center gap-2">
         <div class="w-3 h-3 rounded-full bg-orange-500"></div>
-        <span class="text-gray-400">Maintenance</span>
+        <span class="text-[#0C2340]">Maintenance</span>
       </div>
     </div>
   </div>

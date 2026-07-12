@@ -34,12 +34,15 @@ export const useEnseignantStore = defineStore('enseignant', {
   actions: {
     async fetchEnseignants() {
       this.loading = true;
+      this.error = null;
       try {
         const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/enseignants');
-        if (!res.ok) throw new Error('Erreur réseau');
+        if (!res.ok) throw new Error('Échec du chargement des enseignants');
         this.enseignants = await res.json();
       } catch (err) {
         console.error('fetchEnseignants', err);
+        this.error = 'Impossible de se connecter à la base de données.';
+        this.enseignants = []; // Fallback to empty
       } finally {
         this.loading = false;
       }
@@ -57,6 +60,7 @@ export const useEnseignantStore = defineStore('enseignant', {
         this.enseignants.unshift(created);
       } catch (err) {
         console.error('ajouterEnseignant', err);
+        throw err;
       }
     },
 
@@ -68,11 +72,13 @@ export const useEnseignantStore = defineStore('enseignant', {
           body: JSON.stringify(data)
         });
         if (!res.ok) throw new Error('Erreur modification');
-        // Mise à jour locale
         const index = this.enseignants.findIndex(e => e.id === id);
-        if (index !== -1) this.enseignants[index] = { ...this.enseignants[index], ...data };
+        if (index !== -1) {
+          this.enseignants[index] = { ...this.enseignants[index], ...data };
+        }
       } catch (err) {
         console.error('modifierEnseignant', err);
+        throw err;
       }
     },
 
@@ -83,6 +89,7 @@ export const useEnseignantStore = defineStore('enseignant', {
         this.enseignants = this.enseignants.filter(e => e.id !== id);
       } catch (err) {
         console.error('supprimerEnseignant', err);
+        throw err;
       }
     },
 

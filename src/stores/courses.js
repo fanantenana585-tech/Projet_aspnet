@@ -21,33 +21,38 @@ export const useCoursesStore = defineStore('courses', {
     async fetchCourses() {
       try {
         const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/courses');
-        if (!res.ok) throw new Error('Erreur fetch courses');
-        this.courses = await res.json();
+        if (res.ok) {
+          this.courses = await res.json();
+        }
       } catch (err) {
-        console.error('fetchCourses', err);
+        console.error('fetchCourses error', err);
       }
     },
 
     async addCourse(course) {
       try {
         const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/courses', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(course)
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(course)
         });
-        if (!res.ok) throw new Error('Erreur création course');
-        const created = await res.json();
-        this.courses.push(created);
+        if (res.ok) {
+          const created = await res.json();
+          this.courses.push(created);
+        }
       } catch (err) {
-        console.error('addCourse', err);
+        console.error('addCourse error', err);
       }
     },
 
     async removeCourse(id) {
       try {
         const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/courses/${id}`, { method: 'DELETE' });
-        if (!res.ok) throw new Error('Erreur suppression course');
-        this.courses = this.courses.filter(c => c.id !== id);
+        if (res.ok) {
+          this.courses = this.courses.filter(c => c.id !== id);
+        }
       } catch (err) {
-        console.error('removeCourse', err);
+        console.error('removeCourse error', err);
       }
     }
   }

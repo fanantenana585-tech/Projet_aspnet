@@ -66,7 +66,7 @@ const getMentionShort = (mentionId) => {
         <template v-for="hour in morningHours" :key="`morning-${hour}`">
           <div class="h-24 border-t border-gray-100 flex items-center justify-center gap-1 bg-gray-50/50">
             <Sun :size="14" class="text-orange-400" />
-            <span class="font-bold text-gray-500 text-sm">{{ hour }}h</span>
+            <span class="font-bold text-gray-700 text-sm">{{ hour }}h</span>
           </div>
           <div
             v-for="day in days"
@@ -109,14 +109,14 @@ const getMentionShort = (mentionId) => {
 
         <!-- Noon Break -->
         <div class="h-8 bg-gray-100/50 border-y-2 border-gray-200 flex items-center justify-center col-span-full">
-           <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Pause Déjeuner — 12h00 à 14h00</span>
+           <span class="text-[10px] font-bold text-[#0C2340] uppercase tracking-widest">Pause Déjeuner — 12h00 à 14h00</span>
         </div>
 
         <!-- Evening Section -->
         <template v-for="hour in eveningHours" :key="`evening-${hour}`">
           <div class="h-24 border-t border-gray-100 flex items-center justify-center gap-1 bg-gray-50/50">
             <Moon :size="14" class="text-indigo-400" />
-            <span class="font-bold text-gray-500 text-sm">{{ hour }}h</span>
+            <span class="font-bold text-gray-700 text-sm">{{ hour }}h</span>
           </div>
           <div
             v-for="day in days"

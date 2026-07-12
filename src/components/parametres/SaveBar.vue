@@ -27,7 +27,7 @@ defineEmits(['save', 'reset'])
         <div class="flex gap-3">
           <button
             @click="$emit('reset')"
-            class="px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-900 transition-colors flex items-center gap-2"
+            class="px-4 py-2 text-xs font-bold text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-2"
           >
             <RotateCcw :size="14" /> Annuler
           </button>
@@ -42,3 +42,4 @@ defineEmits(['save', 'reset'])
     </div>
   </Transition>
 </template>
+

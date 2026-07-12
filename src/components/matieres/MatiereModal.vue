@@ -1,17 +1,10 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
 import { useMatiereStore, MENTIONS_EMIT } from '@/stores/matiereStore';
-import {
-  X, Check, ChevronRight, ChevronLeft,
-  BookOpen, Clock, Award, Users,
-  CheckCircle2, AlertCircle, Info,
-  Layout, Palette, Type
-} from 'lucide-vue-next';
+import { X, Save, BookOpen, Edit2 } from 'lucide-vue-next';
 
 const store = useMatiereStore();
-const emit = defineEmits(['close']);
 
-const step = ref(1);
 const isLoading = ref(false);
 
 const form = reactive({
@@ -45,7 +38,6 @@ watch(() => store.modalOuverte, (val) => {
     } else {
       resetForm();
     }
-    step.value = 1;
   }
 });
 
@@ -90,10 +82,6 @@ const generateCode = () => {
   form.code = `${form.parcours}${num}`;
 };
 
-const totalVolume = computed(() =>
-  Object.values(form.volumeHoraire).reduce((acc, val) => acc + (parseInt(val) || 0), 0)
-);
-
 const submit = async () => {
   isLoading.value = true;
   const mention = MENTIONS_EMIT.find(m => m.id === form.mentionId);
@@ -109,230 +97,150 @@ const submit = async () => {
 };
 
 const colors = ['#0EA5E9', '#38BDF8', '#0284C7', '#2563EB', '#6D28D9', '#10B981', '#059669', '#F472B6', '#EC4899', '#DB2777', '#F43F5E', '#F59E0B'];
-
-const canNext = computed(() => {
-  if (step.value === 1) return form.nom && form.code;
-  return true;
-});
-
 </script>
 
 <template>
-  <Transition name="modal">
-    <div v-if="store.modalOuverte" class="fixed inset-0 z-[200] flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-[#0C2340]/40 backdrop-blur-[4px]" @click="store.fermerModal()"></div>
+  <Transition
+    enter-active-class="transition duration-300 ease-out"
+    enter-from-class="opacity-0"
+    enter-to-class="opacity-100"
+    leave-active-class="transition duration-200 ease-in"
+    leave-from-class="opacity-100"
+    leave-to-class="opacity-0"
+  >
+    <div v-if="store.modalOuverte" class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="store.fermerModal()"></div>
 
-      <div class="bg-white w-full max-w-[800px] rounded-[2.5rem] border border-[#BFDBFE] shadow-[0_40px_100px_rgba(0,0,0,0.2)] relative overflow-hidden flex flex-col max-h-[90vh]">
-
+      <div class="relative bg-[#1E293B] w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-700 overflow-hidden animate-in zoom-in-95 duration-300">
         <!-- Header -->
-        <div class="p-8 border-b border-[#F0F7FF] flex justify-between items-center bg-gradient-to-r from-[#F8FBFF] to-white shrink-0">
-          <div class="flex items-center gap-5">
-            <div class="w-14 h-14 rounded-2xl bg-[#38BDF8] text-white flex items-center justify-center shadow-lg shadow-[#38BDF8]/20">
-               <BookOpen :size="28" />
+        <div class="p-6 border-b border-gray-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-emit-blue/10 rounded-lg text-emit-blue">
+              <Edit2 v-if="form.id" :size="20" />
+              <BookOpen v-else :size="20" />
             </div>
-            <div>
-              <h2 class="text-[#0C2340] text-2xl font-black tracking-tight">
-                {{ form.id ? 'Modifier la matière' : 'Nouvelle matière' }}
-              </h2>
-              <div class="flex items-center gap-3 mt-1">
-                 <div v-for="s in 3" :key="s" class="h-1.5 rounded-full transition-all" :class="step >= s ? 'w-8 bg-[#38BDF8]' : 'w-4 bg-[#BFDBFE]'"></div>
-                 <span class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-2">Étape {{ step }} sur 3</span>
-              </div>
-            </div>
+            <h2 class="text-xl font-bold text-white">
+              {{ form.id ? 'Modifier la matière' : 'Ajouter une matière' }}
+            </h2>
           </div>
-          <button @click="store.fermerModal()" class="p-3 bg-white rounded-2xl text-[#64A8CC] hover:text-red-500 shadow-sm border border-[#BFDBFE] transition-all">
-            <X :size="20" />
+          <button @click="store.fermerModal()" class="p-2 text-[#0C2340] hover:text-white hover:bg-gray-800 rounded-full transition-colors">
+            <X :size="24" />
           </button>
         </div>
 
-        <!-- Body -->
-        <div class="flex-1 overflow-y-auto p-10 custom-scrollbar">
+        <!-- Form -->
+        <form @submit.prevent="submit" class="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Colonne 1 -->
+            <div class="space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Nom de la matière <span class="text-red-500">*</span></label>
+                <input v-model="form.nom" type="text" placeholder="Ex: Algorithmique" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]" />
+              </div>
 
-          <!-- Step 1: Identification -->
-          <div v-if="step === 1" class="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-             <div class="grid grid-cols-2 gap-8">
-                <div class="space-y-2">
-                   <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Mention</label>
-                   <select v-model="form.mentionId" @change="handleMentionChange" class="w-full bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-bold text-[#0C2340] focus:border-[#38BDF8] outline-none appearance-none cursor-pointer">
-                      <option v-for="m in MENTIONS_EMIT" :key="m.id" :value="m.id">{{ m.icone }} {{ m.nom }}</option>
-                      <option value="transversal">📚 Transversal</option>
-                   </select>
-                </div>
-                <div class="space-y-2">
-                   <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Parcours</label>
-                   <select v-model="form.parcours" @change="handleParcoursChange" class="w-full bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-bold text-[#0C2340] focus:border-[#38BDF8] outline-none appearance-none cursor-pointer">
-                      <option v-for="p in filteredParcours" :key="p.id" :value="p.id">[{{ p.code }}] {{ p.nom }}</option>
-                   </select>
-                </div>
-             </div>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Mention <span class="text-red-500">*</span></label>
+                <select v-model="form.mentionId" @change="handleMentionChange" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
+                  <option v-for="m in MENTIONS_EMIT" :key="m.id" :value="m.id">{{ m.icone }} {{ m.nom }}</option>
+                  <option value="transversal">📚 Transversal</option>
+                </select>
+              </div>
 
-             <div class="grid grid-cols-3 gap-8">
-                <div class="col-span-1 space-y-2">
-                   <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Code</label>
-                   <input type="text" v-model="form.code" class="w-full bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-black text-[#38BDF8] focus:border-[#38BDF8] outline-none uppercase">
-                </div>
-                <div class="col-span-2 space-y-2">
-                   <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Nom de la matière</label>
-                   <input type="text" v-model="form.nom" placeholder="ex: Programmation Orientée Objet" class="w-full bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-bold text-[#0C2340] focus:border-[#38BDF8] outline-none">
-                </div>
-             </div>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Parcours <span class="text-red-500">*</span></label>
+                <select v-model="form.parcours" @change="handleParcoursChange" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
+                  <option v-for="p in filteredParcours" :key="p.id" :value="p.id">[{{ p.code }}] {{ p.nom }}</option>
+                </select>
+              </div>
+              
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Niveau</label>
+                <select v-model="form.niveau" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
+                  <option v-for="n in ['L1','L2','L3','M1','M2']" :key="n">{{ n }}</option>
+                </select>
+              </div>
 
-             <div class="space-y-2">
-                <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Description</label>
-                <textarea v-model="form.description" rows="3" class="w-full bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-medium text-[#1E5F8E] focus:border-[#38BDF8] outline-none resize-none"></textarea>
-             </div>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Semestre</label>
+                <select v-model="form.semestre" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
+                  <option v-for="s in 10" :key="s">S{{ s }}</option>
+                </select>
+              </div>
+            </div>
 
-             <div class="grid grid-cols-2 gap-8">
-                <div class="space-y-2">
-                   <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Niveau & Semestre</label>
-                   <div class="flex gap-4">
-                      <select v-model="form.niveau" class="flex-1 bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-bold text-[#0C2340] outline-none">
-                         <option v-for="n in ['L1','L2','L3','M1','M2']" :key="n">{{ n }}</option>
-                      </select>
-                      <select v-model="form.semestre" class="flex-1 bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-bold text-[#0C2340] outline-none">
-                         <option v-for="s in 10" :key="s">S{{ s }}</option>
-                      </select>
-                   </div>
-                </div>
-                <div class="space-y-2">
-                   <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest ml-1">Couleur distinctive</label>
-                   <div class="flex flex-wrap gap-2 pt-1">
-                      <button
-                         v-for="c in colors" :key="c"
-                         @click="form.couleur = c"
-                         class="w-8 h-8 rounded-full border-2 transition-all hover:scale-110"
-                         :class="form.couleur === c ? 'border-[#0C2340]' : 'border-transparent'"
-                         :style="{ backgroundColor: c }"
-                      ></button>
-                   </div>
-                </div>
-             </div>
-          </div>
+            <!-- Colonne 2 -->
+            <div class="space-y-4">
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Code <span class="text-red-500">*</span></label>
+                <input v-model="form.code" type="text" placeholder="Ex: DA2I101" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340] uppercase" />
+              </div>
 
-          <!-- Step 2: Volume & Crédits -->
-          <div v-if="step === 2" class="space-y-10 animate-in fade-in slide-in-from-right-4">
-             <div class="grid grid-cols-2 gap-10">
-                <div class="space-y-8">
-                   <div class="flex items-center gap-4 border-l-4 border-[#38BDF8] pl-4">
-                      <Award class="text-[#38BDF8]" :size="20" />
-                      <h3 class="text-sm font-black text-[#0C2340] uppercase tracking-widest">Valeur académique</h3>
-                   </div>
-                   <div class="grid grid-cols-2 gap-6">
-                      <div class="space-y-2">
-                         <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest">Crédits ECTS</label>
-                         <input type="number" v-model="form.credits" class="w-full bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-black text-xl text-center">
-                      </div>
-                      <div class="space-y-2">
-                         <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest">Coefficient</label>
-                         <input type="number" v-model="form.coefficient" class="w-full bg-[#F0F9FF] border-2 border-[#BFDBFE] p-4 rounded-2xl font-black text-xl text-center">
-                      </div>
-                   </div>
-                </div>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Crédits ECTS</label>
+                <input v-model.number="form.credits" type="number" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all" />
+              </div>
 
-                <div class="space-y-6">
-                   <div class="flex items-center gap-4 border-l-4 border-[#0EA5E9] pl-4">
-                      <Clock class="text-[#0EA5E9]" :size="20" />
-                      <h3 class="text-sm font-black text-[#0C2340] uppercase tracking-widest">Volume Horaire</h3>
-                   </div>
-                   <div class="space-y-4">
-                      <div v-for="(v, key) in form.volumeHoraire" :key="key" class="space-y-2">
-                         <div class="flex justify-between">
-                            <label class="text-[10px] font-black text-[#64A8CC] uppercase tracking-widest">{{ key }}</label>
-                            <span class="text-xs font-black text-[#38BDF8]">{{ v }}h</span>
-                         </div>
-                         <input type="range" v-model="form.volumeHoraire[key]" min="0" max="60" class="w-full h-1.5 bg-[#F0F9FF] rounded-lg appearance-none cursor-pointer accent-[#38BDF8]">
-                      </div>
-                      <div class="pt-4 border-t border-[#F0F7FF] flex justify-between">
-                         <span class="text-xs font-black text-[#0C2340] uppercase">Total Heures</span>
-                         <span class="text-xl font-black text-[#38BDF8]">{{ totalVolume }}h</span>
-                      </div>
-                   </div>
-                </div>
-             </div>
-          </div>
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Coefficient</label>
+                <input v-model.number="form.coefficient" type="number" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all" />
+              </div>
 
-          <!-- Step 3: Assignation -->
-          <div v-if="step === 3" class="space-y-10 animate-in fade-in slide-in-from-right-4">
-             <div class="bg-[#F0F9FF] p-8 rounded-[2.5rem] border-2 border-[#BFDBFE] space-y-6">
-                <div class="flex items-center gap-4">
-                   <Users class="text-[#38BDF8]" :size="24" />
-                   <h3 class="text-sm font-black text-[#0C2340] uppercase tracking-widest">Équipe pédagogique</h3>
-                </div>
-                <div class="space-y-4">
-                   <p class="text-xs text-[#64A8CC] font-bold">Sélectionnez les enseignants intervenant dans cette matière.</p>
-                   <div class="flex flex-wrap gap-3">
-                      <div v-for="e in 4" :key="e" class="bg-white border-2 border-[#BFDBFE] p-3 rounded-2xl flex items-center gap-3 cursor-pointer hover:border-[#38BDF8] transition-all">
-                         <div class="w-8 h-8 rounded-full bg-[#38BDF8] flex items-center justify-center text-white text-[10px] font-black">JR</div>
-                         <span class="text-xs font-black text-[#0C2340]">Rakoto Jean</span>
-                      </div>
-                   </div>
-                </div>
-             </div>
-
-             <div class="flex items-center justify-between p-8 bg-white border-2 border-[#BFDBFE] rounded-[2.5rem]">
-                <div class="flex items-center gap-4">
-                   <CheckCircle2 class="text-[#059669]" :size="24" />
-                   <div>
-                      <p class="text-sm font-black text-[#0C2340]">Statut de la matière</p>
-                      <p class="text-xs text-[#64A8CC] font-bold">La matière sera visible dès son activation.</p>
-                   </div>
-                </div>
+              <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-2xl border border-gray-800">
+                <label class="text-sm font-medium text-white">Statut de la matière</label>
                 <button
+                  type="button"
                   @click="form.statut = form.statut === 'actif' ? 'inactif' : 'actif'"
-                  class="w-16 h-8 rounded-full relative transition-all"
-                  :class="form.statut === 'actif' ? 'bg-[#059669]' : 'bg-[#BFDBFE]'"
+                  class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors outline-none focus:ring-2 focus:ring-emit-blue/50"
+                  :class="form.statut === 'actif' ? 'bg-emerald-500' : 'bg-gray-600'"
                 >
-                   <div class="absolute top-1 w-6 h-6 bg-white rounded-full transition-all" :style="{ left: form.statut === 'actif' ? '36px' : '4px' }"></div>
+                  <span
+                    class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
+                    :class="form.statut === 'actif' ? 'translate-x-6' : 'translate-x-1'"
+                  />
                 </button>
-             </div>
+              </div>
+              
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Couleur</label>
+                <div class="flex flex-wrap gap-2 pt-1">
+                  <button
+                    v-for="c in colors" :key="c"
+                    type="button"
+                    @click="form.couleur = c"
+                    class="w-6 h-6 rounded-full border-2 transition-all"
+                    :class="form.couleur === c ? 'border-white scale-110' : 'border-transparent hover:scale-110'"
+                    :style="{ backgroundColor: c }"
+                  ></button>
+                </div>
+              </div>
+            </div>
           </div>
 
-        </div>
+          <div class="space-y-1.5">
+            <label class="text-sm font-medium text-white">Description</label>
+            <textarea v-model="form.description" rows="3" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340] resize-none" placeholder="Description de la matière..."></textarea>
+          </div>
+        </form>
 
         <!-- Footer -->
-        <div class="p-8 border-t border-[#F0F7FF] flex justify-between items-center bg-[#F8FBFF] shrink-0">
-           <button
-              v-if="step > 1"
-              @click="step--"
-              class="flex items-center gap-2 px-6 py-3 rounded-xl font-black text-[10px] uppercase text-[#64A8CC] hover:bg-white transition-all"
-           >
-              <ChevronLeft :size="16" /> Précédent
-           </button>
-           <div v-else></div>
-
-           <div class="flex gap-4">
-              <button @click="store.fermerModal()" class="px-8 py-4 font-black text-[10px] uppercase text-[#64A8CC]">Annuler</button>
-
-              <button
-                v-if="step < 3"
-                @click="step++"
-                :disabled="!canNext"
-                class="px-10 py-4 bg-[#38BDF8] text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#38BDF8]/20 disabled:opacity-50 flex items-center gap-3"
-              >
-                Suivant <ChevronRight :size="16" />
-              </button>
-
-              <button
-                v-else
-                @click="submit"
-                :disabled="isLoading"
-                class="px-10 py-4 bg-gradient-to-r from-[#059669] to-[#10B981] text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#059669]/20 flex items-center gap-3"
-              >
-                <Check v-if="!isLoading" :size="18" />
-                <div v-else class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                {{ form.id ? 'Enregistrer les modifications' : 'Confirmer la création' }}
-              </button>
-           </div>
+        <div class="p-6 border-t border-gray-800 flex justify-end gap-4 bg-gray-800/10">
+          <button
+            @click="store.fermerModal()"
+            class="px-6 py-2.5 rounded-xl border border-gray-700 text-[#0C2340] hover:bg-gray-800 transition-all text-sm font-medium"
+          >
+            Annuler
+          </button>
+          <button
+            @click="submit"
+            :disabled="isLoading"
+            class="px-8 py-2.5 rounded-xl bg-gradient-to-r from-emit-blue to-emit-purple text-white font-bold text-sm shadow-lg shadow-emit-blue/20 hover:brightness-110 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <Save v-if="!isLoading" :size="18" />
+            <div v-else class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            {{ isLoading ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
         </div>
       </div>
     </div>
   </Transition>
 </template>
-
-<style scoped>
-.modal-enter-active, .modal-leave-active { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.modal-enter-from, .modal-leave-to { opacity: 0; transform: scale(0.9); }
-
-.custom-scrollbar::-webkit-scrollbar { width: 5px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #BFDBFE; border-radius: 10px; }
-</style>

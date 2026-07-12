@@ -52,7 +52,7 @@ const isWeekBlocked = (day) => {
         <button v-if="selection.length > 0" @click="clearSelection" class="text-xs font-bold text-red-400 hover:text-red-600 transition-colors uppercase tracking-widest">Effacer</button>
       </div>
 
-      <div class="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-widest">
+      <div class="flex items-center gap-2 text-[#0C2340] text-xs font-bold uppercase tracking-widest">
         <i class="fas fa-info-circle text-blue-400"></i>
         <span>Cliquez sur une cellule vide pour définir une disponibilité temporaire</span>
       </div>
@@ -96,7 +96,7 @@ const isWeekBlocked = (day) => {
                           :style="{ backgroundColor: (coursesStore.departements[getCourseAt(j, h).departement] || '#0D1B3E') + '15', color: coursesStore.departements[getCourseAt(j, h).departement] || '#0D1B3E' }">
                       {{ getCourseAt(j, h).departement }}
                     </span>
-                    <span class="text-[9px] font-bold text-gray-400">{{ getCourseAt(j, h).promotion }}</span>
+                    <span class="text-[9px] font-bold text-[#0C2340]">{{ getCourseAt(j, h).promotion }}</span>
                   </div>
                   <p class="text-xs font-poppins font-bold text-[#0D1B3E] leading-tight">{{ getCourseAt(j, h).nom }}</p>
                 </div>
@@ -122,7 +122,7 @@ const isWeekBlocked = (day) => {
           <tr class="h-12 bg-gray-50/50">
              <td class="border-b border-gray-100"></td>
              <td :colspan="6" class="p-2 border-b border-gray-100 text-center">
-                <div class="flex items-center justify-center gap-4 text-[10px] font-black text-gray-300 uppercase tracking-[0.5em]">
+                <div class="flex items-center justify-center gap-4 text-[10px] font-black text-[#0C2340] uppercase tracking-[0.5em]">
                    <div class="h-px w-20 bg-gray-200"></div>
                    <span>Pause Méridienne</span>
                    <div class="h-px w-20 bg-gray-200"></div>
@@ -151,7 +151,7 @@ const isWeekBlocked = (day) => {
                           :style="{ backgroundColor: (coursesStore.departements[getCourseAt(j, h).departement] || '#0D1B3E') + '15', color: coursesStore.departements[getCourseAt(j, h).departement] || '#0D1B3E' }">
                       {{ getCourseAt(j, h).departement }}
                     </span>
-                    <span class="text-[9px] font-bold text-gray-400">{{ getCourseAt(j, h).promotion }}</span>
+                    <span class="text-[9px] font-bold text-[#0C2340]">{{ getCourseAt(j, h).promotion }}</span>
                   </div>
                   <p class="text-xs font-poppins font-bold text-[#0D1B3E] leading-tight">{{ getCourseAt(j, h).nom }}</p>
                 </div>

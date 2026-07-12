@@ -108,7 +108,7 @@ const getSallePourNiveau = (niv) => {
         <!-- Individual Export Button -->
         <button
           @click="store.exporterPDF('Informatique', niveau)"
-          class="absolute -top-4 -right-24 bg-white border border-gray-200 text-gray-500 hover:text-blue-600 p-2 rounded shadow-sm transition-all flex items-center gap-2 text-[10px] font-bold uppercase"
+          class="absolute -top-4 -right-24 bg-white border border-gray-200 text-gray-700 hover:text-blue-600 p-2 rounded shadow-sm transition-all flex items-center gap-2 text-[10px] font-bold uppercase"
         >
           📄 Exporter ce niveau
         </button>
@@ -134,7 +134,7 @@ const getSallePourNiveau = (niv) => {
       </thead>
       <tbody>
         <tr v-for="tranche in tranches" :key="tranche" class="min-h-[64px]">
-          <td class="border border-gray-400 bg-[#F9FAFB] text-[12px] text-gray-500 text-center py-4">
+          <td class="border border-gray-400 bg-[#F9FAFB] text-[12px] text-gray-700 text-center py-4">
             {{ tranche }}
           </td>
           <template v-for="j in jours" :key="j">
@@ -174,11 +174,11 @@ const getSallePourNiveau = (niv) => {
 
     <!-- Pied de page -->
     <div class="mt-4 flex flex-col items-end pr-6">
-      <p class="text-[12px] italic text-gray-500 mb-2">
+      <p class="text-[12px] italic text-gray-700 mb-2">
         Fianarantsoa, le {{ dateGénération }}
       </p>
       <div class="w-[90px] h-[90px] border-2 border-dashed border-gray-300 flex items-center justify-center relative">
-        <span class="text-[10px] text-gray-300 uppercase">[Cachet]</span>
+        <span class="text-[10px] text-[#0C2340] uppercase">[Cachet]</span>
       </div>
     </div>
   </div>

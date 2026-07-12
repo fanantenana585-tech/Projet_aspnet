@@ -2,10 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useExceptionsStore = defineStore('exceptions', {
   state: () => ({
-    exceptions: [
-      { id: 1, professorId: 2, week: 2, reason: 'Conférence internationale' },
-      { id: 2, professorId: 4, week: 1, reason: 'Congé maladie' }
-    ]
+    exceptions: []
   }),
   getters: {
     isWeekBlocked: (state) => (professorId, week) => {
@@ -16,11 +13,30 @@ export const useExceptionsStore = defineStore('exceptions', {
     }
   },
   actions: {
-    addException(exception) {
-      this.exceptions.push({
-        id: Date.now(),
-        ...exception
-      })
+    async fetchExceptions() {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/exceptions');
+        if (res.ok) {
+          this.exceptions = await res.json();
+        }
+      } catch (err) {
+        console.error('fetchExceptions error', err);
+      }
+    },
+    async addException(exception) {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/exceptions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(exception)
+        });
+        if (res.ok) {
+          const created = await res.json();
+          this.exceptions.push(created);
+        }
+      } catch (err) {
+        console.error('addException error', err);
+      }
     }
   }
 })

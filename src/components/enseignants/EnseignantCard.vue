@@ -87,11 +87,16 @@ const specialiteClasses = {
         </div>
         <span class="font-bold">{{ enseignant.telephone }}</span>
       </div>
-      <div class="flex items-center gap-4 text-sm text-[#1E5F8E]">
-        <div class="w-8 h-8 rounded-lg bg-[#F0F9FF] flex items-center justify-center text-[#38BDF8]">
+      <div class="flex items-start gap-4 text-sm text-[#1E5F8E]">
+        <div class="w-8 h-8 rounded-lg bg-[#F0F9FF] flex items-center justify-center text-[#38BDF8] shrink-0">
           <BookOpen :size="16" />
         </div>
-        <span class="font-bold">{{ enseignant.matieres.length }} matières</span>
+        <div class="flex flex-wrap gap-2 pt-1">
+          <span v-for="(mat, idx) in enseignant.matieres" :key="idx" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100">
+            {{ mat }}
+          </span>
+          <span v-if="!enseignant.matieres || enseignant.matieres.length === 0" class="text-[10px] text-gray-400 italic pt-1">Aucune matière</span>
+        </div>
       </div>
     </div>
 

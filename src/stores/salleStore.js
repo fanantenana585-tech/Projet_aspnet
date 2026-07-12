@@ -41,42 +41,63 @@ export const useSalleStore = defineStore('salle', {
   actions: {
     async fetchSalles() {
       this.loading = true;
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      this.salles = [
-        { id: 1, nom: 'Salle A101', type: 'Salle de cours', capacite: 30, batiment: 'Bâtiment A', etage: 1, equipements: ['Vidéoprojecteur', 'Tableau blanc', 'WiFi'], statut: 'disponible', tauxOccupation: 75 },
-        { id: 2, nom: 'Amphi 1', type: 'Amphithéâtre', capacite: 120, batiment: 'Bâtiment A', etage: 0, equipements: ['Vidéoprojecteur', 'Sono', 'Climatisation', 'WiFi'], statut: 'occupée', tauxOccupation: 90 },
-        { id: 3, nom: 'Labo Info 2', type: 'Laboratoire', capacite: 25, batiment: 'Bâtiment B', etage: 2, equipements: ['Ordinateurs', 'WiFi', 'Tableau blanc'], statut: 'disponible', tauxOccupation: 60 },
-        { id: 4, nom: 'Salle B204', type: 'Salle TD', capacite: 20, batiment: 'Bâtiment B', etage: 2, equipements: ['Tableau blanc', 'WiFi'], statut: 'maintenance', tauxOccupation: 40 },
-        { id: 5, nom: 'Salle A102', type: 'Salle de cours', capacite: 50, batiment: 'Bâtiment A', etage: 1, equipements: ['Vidéoprojecteur', 'Tableau blanc', 'WiFi'], statut: 'disponible', tauxOccupation: 65 },
-        { id: 6, nom: 'Amphi 2', type: 'Amphithéâtre', capacite: 150, batiment: 'Bâtiment C', etage: 0, equipements: ['Vidéoprojecteur', 'Sono', 'Climatisation', 'WiFi'], statut: 'occupée', tauxOccupation: 85 },
-        { id: 7, nom: 'Labo Info 1', type: 'Laboratoire', capacite: 25, batiment: 'Bâtiment B', etage: 1, equipements: ['Ordinateurs', 'WiFi', 'Tableau interactif'], statut: 'disponible', tauxOccupation: 55 },
-        { id: 8, nom: 'Salle C101', type: 'Salle de cours', capacite: 40, batiment: 'Bâtiment C', etage: 1, equipements: ['Vidéoprojecteur', 'WiFi'], statut: 'disponible', tauxOccupation: 70 },
-        { id: 9, nom: 'Salle A201', type: 'Salle TD', capacite: 25, batiment: 'Bâtiment A', etage: 2, equipements: ['Tableau blanc', 'WiFi', 'Climatisation'], statut: 'occupée', tauxOccupation: 80 },
-        { id: 10, nom: 'Salle B101', type: 'Salle de cours', capacite: 35, batiment: 'Bâtiment B', etage: 1, equipements: ['Vidéoprojecteur', 'Tableau blanc'], statut: 'maintenance', tauxOccupation: 30 },
-        { id: 11, nom: 'Amphi 3', type: 'Amphithéâtre', capacite: 100, batiment: 'Bâtiment C', etage: 0, equipements: ['Vidéoprojecteur', 'Sono', 'WiFi'], statut: 'disponible', tauxOccupation: 60 },
-        { id: 12, nom: 'Labo Info 3', type: 'Laboratoire', capacite: 20, batiment: 'Bâtiment B', etage: 2, equipements: ['Ordinateurs', 'WiFi', 'Webcam'], statut: 'disponible', tauxOccupation: 50 }
-      ];
-      this.loading = false;
-    },
-
-    ajouterSalle(data) {
-      this.salles.unshift({
-        id: this.salles.length + 1,
-        ...data,
-        tauxOccupation: 0
-      });
-    },
-
-    modifierSalle(id, data) {
-      const index = this.salles.findIndex(s => s.id === id);
-      if (index !== -1) {
-        this.salles[index] = { ...this.salles[index], ...data };
+      this.error = null;
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/salles');
+        if (!res.ok) throw new Error('Échec du chargement des salles');
+        this.salles = await res.json();
+      } catch (err) {
+        console.error('fetchSalles', err);
+        this.error = 'Impossible de se connecter à la base de données.';
+        this.salles = [];
+      } finally {
+        this.loading = false;
       }
     },
 
-    supprimerSalle(id) {
-      this.salles = this.salles.filter(s => s.id !== id);
+    async ajouterSalle(data) {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + '/api/salles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Erreur création');
+        const created = await res.json();
+        this.salles.unshift(created);
+      } catch (err) {
+        console.error('ajouterSalle', err);
+        throw err;
+      }
+    },
+
+    async modifierSalle(id, data) {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/salles/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Erreur modification');
+        const index = this.salles.findIndex(s => s.id === id);
+        if (index !== -1) {
+          this.salles[index] = { ...this.salles[index], ...data };
+        }
+      } catch (err) {
+        console.error('modifierSalle', err);
+        throw err;
+      }
+    },
+
+    async supprimerSalle(id) {
+      try {
+        const res = await fetch(import.meta.env.VITE_API_BASE_URL + `/api/salles/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Erreur suppression');
+        this.salles = this.salles.filter(s => s.id !== id);
+      } catch (err) {
+        console.error('supprimerSalle', err);
+        throw err;
+      }
     }
   }
 })

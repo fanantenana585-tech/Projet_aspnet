@@ -72,13 +72,13 @@ const handleConfirm = () => {
         <!-- Availability Grid -->
         <div class="grid grid-cols-[60px_repeat(6,1fr)] bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
           <div class="bg-white h-10 border-b border-gray-200"></div>
-          <div v-for="d in days" :key="d" class="bg-white h-10 border-b border-l border-gray-200 flex items-center justify-center font-bold text-xs uppercase text-gray-500">
+          <div v-for="d in days" :key="d" class="bg-white h-10 border-b border-l border-gray-200 flex items-center justify-center font-bold text-xs uppercase text-gray-700">
             {{ d }}
           </div>
 
           <!-- Morning -->
           <template v-for="h in morningHours" :key="`h-${h}`">
-            <div class="bg-white border-b border-gray-200 flex items-center justify-center font-bold text-xs text-gray-400">{{ h }}h</div>
+            <div class="bg-white border-b border-gray-200 flex items-center justify-center font-bold text-xs text-[#0C2340]">{{ h }}h</div>
             <div
               v-for="d in days"
               :key="`${d}-${h}`"
@@ -98,7 +98,7 @@ const handleConfirm = () => {
 
           <!-- Evening -->
           <template v-for="h in eveningHours" :key="`he-${h}`">
-            <div class="bg-white border-b border-gray-200 flex items-center justify-center font-bold text-xs text-gray-400">{{ h }}h</div>
+            <div class="bg-white border-b border-gray-200 flex items-center justify-center font-bold text-xs text-[#0C2340]">{{ h }}h</div>
             <div
               v-for="d in days"
               :key="`${d}-${h}`"

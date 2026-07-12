@@ -116,7 +116,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
               {{ enseignant ? 'Modifier l\'enseignant' : 'Ajouter un enseignant' }}
             </h2>
           </div>
-          <button @click="emit('close')" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full transition-colors">
+          <button @click="emit('close')" class="p-2 text-[#0C2340] hover:text-white hover:bg-gray-800 rounded-full transition-colors">
             <X :size="24" />
           </button>
         </div>
@@ -127,44 +127,44 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
             <!-- Colonne 1 -->
             <div class="space-y-4">
               <div class="space-y-1.5">
-                <label class="text-sm font-medium text-gray-300">Prénom <span class="text-red-500">*</span></label>
+                <label class="text-sm font-medium text-white">Prénom <span class="text-red-500">*</span></label>
                 <input
                   v-model="form.prenom"
                   type="text"
                   placeholder="Ex: Jean"
-                  class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all"
+                  class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]"
                   :class="{ 'border-red-500/50': errors.prenom }"
                 />
                 <p v-if="errors.prenom" class="text-red-400 text-xs">{{ errors.prenom }}</p>
               </div>
 
               <div class="space-y-1.5">
-                <label class="text-sm font-medium text-gray-300">Email <span class="text-red-500">*</span></label>
+                <label class="text-sm font-medium text-white">Email <span class="text-red-500">*</span></label>
                 <input
                   v-model="form.email"
                   type="email"
                   placeholder="jean@emit.mg"
-                  class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all"
+                  class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]"
                   :class="{ 'border-red-500/50': errors.email }"
                 />
                 <p v-if="errors.email" class="text-red-400 text-xs">{{ errors.email }}</p>
               </div>
 
               <div class="space-y-1.5">
-                <label class="text-sm font-medium text-gray-300">Téléphone</label>
+                <label class="text-sm font-medium text-white">Téléphone</label>
                 <input
                   v-model="form.telephone"
                   type="text"
                   placeholder="034 00 000 00"
-                  class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all"
+                  class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]"
                 />
               </div>
 
               <div class="space-y-1.5">
-                <label class="text-sm font-medium text-gray-300">Grade <span class="text-red-500">*</span></label>
+                <label class="text-sm font-medium text-white">Grade <span class="text-red-500">*</span></label>
                 <select
                   v-model="form.grade"
-                  class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none"
+                  class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none"
                   :class="{ 'border-red-500/50': errors.grade }"
                 >
                   <option value="" disabled>Choisir un grade</option>
@@ -177,22 +177,22 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
             <!-- Colonne 2 -->
             <div class="space-y-4">
               <div class="space-y-1.5">
-                <label class="text-sm font-medium text-gray-300">Nom <span class="text-red-500">*</span></label>
+                <label class="text-sm font-medium text-white">Nom <span class="text-red-500">*</span></label>
                 <input
                   v-model="form.nom"
                   type="text"
                   placeholder="Ex: RAKOTO"
-                  class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all"
+                  class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]"
                   :class="{ 'border-red-500/50': errors.nom }"
                 />
                 <p v-if="errors.nom" class="text-red-400 text-xs">{{ errors.nom }}</p>
               </div>
 
               <div class="space-y-1.5">
-                <label class="text-sm font-medium text-gray-300">Spécialité <span class="text-red-500">*</span></label>
+                <label class="text-sm font-medium text-white">Spécialité <span class="text-red-500">*</span></label>
                 <select
                   v-model="form.specialite"
-                  class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none"
+                  class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none"
                   :class="{ 'border-red-500/50': errors.specialite }"
                 >
                   <option value="" disabled>Choisir une spécialité</option>
@@ -202,7 +202,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
               </div>
 
               <div class="flex items-center justify-between p-4 bg-gray-800/30 rounded-2xl border border-gray-800">
-                <label class="text-sm font-medium text-gray-300">Statut de l'enseignant</label>
+                <label class="text-sm font-medium text-white">Statut de l'enseignant</label>
                 <button
                   type="button"
                   @click="form.statut = form.statut === 'Actif' ? 'Inactif' : 'Actif'"
@@ -217,11 +217,11 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
               </div>
 
               <div class="space-y-1.5">
-                <label class="text-sm font-medium text-gray-300">Charge Max (h/semaine)</label>
+                <label class="text-sm font-medium text-white">Charge Max (h/semaine)</label>
                 <input
                   v-model.number="form.maxHeures"
                   type="number"
-                  class="w-full bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all"
+                  class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all"
                 />
               </div>
             </div>
@@ -229,14 +229,14 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
 
           <!-- Matières Section -->
           <div class="space-y-3">
-            <label class="text-sm font-medium text-gray-300">Matières assignées</label>
+            <label class="text-sm font-medium text-white">Matières assignées</label>
             <div class="flex gap-2">
               <input
                 v-model="newMatiere"
                 @keyup.enter="addMatiere"
                 type="text"
                 placeholder="Ajouter une matière..."
-                class="flex-1 bg-emit-bg/50 border border-gray-700 text-white rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all"
+                class="flex-1 bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]"
               />
               <button
                 type="button"
@@ -257,7 +257,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
                   <X :size="14" />
                 </button>
               </div>
-              <p v-if="form.matieres.length === 0" class="text-xs text-gray-500 italic">Aucune matière assignée</p>
+              <p v-if="form.matieres.length === 0" class="text-xs text-gray-700 italic">Aucune matière assignée</p>
             </div>
           </div>
         </form>
@@ -266,7 +266,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
         <div class="p-6 border-t border-gray-800 flex justify-end gap-4 bg-gray-800/10">
           <button
             @click="emit('close')"
-            class="px-6 py-2.5 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-all text-sm font-medium"
+            class="px-6 py-2.5 rounded-xl border border-gray-700 text-[#0C2340] hover:bg-gray-800 transition-all text-sm font-medium"
           >
             Annuler
           </button>

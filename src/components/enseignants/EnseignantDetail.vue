@@ -51,7 +51,7 @@ const planning = [
       <!-- Header -->
       <div class="p-6 border-b border-gray-800 bg-[#1E293B] sticky top-0 z-10">
         <div class="flex items-center justify-between mb-6">
-          <button @click="emit('close')" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-full transition-colors">
+          <button @click="emit('close')" class="p-2 text-[#0C2340] hover:text-white hover:bg-gray-800 rounded-full transition-colors">
             <X :size="24" />
           </button>
           <button @click="emit('edit', enseignant)" class="flex items-center gap-2 px-4 py-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white rounded-xl transition-all text-sm font-bold">
@@ -64,7 +64,7 @@ const planning = [
             {{ initials }}
           </div>
           <h2 class="text-2xl font-bold text-white mb-1">{{ enseignant.prenom }} {{ enseignant.nom }}</h2>
-          <p class="text-gray-400 font-medium mb-3">{{ enseignant.grade }}</p>
+          <p class="text-[#0C2340] font-medium mb-3">{{ enseignant.grade }}</p>
           <div class="flex items-center gap-2">
             <span :class="['px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border',
               enseignant.statut === 'Actif' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20']">
@@ -84,7 +84,7 @@ const planning = [
           :key="tab"
           @click="activeTab = tab"
           class="flex-1 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all"
-          :class="activeTab === tab ? 'bg-emit-blue text-white shadow-lg shadow-emit-blue/20' : 'text-gray-500 hover:text-gray-300'"
+          :class="activeTab === tab ? 'bg-emit-blue text-white shadow-lg shadow-emit-blue/20' : 'text-gray-700 hover:text-[#0C2340]'"
         >
           {{ tab }}
         </button>
@@ -94,40 +94,40 @@ const planning = [
       <div class="flex-1 overflow-y-auto px-6 pb-8 custom-scrollbar">
         <div v-if="activeTab === 'infos' && enseignant" class="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
           <div class="space-y-4">
-            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Coordonnées</h3>
+            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-widest">Coordonnées</h3>
             <div class="grid gap-4">
               <div class="flex items-center gap-4 p-4 bg-gray-800/40 rounded-2xl border border-gray-800">
                 <div class="p-2 bg-blue-500/10 text-blue-400 rounded-lg"><Mail :size="18" /></div>
-                <div><p class="text-xs text-gray-500">Email</p><p class="text-sm text-white font-medium">{{ enseignant.email }}</p></div>
+                <div><p class="text-xs text-gray-700">Email</p><p class="text-sm text-white font-medium">{{ enseignant.email }}</p></div>
               </div>
               <div class="flex items-center gap-4 p-4 bg-gray-800/40 rounded-2xl border border-gray-800">
                 <div class="p-2 bg-purple-500/10 text-purple-400 rounded-lg"><Phone :size="18" /></div>
-                <div><p class="text-xs text-gray-500">Téléphone</p><p class="text-sm text-white font-medium">{{ enseignant.telephone }}</p></div>
+                <div><p class="text-xs text-gray-700">Téléphone</p><p class="text-sm text-white font-medium">{{ enseignant.telephone }}</p></div>
               </div>
               <div class="flex items-center gap-4 p-4 bg-gray-800/40 rounded-2xl border border-gray-800">
                 <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg"><Calendar :size="18" /></div>
-                <div><p class="text-xs text-gray-500">Recruté le</p><p class="text-sm text-white font-medium">{{ formatDate(enseignant.dateRecrutement) }}</p></div>
+                <div><p class="text-xs text-gray-700">Recruté le</p><p class="text-sm text-white font-medium">{{ formatDate(enseignant.dateRecrutement) }}</p></div>
               </div>
             </div>
           </div>
 
           <div class="space-y-4">
-            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Charge Horaire</h3>
+            <h3 class="text-xs font-bold text-gray-700 uppercase tracking-widest">Charge Horaire</h3>
             <div class="grid grid-cols-2 gap-4">
               <div class="p-4 bg-gray-800/40 rounded-2xl border border-gray-800 text-center">
                 <p class="text-2xl font-bold text-white mb-1">{{ enseignant.nbHeures }}h</p>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Effectuées</p>
+                <p class="text-[10px] text-gray-700 font-bold uppercase tracking-wider">Effectuées</p>
               </div>
               <div class="p-4 bg-gray-800/40 rounded-2xl border border-gray-800 text-center">
                 <p class="text-2xl font-bold text-white mb-1">{{ enseignant.maxHeures }}h</p>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Maximum</p>
+                <p class="text-[10px] text-gray-700 font-bold uppercase tracking-wider">Maximum</p>
               </div>
             </div>
           </div>
         </div>
 
         <div v-else-if="activeTab === 'matieres'" class="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Matières assignées</h3>
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-widest mb-4">Matières assignées</h3>
           <div v-if="enseignant?.matieres.length" class="space-y-3">
             <div
               v-for="(matiere, index) in enseignant.matieres"
@@ -138,14 +138,14 @@ const planning = [
                 <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">{{ index + 1 }}</div>
                 <span class="text-sm font-medium text-white">{{ matiere }}</span>
               </div>
-              <span class="text-[10px] text-gray-500 font-bold uppercase">L1/L2/L3</span>
+              <span class="text-[10px] text-gray-700 font-bold uppercase">L1/L2/L3</span>
             </div>
           </div>
-          <p v-else class="text-center text-gray-500 py-10 italic">Aucune matière enregistrée</p>
+          <p v-else class="text-center text-gray-700 py-10 italic">Aucune matière enregistrée</p>
         </div>
 
         <div v-else-if="activeTab === 'planning'" class="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
-          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Planning Semaine</h3>
+          <h3 class="text-xs font-bold text-gray-700 uppercase tracking-widest mb-4">Planning Semaine</h3>
           <div class="space-y-3">
             <div
               v-for="(item, index) in planning"
@@ -155,7 +155,7 @@ const planning = [
               <div class="px-3 py-1 bg-emit-blue text-white rounded-lg text-xs font-bold">{{ item.day }}</div>
               <div class="flex-1">
                 <p class="text-sm font-bold text-white">{{ item.matiere }}</p>
-                <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-500 font-medium">
+                <div class="flex items-center gap-3 mt-1 text-[11px] text-gray-700 font-medium">
                   <span class="flex items-center gap-1"><Clock :size="12" /> {{ item.hours }}</span>
                   <span class="flex items-center gap-1"><School :size="12" /> {{ item.room }}</span>
                 </div>

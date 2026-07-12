@@ -59,7 +59,7 @@ const getStatusBadge = (statut) => {
     case 'disponible': return 'bg-emerald-50 text-emerald-600 border-emerald-100'
     case 'occupée': return 'bg-red-50 text-red-600 border-red-100'
     case 'maintenance': return 'bg-orange-50 text-orange-600 border-orange-100'
-    default: return 'bg-gray-50 text-gray-500 border-gray-100'
+    default: return 'bg-gray-50 text-gray-700 border-gray-100'
   }
 }
 </script>

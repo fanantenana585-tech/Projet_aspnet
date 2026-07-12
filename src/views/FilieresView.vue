@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { useFiliereStore, MOCK_MENTIONS } from '@/stores/filiereStore';
 import FiliereCard from '@/components/filieres/FiliereCard.vue';
+import FiliereModal from '@/components/filieres/FiliereModal.vue';
 import {
   GraduationCap, Plus, Search, ChevronDown,
   LayoutGrid, List, Landmark, TreeDeciduous,
@@ -191,5 +192,12 @@ const getParcoursForMention = (mentionId) => {
           </tbody>
        </table>
     </div>
+
+    <!-- Modal pour ajout/modification -->
+    <FiliereModal
+      :is-open="store.modalOuverte"
+      :parcours="store.parcoursEnEdition"
+      @close="store.fermerModal()"
+    />
   </div>
 </template>

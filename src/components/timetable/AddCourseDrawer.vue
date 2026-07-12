@@ -86,7 +86,7 @@ const isBusy = (day, hour) => coursesStore.isProfBusy(formData.value.profId, day
                     :class="i <= step ? 'bg-[#1D9E75] w-8' : 'bg-gray-200 w-4'"></div>
             </div>
           </div>
-          <button @click="emit('close')" class="w-12 h-12 rounded-2xl bg-white text-gray-400 hover:text-red-500 shadow-sm flex items-center justify-center">
+          <button @click="emit('close')" class="w-12 h-12 rounded-2xl bg-white text-[#0C2340] hover:text-red-500 shadow-sm flex items-center justify-center">
             <i class="fas fa-times"></i>
           </button>
         </div>
@@ -94,7 +94,7 @@ const isBusy = (day, hour) => coursesStore.isProfBusy(formData.value.profId, day
         <div class="flex-1 overflow-y-auto p-8">
           <!-- Step 1: Prof Selection -->
           <div v-if="step === 1" class="space-y-6">
-            <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest">Étape 1 : Choisir l'enseignant</h3>
+            <h3 class="text-sm font-black text-[#0C2340] uppercase tracking-widest">Étape 1 : Choisir l'enseignant</h3>
             <div class="space-y-3">
                <button v-for="p in professorsStore.professors" :key="p.id"
                        @click="formData.profId = p.id; nextStep()"
@@ -105,7 +105,7 @@ const isBusy = (day, hour) => coursesStore.isProfBusy(formData.value.profId, day
                   </div>
                   <div>
                     <p class="font-bold text-[#0D1B3E]">{{ p.prenom }} {{ p.nom }}</p>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-gray-400">{{ p.specialite }}</p>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-[#0C2340]">{{ p.specialite }}</p>
                   </div>
                   <i v-if="formData.profId === p.id" class="fas fa-check-circle ml-auto text-[#1D9E75] text-xl"></i>
                </button>
@@ -115,7 +115,7 @@ const isBusy = (day, hour) => coursesStore.isProfBusy(formData.value.profId, day
           <!-- Step 2: Slot Selection -->
           <div v-if="step === 2" class="space-y-6">
             <div class="flex items-center justify-between">
-               <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest">Étape 2 : Créneau horaire</h3>
+               <h3 class="text-sm font-black text-[#0C2340] uppercase tracking-widest">Étape 2 : Créneau horaire</h3>
                <button @click="step = 1" class="text-[10px] font-bold text-[#1D9E75] uppercase underline">Changer prof</button>
             </div>
 
@@ -133,7 +133,7 @@ const isBusy = (day, hour) => coursesStore.isProfBusy(formData.value.profId, day
                              :class="[
                                isBusy(day, h) ? 'bg-red-50 border-red-100 text-red-400 cursor-not-allowed opacity-50' :
                                isAvailable(day, h) ? 'bg-emerald-50 border-emerald-100 text-[#1D9E75] hover:scale-105' :
-                               'bg-gray-50 border-gray-100 text-gray-400 opacity-30 cursor-not-allowed'
+                               'bg-gray-50 border-gray-100 text-[#0C2340] opacity-30 cursor-not-allowed'
                              ]">
                         {{ h }}h–{{ h+1 }}h
                         <i v-if="isBusy(day, h)" class="fas fa-times ml-1"></i>
@@ -147,7 +147,7 @@ const isBusy = (day, hour) => coursesStore.isProfBusy(formData.value.profId, day
           <!-- Step 3: Course details -->
           <div v-if="step === 3" class="space-y-8">
              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest">Étape 3 : Informations</h3>
+                <h3 class="text-sm font-black text-[#0C2340] uppercase tracking-widest">Étape 3 : Informations</h3>
                 <button @click="step = 2" class="text-[10px] font-bold text-[#1D9E75] uppercase underline">Changer créneau</button>
              </div>
 
@@ -166,15 +166,15 @@ const isBusy = (day, hour) => coursesStore.isProfBusy(formData.value.profId, day
 
              <div class="space-y-5">
                 <div class="space-y-2">
-                   <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Nom du module</label>
+                   <label class="text-[10px] font-black text-[#0C2340] uppercase tracking-widest ml-4">Nom du module</label>
                    <input v-model="formData.nom" type="text" placeholder="ex: Algèbre de Boole" class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#1D9E75] font-bold text-[#0D1B3E]" />
                 </div>
                 <div class="space-y-2">
-                   <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Salle attribuée</label>
+                   <label class="text-[10px] font-black text-[#0C2340] uppercase tracking-widest ml-4">Salle attribuée</label>
                    <input v-model="formData.salle" type="text" placeholder="ex: A101" class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#1D9E75] font-bold text-[#0D1B3E]" />
                 </div>
                 <div class="space-y-2">
-                   <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Département</label>
+                   <label class="text-[10px] font-black text-[#0C2340] uppercase tracking-widest ml-4">Département</label>
                    <select v-model="formData.departement" class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-[#1D9E75] font-bold text-[#0D1B3E] appearance-none">
                       <option v-for="(color, name) in coursesStore.departements" :key="name" :value="name">{{ name }}</option>
                    </select>

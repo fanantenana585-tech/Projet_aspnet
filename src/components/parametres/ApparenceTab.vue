@@ -49,7 +49,7 @@ const densities = ['Compact', 'Normal', 'Confortable']
           </div>
           <div class="p-4 bg-gray-800/80 flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <component :is="theme.icon" :size="16" class="text-gray-400" />
+              <component :is="theme.icon" :size="16" class="text-[#0C2340]" />
               <span class="text-xs font-black uppercase tracking-widest text-white">{{ theme.name }}</span>
             </div>
             <div v-if="themeStore.mode === theme.id" class="w-5 h-5 bg-emit-blue rounded-full flex items-center justify-center">
@@ -81,13 +81,13 @@ const densities = ['Compact', 'Normal', 'Confortable']
       <h3 class="text-xl font-black text-white mb-6">Typographie</h3>
       <div class="divide-y divide-gray-800/50">
         <SettingRow label="Police de l'interface" description="Choisissez la famille de police globale.">
-          <select v-model="themeStore.police" class="bg-gray-800 text-white rounded-xl px-4 py-2 border border-gray-700 outline-none text-sm font-bold">
+          <select v-model="themeStore.police" class="bg-white text-black border-gray-300 rounded-xl px-4 py-2 border border-gray-700 outline-none text-sm font-bold">
             <option v-for="p in polices" :key="p">{{ p }}</option>
           </select>
         </SettingRow>
         <SettingRow label="Taille de police" description="Ajustez la taille du texte pour plus de confort.">
           <div class="flex items-center gap-4 w-48">
-            <span class="text-[10px] text-gray-500 font-bold uppercase">A</span>
+            <span class="text-[10px] text-gray-700 font-bold uppercase">A</span>
             <input type="range" v-model="themeStore.taillePolice" min="12" max="18" class="flex-1 accent-emit-blue" />
             <span class="text-lg text-white font-bold uppercase">A</span>
           </div>
@@ -99,7 +99,7 @@ const densities = ['Compact', 'Normal', 'Confortable']
               :key="d"
               @click="themeStore.densite = d"
               class="px-4 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all"
-              :class="themeStore.densite === d ? 'bg-gray-800 text-white shadow-lg' : 'text-gray-600'"
+              :class="themeStore.densite === d ? 'bg-white text-black border-gray-300 shadow-lg' : 'text-gray-600'"
             >
               {{ d }}
             </button>
@@ -109,3 +109,4 @@ const densities = ['Compact', 'Normal', 'Confortable']
     </section>
   </div>
 </template>
+

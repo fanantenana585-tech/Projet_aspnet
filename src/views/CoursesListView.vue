@@ -21,12 +21,12 @@ const getProfessorName = (id) => {
       <table class="w-full text-left">
         <thead>
           <tr class="bg-gray-50 border-b border-gray-100">
-            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Cours</th>
-            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Enseignant</th>
-            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Promotion</th>
-            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Horaire</th>
-            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Salle</th>
-            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Action</th>
+            <th class="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-widest">Cours</th>
+            <th class="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-widest">Enseignant</th>
+            <th class="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-widest">Promotion</th>
+            <th class="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-widest">Horaire</th>
+            <th class="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-widest">Salle</th>
+            <th class="px-6 py-4 text-xs font-bold text-gray-700 uppercase tracking-widest text-right">Action</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-50">
@@ -42,7 +42,7 @@ const getProfessorName = (id) => {
             <td class="px-6 py-4 text-sm text-gray-600">{{ course.jour }} {{ course.creneau }}</td>
             <td class="px-6 py-4 text-sm font-bold text-[#0D1B3E]">{{ course.salle }}</td>
             <td class="px-6 py-4 text-right">
-              <button @click="coursesStore.deleteCourse(course.id)" class="text-gray-300 hover:text-red-500 transition-colors">
+              <button @click="coursesStore.deleteCourse(course.id)" class="text-[#0C2340] hover:text-red-500 transition-colors">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </td>

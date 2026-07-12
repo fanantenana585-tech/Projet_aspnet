@@ -21,7 +21,7 @@ const config = reactive({ ...store.notifications })
           </div>
           <div>
             <h4 class="font-bold text-white mb-1">Email</h4>
-            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-4">Alertes par email</p>
+            <p class="text-[10px] text-gray-700 uppercase font-black tracking-widest mb-4">Alertes par email</p>
             <ToggleSwitch v-model="config.email" />
           </div>
         </div>
@@ -32,7 +32,7 @@ const config = reactive({ ...store.notifications })
           </div>
           <div>
             <h4 class="font-bold text-white mb-1">Navigateur</h4>
-            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-4">Notifications Push</p>
+            <p class="text-[10px] text-gray-700 uppercase font-black tracking-widest mb-4">Notifications Push</p>
             <button v-if="!config.navigateur" class="px-4 py-1.5 bg-purple-500 text-white text-[10px] font-black uppercase rounded-lg">Activer</button>
             <ToggleSwitch v-else v-model="config.navigateur" />
           </div>
@@ -44,7 +44,7 @@ const config = reactive({ ...store.notifications })
           </div>
           <div>
             <h4 class="font-bold text-white mb-1">Sons</h4>
-            <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-4">Sons d'alerte</p>
+            <p class="text-[10px] text-gray-700 uppercase font-black tracking-widest mb-4">Sons d'alerte</p>
             <ToggleSwitch v-model="config.sons" />
           </div>
         </div>
@@ -60,7 +60,7 @@ const config = reactive({ ...store.notifications })
         </SettingRow>
         <SettingRow label="Rappels de cours" description="Notifications de rappel avant le début de chaque séance.">
           <div class="flex items-center gap-4">
-            <select class="bg-gray-800 text-white rounded-xl px-3 py-1.5 border border-gray-700 outline-none text-[10px] font-bold uppercase">
+            <select class="bg-white text-black border-gray-300 rounded-xl px-3 py-1.5 border border-gray-700 outline-none text-[10px] font-bold uppercase">
               <option>15 minutes avant</option>
               <option>30 minutes avant</option>
               <option>1 heure avant</option>
@@ -78,3 +78,4 @@ const config = reactive({ ...store.notifications })
     </section>
   </div>
 </template>
+

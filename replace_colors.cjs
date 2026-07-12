@@ -15,7 +15,7 @@ function walkDir(dir, callback) {
   });
 }
 
-const targetDir = path.resolve('..', 'ASPE_NET', 'src');
+const targetDir = path.resolve(__dirname, 'src');
 
 walkDir(targetDir, function(filePath) {
   let content = fs.readFileSync(filePath, 'utf8');
