@@ -8,5 +8,6 @@ public class Enseignant
     public string Specialite { get; set; } = string.Empty;
     public string Statut { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string? PhoneNumber { get; set; }
     public string? Initiales { get; set; }
 }

@@ -34,6 +34,7 @@ public class EnseignantService : IEnseignantService
             Email = dto.Email,
             Specialite = dto.Specialite,
             Statut = dto.Statut,
+            PhoneNumber = dto.Telephone,
             Initiales = !string.IsNullOrWhiteSpace(dto.Initiales) ? dto.Initiales : GenerateInitials(dto.Nom, dto.Prenom)
         };
         await _repository.AddAsync(enseignant);
@@ -51,6 +52,7 @@ public class EnseignantService : IEnseignantService
         enseignant.Email = dto.Email;
         enseignant.Specialite = dto.Specialite;
         enseignant.Statut = dto.Statut;
+        enseignant.PhoneNumber = dto.Telephone;
         enseignant.Initiales = !string.IsNullOrWhiteSpace(dto.Initiales) ? dto.Initiales : GenerateInitials(dto.Nom, dto.Prenom);
 
         _repository.Update(enseignant);
@@ -76,6 +78,7 @@ public class EnseignantService : IEnseignantService
         Email = e.Email,
         Specialite = e.Specialite,
         Statut = e.Statut,
+        Telephone = e.PhoneNumber,
         Initiales = e.Initiales
     };
 

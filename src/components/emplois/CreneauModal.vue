@@ -27,6 +27,7 @@ const isLoading = ref(false);
 const forceSave = ref(false);
 const showDeleteConfirm = ref(false);
 const deleteOption = ref('only'); // 'only' or 'all'
+const saveError = ref('');
 
 const form = reactive({
   id: null,
@@ -78,15 +79,15 @@ const isMaster = computed(() => {
 const niveauxDisponibles = computed(() => isMaster.value ? ['M1', 'M2'] : ['L1', 'L2', 'L3']);
 
 const filteredMatieres = computed(() => {
+  // Parcours is intentionally NOT used to filter matieres here so the two selects remain independent.
   return matiereStore.matieres.filter(m => {
-    const matchFiltre = m.mentionId === form.mention &&
-      (m.parcours === form.parcours || m.mentionId === 'transversal') &&
-      m.niveau === form.niveau;
+    const matchMention = !form.mention || form.mention === 'toutes' ? true : m.mentionId === form.mention;
+    const matchNiveau = !form.niveau || form.niveau === 'tous' ? true : m.niveau === form.niveau;
 
-    const matchSearch = m.nom.toLowerCase().includes(matiereSearch.value.toLowerCase()) ||
-                        m.code.toLowerCase().includes(matiereSearch.value.toLowerCase());
+    const q = matiereSearch.value.toLowerCase();
+    const matchSearch = (m.nom || '').toLowerCase().includes(q) || (m.code || '').toLowerCase().includes(q);
 
-    return matchFiltre && matchSearch;
+    return matchMention && matchNiveau && matchSearch;
   });
 });
 
@@ -180,6 +181,7 @@ watch(() => props.isOpen, (val) => {
     }
     forceSave.value = false;
     showDeleteConfirm.value = false;
+    saveError.value = '';
   }
 });
 
@@ -213,6 +215,30 @@ const selectMatiere = (m) => {
   form.matiere = m;
   matiereSearch.value = `[${m.code}] ${m.nom}`;
   showMatiereList.value = false;
+  tryAutoFillEnseignantForMatiere(m);
+};
+
+// Auto-fill responsable enseignant when a matiere is selected
+// Tries multiple possible fields returned by backend: `responsableEnseignant` (object) or `responsableEnseignantId` (id)
+// Falls back to searching the enseignants list by id
+const tryAutoFillEnseignantForMatiere = (m) => {
+  if (!m) return;
+  // If matiere already contains full enseignant object
+  if (m.responsableEnseignant && m.responsableEnseignant.id) {
+    form.enseignant = m.responsableEnseignant;
+    enseignantSearch.value = `${form.enseignant.prenom} ${form.enseignant.nom}`;
+    return;
+  }
+
+  // If matiere exposes an id field
+  const possibleId = m.responsableEnseignantId || m.responsableId || m.responsable?.id;
+  if (possibleId) {
+    const enseignant = enseignantStore.enseignants.find(e => String(e.id) === String(possibleId));
+    if (enseignant) {
+      form.enseignant = enseignant;
+      enseignantSearch.value = `${enseignant.prenom} ${enseignant.nom}`;
+    }
+  }
 };
 
 const selectEnseignant = (e) => {
@@ -241,6 +267,7 @@ const canSave = computed(() => {
 
 const submit = async () => {
   if (!canSave.value) return;
+  saveError.value = '';
   isLoading.value = true;
 
   const m = filiereStore.mentions.find(m => m.id === form.mention);
@@ -252,11 +279,24 @@ const submit = async () => {
     parcours: { id: p.id, nom: p.nom, code: p.code, couleur: p.couleur }
   };
 
-  try {
-    if (form.id) await store.modifierCreneau(form.id, payload);
-    else await store.ajouterCreneau(payload);
+  try {    // ===== VÉRIFICATION DES CONFLITS AVANT ENREGISTREMENT =====
+    const conflictCheck = store.verifierConflitsAvantEnregistrement(payload, form.id || null);
+    if (conflictCheck.hasConflict) {
+      // Afficher le message du premier conflit détecté
+      saveError.value = conflictCheck.firstConflict.message;
+      isLoading.value = false;
+      return;
+    }
+    if (form.id) {
+      await store.modifierCreneau(form.id, payload);
+      emit('saved', 'Créneau modifié avec succès');
+    } else {
+      await store.ajouterCreneau(payload);
+      emit('saved', 'Créneau ajouté avec succès');
+    }
     emit('close');
   } catch (err) {
+    saveError.value = err?.message || 'Impossible d’enregistrer ce créneau.';
     console.error(err);
   } finally {
     isLoading.value = false;
@@ -270,8 +310,20 @@ const confirmDeleteAction = () => {
 };
 
 const closeOnEsc = (e) => { if (e.key === 'Escape' && props.isOpen) emit('close'); };
-onMounted(() => window.addEventListener('keydown', closeOnEsc));
-onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
+onMounted(() => {
+  window.addEventListener('keydown', closeOnEsc);
+});
+onUnmounted(() => {
+  window.removeEventListener('keydown', closeOnEsc);
+});
+
+// Safety helpers for template blur handlers
+const onMatiereBlur = () => {
+  globalThis.setTimeout(() => { showMatiereList.value = false; }, 200);
+};
+const onEnseignantBlur = () => {
+  globalThis.setTimeout(() => { showEnseignantList.value = false; }, 200);
+};
 
 </script>
 
@@ -282,11 +334,11 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
       <div class="absolute inset-0 bg-[#0C2340]/40 backdrop-blur-[4px]" @click="emit('close')"></div>
 
       <!-- Modal Card -->
-      <div class="bg-[#1E293B] w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-700 relative overflow-hidden flex flex-col max-h-[92vh] animate-modal-in">
+      <div class="bg-[#1E293B] w-full max-w-2xl rounded-3xl shadow-2xl border border-gray-700 relative overflow-hidden flex flex-col max-h-screen animate-modal-in">
 
         <!-- Header -->
-        <div class="p-8 border-b border-gray-700 flex justify-between items-center shrink-0">
-          <div class="flex items-center gap-6">
+        <div class="p-5 border-b border-gray-700 flex justify-between items-center shrink-0">
+          <div class="flex items-center gap-3">
             <div class="w-14 h-14 rounded-2xl bg-[#38BDF8] text-white flex items-center justify-center shadow-lg shadow-[#38BDF8]/20 transition-transform hover:scale-110 duration-300">
                <Calendar v-if="!form.id" :size="28" />
                <RotateCcw v-else :size="28" />
@@ -309,40 +361,43 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
         </div>
 
         <!-- Body -->
-        <div class="flex-1 overflow-y-auto p-10 space-y-12 custom-scrollbar">
+        <div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
 
           <!-- Section 1: Cours -->
-          <section class="space-y-8">
-            <div class="flex items-center gap-4 border-l-4 border-[#38BDF8] pl-4">
-              <BookOpen class="text-[#38BDF8]" :size="20" />
-              <h3 class="text-sm font-black text-white">Informations du cours</h3>
+          <div v-if="saveError" class="rounded-2xl border border-red-500 bg-red-500/10 p-4 text-sm text-red-600 font-medium">
+            {{ saveError }}
+          </div>
+          <section class="space-y-4">
+            <div class="flex items-center gap-3 border-l-4 border-[#38BDF8] pl-3">
+              <BookOpen class="text-[#38BDF8]" :size="18" />
+              <h3 class="text-xs font-black text-white">Informations du cours</h3>
             </div>
 
-            <div class="grid grid-cols-2 gap-8">
-              <div class="space-y-2">
-                <label class="text-sm font-medium text-white ml-1">Mention</label>
-                <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="text-xs font-medium text-white ml-1">Mention</label>
+                <div class="grid grid-cols-3 gap-2">
                    <button
                      v-for="m in filiereStore.mentions" :key="m.id"
                      @click="selectMention(m.id)"
-                     class="flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-300"
+                     class="flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition-all duration-300"
                      :style="{
                         borderColor: form.mention === m.id ? m.couleur : '#BFDBFE',
                         backgroundColor: form.mention === m.id ? `${m.couleur}10` : '#F8FBFF'
                      }"
                    >
-                      <span class="text-2xl">{{ m.icone }}</span>
-                      <span class="text-[10px] font-black uppercase" :style="{ color: form.mention === m.id ? m.couleur : '#64A8CC' }">{{ m.nom }}</span>
+                      <span class="text-lg">{{ m.icone }}</span>
+                      <span class="text-[8px] font-black uppercase" :style="{ color: form.mention === m.id ? m.couleur : '#64A8CC' }">{{ m.nom }}</span>
                    </button>
                 </div>
               </div>
 
-              <div class="space-y-2 relative">
-                <label class="text-sm font-medium text-white ml-1">Parcours</label>
+              <div class="space-y-1 relative">
+                <label class="text-xs font-medium text-white ml-1">Parcours</label>
                 <div class="relative">
                    <button
                      @click="showParcoursList = !showParcoursList"
-                     class="w-full bg-white border-2 border-gray-300 rounded-2xl p-4 flex items-center justify-between font-bold text-black hover:border-[#38BDF8] transition-all"
+                     class="w-full bg-white border-2 border-gray-300 rounded-xl p-2 flex items-center justify-between font-bold text-black text-sm hover:border-[#38BDF8] transition-all"
                    >
                       <div class="flex items-center gap-3">
                          <span class="bg-[#0EA5E91A] text-[#0EA5E9] px-2 py-0.5 rounded text-[10px] font-black">[{{ filiereStore.parcours.find(p => p.id === form.parcours)?.code }}]</span>
@@ -365,14 +420,14 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-8">
-               <div class="space-y-2">
-                <label class="text-sm font-medium text-white ml-1">Niveau</label>
-                <div class="flex bg-gray-800/40 p-1.5 rounded-2xl border-2 border-gray-700">
+            <div class="grid grid-cols-2 gap-4">
+               <div class="space-y-1">
+                <label class="text-xs font-medium text-white ml-1">Niveau</label>
+                <div class="flex bg-gray-800/40 p-1 rounded-xl border-2 border-gray-700">
                   <button
                     v-for="lvl in niveauxDisponibles" :key="lvl"
                     @click="form.niveau = lvl"
-                    class="flex-1 py-3 rounded-xl text-xs font-black transition-all"
+                    class="flex-1 py-2 rounded-lg text-xs font-black transition-all"
                     :class="form.niveau === lvl ? 'bg-[#38BDF8] text-white shadow-md' : 'text-gray-400 hover:text-white'"
                   >
                     {{ lvl }}
@@ -380,10 +435,10 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
                 </div>
               </div>
 
-              <div class="space-y-2">
-                <label class="text-sm font-medium text-white ml-1">Groupe</label>
+              <div class="space-y-1">
+                <label class="text-xs font-medium text-white ml-1">Groupe</label>
                 <div class="relative">
-                   <select v-model="form.groupe" class="w-full bg-white border border-gray-300 text-black font-bold rounded-2xl p-4 appearance-none outline-none focus:border-[#38BDF8] transition-all">
+                   <select v-model="form.groupe" class="w-full bg-white border border-gray-300 text-black font-bold rounded-xl p-2 text-sm appearance-none outline-none focus:border-[#38BDF8] transition-all">
                      <option :value="null">Tous</option>
                      <option>Groupe A</option>
                      <option>Groupe B</option>
@@ -393,17 +448,17 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
               </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-8">
-               <div class="col-span-2 space-y-2 relative">
-                 <label class="text-sm font-medium text-white ml-1">Matière</label>
+            <div class="grid grid-cols-3 gap-4">
+               <div class="col-span-2 space-y-1 relative">
+                 <label class="text-xs font-medium text-white ml-1">Matière</label>
                  <div class="relative">
-                    <Search class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" :size="18" />
+                    <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" :size="16" />
                     <input
                       type="text" v-model="matiereSearch"
                       @focus="showMatiereList = true"
-                      @blur="setTimeout(() => showMatiereList = false, 200)"
+                      @blur="onMatiereBlur"
                       placeholder="Code ou nom de la matière..."
-                      class="w-full bg-white border border-gray-300 text-black font-bold rounded-2xl pl-12 pr-4 py-4 focus:border-[#38BDF8] outline-none transition-all"
+                      class="w-full bg-white border border-gray-300 text-black font-bold rounded-xl pl-10 pr-3 py-2 text-sm focus:border-[#38BDF8] outline-none transition-all"
                     >
                     <div v-if="showMatiereList && filteredMatieres.length > 0" class="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-700 rounded-2xl shadow-2xl z-[50] max-h-60 overflow-y-auto custom-scrollbar">
                        <div
@@ -421,13 +476,13 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
                  </div>
                </div>
 
-               <div class="space-y-2">
-                 <label class="text-sm font-medium text-white ml-1">Type</label>
-                 <div class="flex bg-gray-800/40 p-1.5 rounded-2xl border-2 border-gray-700 overflow-x-auto no-scrollbar">
+               <div class="space-y-1">
+                 <label class="text-xs font-medium text-white ml-1">Type</label>
+                 <div class="flex bg-gray-800/40 p-1 rounded-xl border-2 border-gray-700 overflow-x-auto no-scrollbar">
                    <button
                      v-for="t in ['Cours','TD','TP','Examen','Projet']" :key="t"
                      @click="form.type = t"
-                     class="flex-1 px-3 py-3 rounded-xl text-[9px] font-black uppercase transition-all whitespace-nowrap"
+                     class="flex-1 px-2 py-2 rounded-lg text-[8px] font-black uppercase transition-all whitespace-nowrap"
                      :class="form.type === t ? 'bg-[#38BDF8] text-white shadow-md' : 'text-gray-400 hover:text-white'"
                    >
                      {{ t }}
@@ -438,7 +493,7 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
           </section>
 
           <!-- Section 2: Intervenant -->
-          <section class="space-y-6">
+          <section class="space-y-3">
             <div class="flex items-center justify-between">
                <div class="flex items-center gap-4 border-l-4 border-[#0EA5E9] pl-4">
                  <User class="text-[#0EA5E9]" :size="20" />
@@ -446,15 +501,15 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
                </div>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-2">
                <div class="relative">
-                  <Search class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" :size="18" />
+                  <Search class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" :size="16" />
                   <input
                     type="text" v-model="enseignantSearch"
                     @focus="showEnseignantList = true"
-                    @blur="setTimeout(() => showEnseignantList = false, 200)"
+                    @blur="onEnseignantBlur"
                     placeholder="Chercher par nom ou initiales..."
-                    class="w-full bg-white border border-gray-300 text-black font-bold rounded-2xl pl-12 pr-4 py-4 focus:border-[#38BDF8] outline-none transition-all"
+                    class="w-full bg-white border border-gray-300 text-black font-bold rounded-xl pl-10 pr-3 py-2 text-sm focus:border-[#38BDF8] outline-none transition-all"
                   >
                   <div v-if="showEnseignantList && filteredEnseignants.length > 0" class="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-700 rounded-2xl shadow-2xl z-[50] max-h-60 overflow-y-auto custom-scrollbar">
                      <div
@@ -474,45 +529,45 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
           </section>
 
           <!-- Section 3: Lieu & Temps -->
-          <section class="space-y-8">
-            <div class="flex items-center gap-4 border-l-4 border-[#059669] pl-4">
-              <MapPin class="text-[#059669]" :size="20" />
-              <h3 class="text-sm font-black text-white">Lieu et Temps</h3>
+          <section class="space-y-3">
+            <div class="flex items-center gap-3 border-l-4 border-[#059669] pl-3">
+              <MapPin class="text-[#059669]" :size="18" />
+              <h3 class="text-xs font-black text-white">Lieu et Temps</h3>
             </div>
 
-            <div class="space-y-8">
-               <div class="flex gap-2 p-1.5 bg-gray-800/40 rounded-[1.5rem] border-2 border-gray-700">
+            <div class="space-y-3">
+               <div class="flex gap-1 p-1 bg-gray-800/40 rounded-xl border-2 border-gray-700">
                   <button
                     v-for="j in ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi']" :key="j"
                     @click="form.jour = j"
-                    class="flex-1 py-4 rounded-xl text-[10px] font-black uppercase transition-all"
+                    class="flex-1 py-2 rounded-lg text-[9px] font-black uppercase transition-all"
                     :class="form.jour === j ? 'bg-emit-blue text-white shadow-md border-transparent' : 'text-gray-400 hover:text-white'"
                   >
                     {{ j }}
                   </button>
                </div>
 
-               <div class="grid grid-cols-3 gap-8 items-end">
-                  <div class="col-span-2 grid grid-cols-2 gap-6">
-                     <div class="space-y-2">
-                        <label class="text-sm font-medium text-white ml-1">Début</label>
-                        <input type="time" v-model="form.heureDebut" class="w-full bg-white border-2 border-gray-300 rounded-2xl p-4 font-black text-black focus:border-[#38BDF8] outline-none">
+               <div class="grid grid-cols-3 gap-3 items-end">
+                  <div class="col-span-2 grid grid-cols-2 gap-3">
+                     <div class="space-y-1">
+                        <label class="text-xs font-medium text-white ml-1">Début</label>
+                        <input type="time" v-model="form.heureDebut" class="w-full bg-white border-2 border-gray-300 rounded-lg p-2 font-black text-black text-sm focus:border-[#38BDF8] outline-none">
                      </div>
-                     <div class="space-y-2">
-                        <label class="text-sm font-medium text-white ml-1">Fin</label>
-                        <input type="time" v-model="form.heureFin" class="w-full bg-white border-2 border-gray-300 rounded-2xl p-4 font-black text-black focus:border-[#38BDF8] outline-none">
+                     <div class="space-y-1">
+                        <label class="text-xs font-medium text-white ml-1">Fin</label>
+                        <input type="time" v-model="form.heureFin" class="w-full bg-white border-2 border-gray-300 rounded-lg p-2 font-black text-black text-sm focus:border-[#38BDF8] outline-none">
                      </div>
                   </div>
-                  <div class="space-y-2">
-                     <label class="text-sm font-medium text-white ml-1">Salle</label>
+                  <div class="space-y-1">
+                     <label class="text-xs font-medium text-white ml-1">Salle</label>
                      <div class="relative">
-                        <select v-model="form.salle" class="w-full bg-white border border-gray-300 text-black font-bold rounded-2xl p-4 appearance-none outline-none focus:border-[#38BDF8]">
+                        <select v-model="form.salle" class="w-full bg-white border border-gray-300 text-black font-bold rounded-lg p-2 text-sm appearance-none outline-none focus:border-[#38BDF8]">
                            <option :value="null">Sélectionner...</option>
                            <option v-for="s in salleStore.salles" :key="s.id" :value="s">
                               {{ s.nom }} - {{ s.batiment }} ({{ s.capacite }}p)
                            </option>
                         </select>
-                        <MapPin class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" :size="18" />
+                        <MapPin class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" :size="16" />
                      </div>
                   </div>
                </div>
@@ -520,25 +575,25 @@ onUnmounted(() => window.removeEventListener('keydown', closeOnEsc));
           </section>
 
           <!-- Section 6: Note -->
-          <section class="space-y-4">
-            <div class="flex items-center gap-4 border-l-4 border-gray-700 pl-4">
-              <MessageSquare class="text-gray-400" :size="20" />
-              <h3 class="text-sm font-black text-white">Notes</h3>
+          <section class="space-y-2">
+            <div class="flex items-center gap-3 border-l-4 border-gray-700 pl-3">
+              <MessageSquare class="text-gray-400" :size="18" />
+              <h3 class="text-xs font-black text-white">Notes</h3>
             </div>
-            <textarea v-model="form.note" rows="2" class="w-full bg-white border-2 border-gray-300 rounded-[1.5rem] p-6 text-sm font-medium text-black focus:border-[#38BDF8] outline-none resize-none" placeholder="Ajouter une consigne..."></textarea>
+            <textarea v-model="form.note" rows="1" class="w-full bg-white border-2 border-gray-300 rounded-lg p-3 text-sm font-medium text-black focus:border-[#38BDF8] outline-none resize-none" placeholder="Ajouter une consigne..."></textarea>
           </section>
         </div>
 
         <!-- Footer -->
-        <div class="p-8 border-t border-gray-700 flex justify-end gap-4 bg-gray-800/10">
-          <button @click="emit('close')" class="px-8 py-4 rounded-2xl font-black text-gray-400 uppercase text-[10px] tracking-widest hover:bg-white transition-all">Annuler</button>
+        <div class="p-4 border-t border-gray-700 flex justify-end gap-3 bg-gray-800/10">
+          <button @click="emit('close')" class="px-6 py-3 rounded-lg font-black text-gray-400 uppercase text-[9px] tracking-widest hover:bg-white transition-all">Annuler</button>
           <button
              @click="submit"
              :disabled="isLoading || !canSave"
-             class="min-w-[240px] px-10 py-4 bg-gradient-to-r from-emit-blue to-emit-purple text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-[#38BDF8]/20 hover:-translate-y-1 active:scale-95 transition-all disabled:opacity-50 disabled:translate-y-0"
+             class="min-w-[180px] px-8 py-3 bg-gradient-to-r from-emit-blue to-emit-purple text-white rounded-lg font-black uppercase tracking-widest shadow-xl shadow-[#38BDF8]/20 hover:-translate-y-1 active:scale-95 transition-all disabled:opacity-50 disabled:translate-y-0 text-sm"
           >
-             <span v-if="!isLoading" class="flex items-center justify-center gap-3">
-                <Check :size="18" /> {{ form.id ? 'Enregistrer' : 'Confirmer' }}
+            <span v-if="!isLoading" class="flex items-center justify-center gap-2">
+                <Check :size="16" /> {{ form.id ? 'Enregistrer' : 'Confirmer' }}
              </span>
              <div v-else class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
           </button>

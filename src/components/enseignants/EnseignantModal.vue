@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, watch, onMounted, onUnmounted } from 'vue'
-import { X, Save, Plus, Trash2, AlertCircle } from 'lucide-vue-next'
+import { X, Save, Plus, Trash2, AlertCircle, UserPlus, Edit2 } from 'lucide-vue-next'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -23,7 +23,6 @@ const form = reactive({
 
 const errors = reactive({})
 const isSubmitting = ref(false)
-const newMatiere = ref('')
 
 const grades = ['Assistant', 'MAA', 'MCA', 'Professeur']
 const specialites = ['Informatique', 'Mathématiques', 'Management', 'Communication', 'Economie', 'Réseaux', 'Droit']
@@ -68,17 +67,6 @@ const handleSubmit = async () => {
 
   emit('save', { ...form })
   isSubmitting.value = false
-}
-
-const addMatiere = () => {
-  if (newMatiere.value.trim() && !form.matieres.includes(newMatiere.value.trim())) {
-    form.matieres.push(newMatiere.value.trim())
-    newMatiere.value = ''
-  }
-}
-
-const removeMatiere = (index) => {
-  form.matieres.splice(index, 1)
 }
 
 // Handle Escape key
@@ -227,39 +215,6 @@ onUnmounted(() => window.removeEventListener('keydown', handleEsc))
             </div>
           </div>
 
-          <!-- Matières Section -->
-          <div class="space-y-3">
-            <label class="text-sm font-medium text-white">Matières assignées</label>
-            <div class="flex gap-2">
-              <input
-                v-model="newMatiere"
-                @keyup.enter="addMatiere"
-                type="text"
-                placeholder="Ajouter une matière..."
-                class="flex-1 bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all placeholder:text-[#0C2340]"
-              />
-              <button
-                type="button"
-                @click="addMatiere"
-                class="p-3 bg-emit-blue/10 text-emit-blue rounded-xl hover:bg-emit-blue hover:text-white transition-all"
-              >
-                <Plus :size="24" />
-              </button>
-            </div>
-            <div class="flex flex-wrap gap-2 mt-2">
-              <div
-                v-for="(matiere, index) in form.matieres"
-                :key="index"
-                class="flex items-center gap-2 bg-emit-blue/10 text-emit-blue px-3 py-1.5 rounded-lg border border-emit-blue/20 text-sm"
-              >
-                {{ matiere }}
-                <button @click="removeMatiere(index)" class="hover:text-red-400 transition-colors">
-                  <X :size="14" />
-                </button>
-              </div>
-              <p v-if="form.matieres.length === 0" class="text-xs text-gray-700 italic">Aucune matière assignée</p>
-            </div>
-          </div>
         </form>
 
         <!-- Footer -->

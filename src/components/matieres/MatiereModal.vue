@@ -1,9 +1,11 @@
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch, computed, onMounted } from 'vue';
 import { useMatiereStore, MENTIONS_EMIT } from '@/stores/matiereStore';
+import { useEnseignantStore } from '@/stores/enseignantStore';
 import { X, Save, BookOpen, Edit2 } from 'lucide-vue-next';
 
 const store = useMatiereStore();
+const enseignantStore = useEnseignantStore();
 
 const isLoading = ref(false);
 
@@ -28,17 +30,25 @@ const form = reactive({
   },
   couleur: '#0EA5E9',
   statut: 'actif',
-  enseignants: []
+  enseignants: [],
+  responsableEnseignantId: null
 });
 
 watch(() => store.modalOuverte, (val) => {
   if (val) {
     if (store.matiereEnEdition) {
       Object.assign(form, JSON.parse(JSON.stringify(store.matiereEnEdition)));
+      if (store.matiereEnEdition.responsableEnseignantId) {
+        form.responsableEnseignantId = store.matiereEnEdition.responsableEnseignantId;
+      }
     } else {
       resetForm();
     }
   }
+});
+
+onMounted(() => {
+  enseignantStore.fetchEnseignants();
 });
 
 function resetForm() {
@@ -178,6 +188,14 @@ const colors = ['#0EA5E9', '#38BDF8', '#0284C7', '#2563EB', '#6D28D9', '#10B981'
               <div class="space-y-1.5">
                 <label class="text-sm font-medium text-white">Crédits ECTS</label>
                 <input v-model.number="form.credits" type="number" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all" />
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-sm font-medium text-white">Enseignant responsable</label>
+                <select v-model="form.responsableEnseignantId" class="w-full bg-white border border-gray-300 text-black rounded-xl p-3 focus:ring-2 focus:ring-emit-blue/50 outline-none transition-all appearance-none">
+                  <option :value="null">Aucun</option>
+                  <option v-for="e in enseignantStore.enseignants" :key="e.id" :value="e.id">{{ e.prenom }} {{ e.nom }} ({{ e.initiales }})</option>
+                </select>
               </div>
 
               <div class="space-y-1.5">

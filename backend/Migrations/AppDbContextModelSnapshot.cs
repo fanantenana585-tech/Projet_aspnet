@@ -273,6 +273,9 @@ namespace BackendApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
                     b.Property<string>("Prenom")
                         .IsRequired()
                         .HasColumnType("text");
@@ -339,6 +342,9 @@ namespace BackendApi.Migrations
                     b.Property<string>("ParcoursNom")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int?>("ResponsableEnseignantId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Semestre")
                         .IsRequired()

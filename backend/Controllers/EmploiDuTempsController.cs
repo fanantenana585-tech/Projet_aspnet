@@ -9,10 +9,12 @@ namespace backend.Controllers;
 public class EmploiDuTempsController : ControllerBase
 {
     private readonly IEmploiService _service;
+    private readonly INotificationService _notifier;
 
-    public EmploiDuTempsController(IEmploiService service)
+    public EmploiDuTempsController(IEmploiService service, INotificationService notifier)
     {
         _service = service;
+        _notifier = notifier;
     }
 
     [HttpGet]
@@ -33,6 +35,7 @@ public class EmploiDuTempsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateEmploiDto dto)
     {
         var result = await _service.CreateAsync(dto);
+        await _notifier.NotifyAllAsync(new { type = "emploi_created", title = "Emploi créé", body = $"Emploi {result.Id} créé", payload = result, timestamp = DateTime.UtcNow });
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
@@ -41,6 +44,7 @@ public class EmploiDuTempsController : ControllerBase
     {
         var result = await _service.UpdateAsync(id, dto);
         if (result == null) return NotFound();
+        await _notifier.NotifyAllAsync(new { type = "emploi_updated", title = "Emploi modifié", body = $"Emploi {result.Id} modifié", payload = result, timestamp = DateTime.UtcNow });
         return Ok(result);
     }
 
@@ -49,6 +53,7 @@ public class EmploiDuTempsController : ControllerBase
     {
         var result = await _service.DeleteAsync(id);
         if (!result) return NotFound();
+        await _notifier.NotifyAllAsync(new { type = "emploi_deleted", title = "Emploi supprimé", body = $"Emploi {id} supprimé", payload = new { id }, timestamp = DateTime.UtcNow });
         return NoContent();
     }
 }

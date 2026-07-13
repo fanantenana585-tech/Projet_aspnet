@@ -21,6 +21,20 @@ public class FiliereController : ControllerBase
         return Ok(await _service.GetFullStructureAsync());
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetParcours(int id)
+    {
+        try
+        {
+            var result = await _service.GetParcoursAsync(id);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
     [HttpPost("parcours")]
     public async Task<IActionResult> CreateParcours([FromBody] CreateParcoursDto dto)
     {
@@ -37,6 +51,30 @@ public class FiliereController : ControllerBase
         catch (InvalidOperationException ex)
         {
             return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPut("parcours/{id}")]
+    public async Task<IActionResult> UpdateParcours(int id, [FromBody] UpdateParcoursDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (id != dto.Id)
+        {
+            return BadRequest(new { message = "L'ID du parcours ne correspond pas." });
+        }
+
+        try
+        {
+            var result = await _service.UpdateParcoursAsync(dto);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(new { message = ex.Message });
         }
     }
 

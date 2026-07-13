@@ -164,7 +164,6 @@ C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\packa
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\tools\RoslynLatest\VBCSCompiler.exe.config
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\appsettings.json
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\BackendApi.staticwebassets.endpoints.json
-C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\BackendApi.exe
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\BackendApi.deps.json
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\BackendApi.runtimeconfig.json
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\BackendApi.dll
@@ -266,3 +265,14 @@ C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\obj\Debug\net10.0\swae.
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\obj\Debug\net10.0\BackendApi.csproj.Up2Date
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\obj\Debug\net10.0\BackendApi.genruntimeconfig.cache
 C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\obj\Debug\net10.0\ref\BackendApi.dll
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\BackendApi.exe
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\all_emplois.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\test1.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\test2.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\test3.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\test4.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\test5.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\test_payload.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\all_emplois_after_fix.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\all_emplois_verify.json
+C:\Users\BOTSOKAYA\3D Objects\Projet_aspnet-main\backend\bin\Debug\net10.0\payload.json

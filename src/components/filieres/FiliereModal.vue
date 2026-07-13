@@ -245,13 +245,24 @@ const submit = async () => {
       responsableEnseignantId: form.responsableEnseignantId
     }
 
-    const success = await store.ajouterParcours(payload)
-    if (!success) {
-      errorMessage.value = store.notification.text || "Impossible d'ajouter le parcours."
-      return
+    let success
+    if (form.id) {
+      payload.id = form.id
+      success = await store.modifierParcours(payload)
+      if (!success) {
+        errorMessage.value = store.notification.text || "Impossible de modifier le parcours."
+        return
+      }
+      successMessage.value = 'Parcours modifié avec succès!'
+    } else {
+      success = await store.ajouterParcours(payload)
+      if (!success) {
+        errorMessage.value = store.notification.text || "Impossible d'ajouter le parcours."
+        return
+      }
+      successMessage.value = 'Parcours créé avec succès!'
     }
-    
-    successMessage.value = 'Parcours créé avec succès!'
+
     setTimeout(() => {
       emit('close')
     }, 800)

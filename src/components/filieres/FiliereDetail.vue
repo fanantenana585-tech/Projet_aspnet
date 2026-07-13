@@ -12,6 +12,21 @@ const emit = defineEmits(['close'])
 const store = useFiliereStore()
 
 const activeTab = ref('presentation')
+
+const handleEdit = () => {
+  if (parcours) {
+    store.ouvrirModal(parcours)
+    emit('close')
+  }
+}
+
+const handleDelete = async () => {
+  if (!parcours) return
+  if (confirm('Supprimer ce parcours ? Les données associées seront perdues.')) {
+    await store.supprimerParcours(parcours.id)
+    emit('close')
+  }
+}
 </script>
 
 <template>
@@ -117,10 +132,10 @@ const activeTab = ref('presentation')
 
         <!-- Footer -->
         <div class="p-8 border-t border-[#F0F7FF] flex gap-4 bg-[#F8FBFF]">
-           <button class="flex-1 bg-white border border-[#BFDBFE] text-[#1E5F8E] py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+           <button @click="handleEdit" class="flex-1 bg-white border border-[#BFDBFE] text-[#1E5F8E] py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
               <Edit3 :size="20" /> Modifier
            </button>
-           <button class="flex-1 bg-red-50 border border-red-100 text-red-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2">
+           <button @click="handleDelete" class="flex-1 bg-red-50 border border-red-100 text-red-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2">
               <Trash2 :size="20" /> Supprimer
            </button>
         </div>

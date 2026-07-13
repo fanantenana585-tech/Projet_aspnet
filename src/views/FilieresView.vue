@@ -3,10 +3,11 @@ import { ref, computed, onMounted } from 'vue';
 import { useFiliereStore } from '@/stores/filiereStore';
 import FiliereCard from '@/components/filieres/FiliereCard.vue';
 import FiliereModal from '@/components/filieres/FiliereModal.vue';
+import FiliereDetail from '@/components/filieres/FiliereDetail.vue';
 import {
   GraduationCap, Plus, Search, ChevronDown,
   LayoutGrid, List, Landmark, TreeDeciduous,
-  RotateCcw, Users, BookOpen, Award
+  RotateCcw, Users, BookOpen, Award, Eye, Pencil
 } from 'lucide-vue-next';
 
 const store = useFiliereStore();
@@ -134,7 +135,9 @@ const getParcoursForMention = (mentionId) => {
                 <span class="text-3xl">{{ m.icone }}</span>
                 <div>
                    <h2 class="text-xl font-black text-[#0C2340]">{{ m.nom }}</h2>
-                   <p class="text-xs font-bold text-[#64A8CC]">Resp: {{ m.responsable.prenom }} {{ m.responsable.nom }}</p>
+                   <p class="text-xs font-bold text-[#64A8CC]">
+                     Resp: {{ m.responsable?.prenom ?? m.responsablePrenom }} {{ m.responsable?.nom ?? m.responsableNom }}
+                   </p>
                 </div>
                 <div class="flex gap-2 ml-4">
                    <span class="px-3 py-1 bg-white border border-[#BFDBFE] rounded-full text-[10px] font-black text-[#1E5F8E] uppercase">{{ m.parcours.length }} Parcours</span>
@@ -190,7 +193,7 @@ const getParcoursForMention = (mentionId) => {
                    <span class="px-3 py-1 rounded-full bg-[#E0F2FE] text-[#0284C7] text-[10px] font-black uppercase">{{ p.niveau }}</span>
                 </td>
                 <td class="p-6 text-center font-black text-[#0C2340]">{{ p.nbEtudiants }}</td>
-                <td class="p-6 text-xs font-bold text-[#64A8CC]">{{ p.responsable.prenom }} {{ p.responsable.nom }}</td>
+                <td class="p-6 text-xs font-bold text-[#64A8CC]">{{ p.responsable?.prenom ?? p.responsablePrenom }} {{ p.responsable?.nom ?? p.responsableNom }}</td>
                 <td class="p-6">
                    <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button @click="handleView(p)" class="p-2 text-[#64A8CC] hover:text-[#38BDF8]"><Eye :size="18"/></button>
@@ -202,11 +205,56 @@ const getParcoursForMention = (mentionId) => {
        </table>
     </div>
 
+    <!-- Cursus View -->
+    <div v-else-if="store.modeVue === 'cursus'" class="space-y-8">
+      <div v-for="mention in sections" :key="mention.id" class="bg-white rounded-[2rem] border border-[#BFDBFE] shadow-sm p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-xl font-black text-[#0C2340]">{{ mention.icone }} {{ mention.nom }}</h2>
+            <p class="text-sm text-[#64A8CC]">Responsable : {{ mention.responsable?.prenom ?? mention.responsablePrenom }} {{ mention.responsable?.nom ?? mention.responsableNom }}</p>
+          </div>
+          <div class="flex gap-3">
+            <span class="px-3 py-2 rounded-full bg-[#EFF6FF] text-[#0C4A6E] text-[10px] font-black uppercase">{{ getParcoursForMention(mention.id).length }} parcours</span>
+            <span class="px-3 py-2 rounded-full bg-[#FEF3C7] text-[#92400E] text-[10px] font-black uppercase">{{ mention.nbEtudiants }} étudiants</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div v-for="p in getParcoursForMention(mention.id)" :key="p.id" class="bg-[#F8FBFF] rounded-[1.75rem] p-6 border border-[#DBEAFE]">
+            <div class="flex items-center justify-between gap-3 mb-4">
+              <div>
+                <p class="text-xs uppercase font-black tracking-widest text-[#64A8CC]">{{ p.niveau }}</p>
+                <h3 class="text-lg font-black text-[#0C2340]">{{ p.nom }}</h3>
+              </div>
+              <span class="text-2xl">{{ p.icone }}</span>
+            </div>
+            <p class="text-sm text-[#475569] mb-4">{{ p.description || 'Aucune description disponible.' }}</p>
+            <div class="flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-wider text-[#1E40AF]">
+              <span class="px-3 py-2 rounded-full bg-white border border-[#BFDBFE]">{{ p.nbEtudiants }} étudiants</span>
+              <span class="px-3 py-2 rounded-full bg-white border border-[#BFDBFE]">{{ p.ouvertConcours ? 'Concours L1' : 'Admission normale' }}</span>
+              <span class="px-3 py-2 rounded-full bg-white border border-[#BFDBFE]">{{ p.actif ? 'Actif' : 'Inactif' }}</span>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              <button @click="handleView(p)" class="px-4 py-3 bg-white border border-[#BFDBFE] rounded-2xl text-[#0C2340] font-black hover:bg-[#EFF6FF] transition">Voir</button>
+              <button @click="handleEdit(p)" class="px-4 py-3 bg-[#38BDF8] text-white rounded-2xl font-black hover:bg-[#0EA5E9] transition">Modifier</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal pour ajout/modification -->
     <FiliereModal
       :is-open="store.modalOuverte"
       :parcours="store.parcoursEnEdition"
       @close="store.fermerModal()"
+    />
+
+    <!-- Détail d'un parcours -->
+    <FiliereDetail
+      :is-open="store.detailOuvert"
+      :parcours="store.parcoursEnEdition"
+      @close="store.fermerDetail()"
     />
   </div>
 </template>

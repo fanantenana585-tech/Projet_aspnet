@@ -16,7 +16,8 @@ export const useFiliereStore = defineStore('filiere', {
     },
     modeVue: 'mentions',
     modalOuverte: false,
-    parcoursEnEdition: null
+    parcoursEnEdition: null,
+    detailOuvert: false
   }),
 
   getters: {
@@ -48,6 +49,15 @@ export const useFiliereStore = defineStore('filiere', {
     },
     fermerModal() {
       this.modalOuverte = false;
+      this.parcoursEnEdition = null;
+    },
+    ouvrirDetail(p) {
+      this.parcoursEnEdition = p;
+      this.detailOuvert = true;
+    },
+    fermerDetail() {
+      this.detailOuvert = false;
+      this.parcoursEnEdition = null;
     },
     async fetchFilieres() {
       this.loading = true;
@@ -55,18 +65,33 @@ export const useFiliereStore = defineStore('filiere', {
         const res = await fetch('/api/filieres');
         if (res.ok) {
           const data = await res.json();
-          this.mentions = data;
+          const mentionsWithResponsable = data.map(m => ({
+            ...m,
+            responsable: {
+              nom: m.responsableNom,
+              prenom: m.responsablePrenom,
+              initiales: `${m.responsablePrenom?.[0] || ''}${m.responsableNom?.[0] || ''}`
+            }
+          }));
+
+          this.mentions = mentionsWithResponsable;
           // Flatten parcours for the list/grid views
           const allParcours = [];
-          data.forEach(m => {
+          mentionsWithResponsable.forEach(m => {
             m.parcours.forEach(p => {
+              const responsable = p.responsableEnseignant || {
+                nom: m.responsableNom,
+                prenom: m.responsablePrenom,
+                initiales: `${m.responsablePrenom?.[0] || ''}${m.responsableNom?.[0] || ''}`
+              };
+
               allParcours.push({
                 ...p,
                 actif: p.actif ?? true,
                 mentionNom: m.nom,
                 mentionIcone: m.icone,
                 mentionCouleur: m.couleur,
-                responsable: { nom: m.responsableNom, prenom: m.responsablePrenom },
+                responsable,
                 couleur: m.couleur // Use mention color as default for parcours
               });
             });
@@ -82,6 +107,10 @@ export const useFiliereStore = defineStore('filiere', {
     },
     setNotification(type, text) {
       this.notification = { type, text };
+      // Auto-clear notification after 5 seconds
+      setTimeout(() => {
+        this.notification = { type: '', text: '' };
+      }, 5000);
     },
     async ajouterParcours(data) {
         try {
@@ -111,15 +140,54 @@ export const useFiliereStore = defineStore('filiere', {
             this.setNotification('error', 'Erreur réseau lors de l’ajout du parcours.');
             return false;
         }
-    },
-    async supprimerParcours(id) {
+    },    async modifierParcours(data) {
+      try {
+        const res = await fetch(`/api/filieres/parcours/${data.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const body = await res.json().catch(() => null);
+        if (res.ok) {
+          this.setNotification('success', 'Parcours modifié avec succès.');
+          await this.fetchFilieres();
+          this.fermerModal();
+          return true;
+        }
+        // Gestion des erreurs de validation du backend (400/404)
+        if (res.status === 400) {
+          const errorMessage = body?.message || body || 'Erreur de validation';
+          this.setNotification('error', errorMessage);
+          return false;
+        }
+        if (res.status === 404) {
+          const errorMessage = body?.message || 'Parcours non trouvé';
+          this.setNotification('error', errorMessage);
+          return false;
+        }
+        const errorMessage = body?.title || body?.message || JSON.stringify(body) || res.statusText;
+        this.setNotification('error', `Erreur : ${errorMessage}`);
+        return false;
+      } catch (err) {
+        console.error(err);
+        this.setNotification('error', 'Erreur réseau lors de la modification du parcours.');
+        return false;
+      }
+    },    async supprimerParcours(id) {
         try {
             const res = await fetch(`/api/filieres/parcours/${id}`, { method: 'DELETE' });
             if (res.ok) {
+                this.setNotification('success', 'Parcours supprimé avec succès.');
                 await this.fetchFilieres();
+                return true;
+            } else {
+                this.setNotification('error', 'Erreur lors de la suppression.');
+                return false;
             }
         } catch (err) {
             console.error(err);
+            this.setNotification('error', 'Erreur réseau lors de la suppression.');
+            return false;
         }
     }
   }

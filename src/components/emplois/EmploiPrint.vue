@@ -48,14 +48,37 @@ const handleMentionChange = () => {
   if (firstP) printForm.value.parcours = firstP.id;
 };
 
-const generatePDF = () => {
+const generatePDF = async () => {
+  const target = document.getElementById('emploi-export-zone');
+  if (!target) {
+    console.error('Element d export introuvable : #emploi-export-zone');
+    return;
+  }
+
   isGenerating.value = true;
-  // Simuler la génération PDF avec html2pdf.js
-  setTimeout(() => {
+
+  try {
+    const { default: html2pdf } = await import('html2pdf.js');
+    const orientation = printForm.value.format.includes('Paysage') ? 'landscape' : 'portrait';
+    const paperFormat = printForm.value.format.split(' ')[0] || 'A4';
+    const filename = `planning-${printForm.value.parcours || 'emploi'}-${new Date().toISOString().slice(0, 10)}.pdf`;
+
+    const options = {
+      margin: [10, 10, 10, 10],
+      filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: paperFormat, orientation },
+      pagebreak: { mode: ['css', 'legacy'] }
+    };
+
+    await html2pdf().set(options).from(target).save();
+  } catch (error) {
+    console.error('Erreur lors de la génération PDF :', error);
+  } finally {
     isGenerating.value = false;
-    // En situation réelle, on utiliserait html2pdf() ici
     store.printModalOuverte = false;
-  }, 2000);
+  }
 };
 
 </script>

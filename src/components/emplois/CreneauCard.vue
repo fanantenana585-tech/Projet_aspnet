@@ -34,11 +34,11 @@ const isShort = computed(() => {
 });
 
 const mentionAbbr = computed(() => {
-  const nom = props.creneau.mention.nom;
+  const nom = props.creneau?.mention?.nom ?? '';
   if (nom.includes('Informatique')) return 'Info';
   if (nom.includes('Management')) return 'Mgt';
   if (nom.includes('Relations Publiques')) return 'RPM';
-  return nom.substring(0, 4);
+  return nom ? nom.substring(0, 4) : '';
 });
 
 const handleDragStart = (e) => {
@@ -71,7 +71,7 @@ const updateTooltipPos = (e) => {
     draggable="true"
     @dragstart="handleDragStart"
     @dragend="handleDragEnd"
-    @click="store.ouvrirDetail(creneau)"
+    @click="store.ouvrirModal(creneau)"
     @mouseenter="showTooltip = true"
     @mouseleave="showTooltip = false"
     @mousemove="updateTooltipPos"
@@ -81,40 +81,40 @@ const updateTooltipPos = (e) => {
       <AlertTriangle :size="12" />
     </div>
 
-    <div class="p-3 h-full flex flex-col text-white">
+    <div class="p-2 h-full flex flex-col text-white">
       <!-- Header -->
-      <div class="flex justify-between items-start gap-1 mb-1">
-        <span class="bg-white/25 text-[9px] font-black font-mono px-1.5 py-0.5 rounded uppercase tracking-wider">
+      <div class="flex justify-between items-start gap-0.5 mb-0.5">
+        <span class="bg-white/25 text-[8px] font-black font-mono px-1 py-0.5 rounded uppercase tracking-wider">
           {{ creneau.matiere.code }}
         </span>
-        <span v-if="!isShort" class="bg-white/20 text-[8px] px-1.5 py-0.5 rounded font-black uppercase tracking-widest">
+        <span v-if="!isShort" class="bg-white/20 text-[7px] px-1 py-0.5 rounded font-black uppercase tracking-widest">
           {{ creneau.type }}
         </span>
       </div>
 
       <!-- Nom -->
-      <h4 class="font-black text-[11px] leading-tight line-clamp-2 mb-1 drop-shadow-sm" :class="{ 'line-clamp-1': isShort }">
+      <h4 class="font-black text-[10px] leading-tight line-clamp-2 mb-0.5 drop-shadow-sm" :class="{ 'line-clamp-1': isShort }">
         {{ creneau.matiere.nom }}
       </h4>
 
       <!-- EMIT Badges -->
-      <div class="flex items-center gap-1.5 mb-2 overflow-hidden">
-         <span class="bg-white/20 text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter whitespace-nowrap">
+      <div class="flex items-center gap-1 mb-1 overflow-hidden">
+         <span class="bg-white/20 text-[7px] font-black px-1 py-0.5 rounded-md uppercase tracking-tighter whitespace-nowrap">
            {{ creneau.parcours.code }} {{ creneau.niveau }}
          </span>
-         <span class="text-[8px] font-black uppercase tracking-widest opacity-80 whitespace-nowrap">
+         <span class="text-[7px] font-black uppercase tracking-widest opacity-80 whitespace-nowrap">
            {{ mentionAbbr }}
          </span>
       </div>
 
       <!-- Detail Infos -->
-      <div v-if="!isShort" class="mt-auto space-y-1">
-        <div class="flex items-center gap-1.5 opacity-90 text-[10px] font-bold">
-          <User :size="10" stroke-width="3" />
+      <div v-if="!isShort" class="mt-auto space-y-0.5">
+        <div class="flex items-center gap-1 opacity-90 text-[9px] font-bold">
+          <User :size="9" stroke-width="3" />
           <span class="truncate">{{ creneau.enseignant.nom }}</span>
         </div>
-        <div class="flex items-center gap-1.5 opacity-90 text-[10px] font-bold">
-          <MapPin :size="10" stroke-width="3" />
+        <div class="flex items-center gap-1 opacity-90 text-[9px] font-bold">
+          <MapPin :size="9" stroke-width="3" />
           <span class="truncate">{{ creneau.salle.nom }}</span>
         </div>
       </div>

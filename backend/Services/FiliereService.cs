@@ -1,3 +1,4 @@
+using System;
 using backend.DTOs;
 using backend.Models;
 using backend.Repositories;
@@ -83,6 +84,90 @@ public class FiliereService : IFiliereService
             ResponsableEnseignantId = dto.ResponsableEnseignantId
         };
         await _parcoursRepository.AddAsync(entity);
+        await _parcoursRepository.SaveChangesAsync();
+
+        return new ParcoursDto
+        {
+            Id = entity.Id,
+            Code = entity.Code,
+            Nom = entity.Nom,
+            Description = entity.Description,
+            Niveau = entity.Niveau,
+            NbEtudiants = entity.NbEtudiants,
+            OuvertConcours = entity.OuvertConcours,
+            Actif = entity.Actif,
+            MentionId = entity.MentionId,
+            ResponsableEnseignantId = entity.ResponsableEnseignantId
+        };
+    }
+
+    public async Task<ParcoursDto> GetParcoursAsync(int id)
+    {
+        var entity = await _parcoursRepository.GetByIdAsync(id);
+        if (entity == null) throw new InvalidOperationException("Parcours non trouvé.");
+
+        return new ParcoursDto
+        {
+            Id = entity.Id,
+            Code = entity.Code,
+            Nom = entity.Nom,
+            Description = entity.Description,
+            Niveau = entity.Niveau,
+            NbEtudiants = entity.NbEtudiants,
+            OuvertConcours = entity.OuvertConcours,
+            Actif = entity.Actif,
+            MentionId = entity.MentionId,
+            ResponsableEnseignantId = entity.ResponsableEnseignantId,
+            ResponsableEnseignant = entity.ResponsableEnseignant != null ? new EnseignantDto
+            {
+                Id = entity.ResponsableEnseignant.Id,
+                Nom = entity.ResponsableEnseignant.Nom,
+                Prenom = entity.ResponsableEnseignant.Prenom,
+                Specialite = entity.ResponsableEnseignant.Specialite,
+                Statut = entity.ResponsableEnseignant.Statut,
+                Email = entity.ResponsableEnseignant.Email,
+                Initiales = entity.ResponsableEnseignant.Initiales
+            } : null
+        };
+    }
+
+    public async Task<ParcoursDto> UpdateParcoursAsync(UpdateParcoursDto dto)
+    {
+        var entity = await _parcoursRepository.GetByIdAsync(dto.Id);
+        if (entity == null) throw new InvalidOperationException("Parcours non trouvé.");
+
+        // Vérifier l'unicité du code (sauf pour l'entité actuelle)
+        if (!entity.Code.Equals(dto.Code, StringComparison.OrdinalIgnoreCase))
+        {
+            var existingByCode = await _parcoursRepository.FindAsync(p => p.Code.ToLower() == dto.Code.ToLower());
+            if (existingByCode.Any())
+            {
+                throw new InvalidOperationException($"Un parcours avec le code '{dto.Code}' existe déjà.");
+            }
+        }
+
+        // Vérifier l'unicité du nom dans la mention (sauf pour l'entité actuelle)
+        if (!entity.Nom.Equals(dto.Nom, StringComparison.OrdinalIgnoreCase) || entity.MentionId != dto.MentionId)
+        {
+            var existingByName = await _parcoursRepository.FindAsync(p => 
+                p.Nom.ToLower() == dto.Nom.ToLower() && p.MentionId == dto.MentionId && p.Id != dto.Id);
+            if (existingByName.Any())
+            {
+                throw new InvalidOperationException($"Un parcours nommé '{dto.Nom}' existe déjà dans cette mention.");
+            }
+        }
+
+        entity.Code = dto.Code;
+        entity.Nom = dto.Nom;
+        entity.Description = dto.Description;
+        entity.Niveau = dto.Niveau;
+        entity.NbEtudiants = dto.NbEtudiants;
+        entity.OuvertConcours = dto.OuvertConcours;
+        entity.Actif = dto.Actif;
+        entity.MentionId = dto.MentionId;
+        entity.ResponsableEnseignantId = dto.ResponsableEnseignantId;
+
+        _parcoursRepository.Update(entity);
         await _parcoursRepository.SaveChangesAsync();
 
         return new ParcoursDto

@@ -73,7 +73,8 @@ public class MatiereService : IMatiereService
         VolumeCours = dto.VolumeCours,
         VolumeTd = dto.VolumeTd,
         VolumeTp = dto.VolumeTp,
-        VolumeProjet = dto.VolumeProjet
+        VolumeProjet = dto.VolumeProjet,
+        ResponsableEnseignantId = dto.ResponsableEnseignantId
     };
 
     private static void UpdateEntity(Matiere entity, CreateMatiereDto dto)
@@ -96,6 +97,7 @@ public class MatiereService : IMatiereService
         entity.VolumeTd = dto.VolumeTd;
         entity.VolumeTp = dto.VolumeTp;
         entity.VolumeProjet = dto.VolumeProjet;
+        entity.ResponsableEnseignantId = dto.ResponsableEnseignantId;
     }
 
     private static MatiereDto MapToDto(Matiere e) => new MatiereDto
@@ -118,6 +120,7 @@ public class MatiereService : IMatiereService
         VolumeCours = e.VolumeCours,
         VolumeTd = e.VolumeTd,
         VolumeTp = e.VolumeTp,
-        VolumeProjet = e.VolumeProjet
+        VolumeProjet = e.VolumeProjet,
+        ResponsableEnseignantId = e.ResponsableEnseignantId
     };
 }

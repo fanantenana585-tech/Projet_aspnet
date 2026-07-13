@@ -26,4 +26,5 @@ public class Matiere
     public int VolumeTd { get; set; }
     public int VolumeTp { get; set; }
     public int VolumeProjet { get; set; }
+    public int? ResponsableEnseignantId { get; set; }
 }

@@ -25,6 +25,9 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// SignalR for real-time notifications
+builder.Services.AddSignalR();
+
 // Swagger configuration for JWT
 builder.Services.AddSwaggerGen(c =>
 {
@@ -106,6 +109,8 @@ builder.Services.AddScoped<IMentionRepository, MentionRepository>();
 builder.Services.AddScoped<IFiliereService, FiliereService>();
 builder.Services.AddScoped<IExceptionRepository, ExceptionRepository>();
 builder.Services.AddScoped<IExceptionService, ExceptionService>();
+// Notification service
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // CORS Configuration
 builder.Services.AddCors(options =>
@@ -135,6 +140,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<backend.Hubs.NotificationsHub>("/hubs/notifications");
 
 // Database and Seeding
 using (var scope = app.Services.CreateScope())

@@ -44,3 +44,21 @@ public class CreateParcoursDto
     public string MentionId { get; set; } = string.Empty;
     public int? ResponsableEnseignantId { get; set; }
 }
+
+public class UpdateParcoursDto
+{
+    [Required]
+    public int Id { get; set; }
+    public string Code { get; set; } = string.Empty;
+    [Required]
+    public string Nom { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    [Required]
+    public string Niveau { get; set; } = string.Empty;
+    public int NbEtudiants { get; set; }
+    public bool OuvertConcours { get; set; }
+    public bool Actif { get; set; } = true;
+    [Required]
+    public string MentionId { get; set; } = string.Empty;
+    public int? ResponsableEnseignantId { get; set; }
+}

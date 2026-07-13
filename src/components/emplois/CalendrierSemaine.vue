@@ -11,7 +11,20 @@ const props = defineProps({
 
 const store = useEmploiStore();
 const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-const heures = Array.from({ length: 14 }, (_, i) => i + 7); // 07h à 20h
+const heures = Array.from({ length: 13 }, (_, i) => i + 7); // 07h à 19h
+
+const datesDuJour = computed(() => {
+  const dates = [];
+  const debutSemaine = new Date(store.semaineCourante);
+  
+  for (let i = 0; i < 6; i++) {
+    const date = new Date(debutSemaine);
+    date.setDate(date.getDate() + i);
+    dates.push(date.getDate()); // Récupère le jour du mois
+  }
+  
+  return dates;
+});
 
 const getEmploisByJour = (jour) => {
   return props.emplois.filter(e => e.jour === jour);
@@ -30,15 +43,15 @@ const handleSlotClick = (jour, h) => {
       <div class="w-20 border-r border-[#BFDBFE] flex items-center justify-center bg-[#F8FBFF]">
          <Clock :size="20" class="text-[#64A8CC]" />
       </div>
-      <div v-for="jour in jours" :key="jour" class="flex-1 border-r border-[#F0F7FF] py-6 text-center group">
-         <p class="text-[10px] font-black text-[#64A8CC] uppercase tracking-[0.2em] mb-1 transition-colors group-hover:text-[#38BDF8]">{{ jour }}</p>
-         <p class="text-xl font-black text-[#0C2340]">16</p> <!-- Mock date -->
+      <div v-for="(jour, idx) in jours" :key="jour" class="flex-1 border-r border-[#F0F7FF] py-4 text-center group">
+         <p class="text-[9px] font-black text-[#64A8CC] uppercase tracking-[0.15em] mb-0.5 transition-colors group-hover:text-[#38BDF8]">{{ jour }}</p>
+         <p class="text-lg font-black text-[#0C2340]">{{ datesDuJour[idx] }}</p>
       </div>
     </div>
 
     <!-- Grille Heures & Créneaux -->
-    <div class="flex-1 overflow-y-auto custom-scrollbar relative bg-[#F0F7FF]/30">
-      <div class="flex min-h-[1200px]" :style="{ height: (13 * 60 * pixelsParMinute) + 'px' }">
+    <div class="flex-1 overflow-hidden relative bg-[#F0F7FF]/30">
+      <div class="flex" :style="{ height: (12 * 60 * pixelsParMinute) + 'px' }">
         <!-- Axe des heures -->
         <div class="w-20 border-r border-[#BFDBFE] bg-white relative z-10 shrink-0">
            <div

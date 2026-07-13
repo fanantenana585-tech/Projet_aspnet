@@ -1,3 +1,4 @@
+using System.Globalization;
 using backend.DTOs;
 using backend.Models;
 using backend.Repositories;
@@ -7,10 +8,12 @@ namespace backend.Services;
 public class EmploiService : IEmploiService
 {
     private readonly IEmploiRepository _repository;
+    private readonly IRepository<Parcours> _parcoursRepository;
 
-    public EmploiService(IEmploiRepository repository)
+    public EmploiService(IEmploiRepository repository, IRepository<Parcours> parcoursRepository)
     {
         _repository = repository;
+        _parcoursRepository = parcoursRepository;
     }
 
     public async Task<IEnumerable<EmploiDto>> GetAllAsync()
@@ -27,6 +30,76 @@ public class EmploiService : IEmploiService
 
     public async Task<EmploiDto> CreateAsync(CreateEmploiDto dto)
     {
+        // Attempt to infer missing fields from related tables
+        string? mentionId = dto.MentionId;
+        string? parcoursId = dto.ParcoursId;
+
+        // If a parcours id or code was provided (string), try to resolve to an existing parcours
+        if (string.IsNullOrWhiteSpace(parcoursId) && !string.IsNullOrWhiteSpace(dto.Title))
+        {
+            // Try to detect parcours code inside the Title (e.g. "DA2I")
+            var parts = dto.Title.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
+            {
+                var matches = await _parcoursRepository.FindAsync(p => p.Code.ToLower() == part.ToLower());
+                var first = matches.FirstOrDefault();
+                if (first != null)
+                {
+                    parcoursId = first.Id.ToString();
+                    mentionId = first.MentionId;
+                    if (string.IsNullOrWhiteSpace(dto.Niveau)) dto.Niveau = first.Niveau;
+                    break;
+                }
+            }
+        }
+
+        // If parcoursId provided but mentionId missing, pull mention from parcours
+        if (!string.IsNullOrWhiteSpace(parcoursId) && string.IsNullOrWhiteSpace(mentionId))
+        {
+            var matches = await _parcoursRepository.FindAsync(p => p.Id.ToString() == parcoursId || p.Code.ToLower() == parcoursId.ToLower());
+            var first = matches.FirstOrDefault();
+            if (first != null)
+            {
+                parcoursId = first.Id.ToString();
+                mentionId = first.MentionId;
+                if (string.IsNullOrWhiteSpace(dto.Niveau)) dto.Niveau = first.Niveau;
+            }
+        }
+
+        // If mention provided but parcours missing, try to find a matching parcours (by niveau if available)
+        if (!string.IsNullOrWhiteSpace(mentionId) && string.IsNullOrWhiteSpace(parcoursId))
+        {
+            IEnumerable<Parcours> candidates;
+            if (!string.IsNullOrWhiteSpace(dto.Niveau))
+            {
+                candidates = await _parcoursRepository.FindAsync(p => p.MentionId == mentionId && p.Niveau == dto.Niveau);
+            }
+            else
+            {
+                candidates = await _parcoursRepository.FindAsync(p => p.MentionId == mentionId);
+            }
+            var first = candidates.FirstOrDefault();
+            if (first != null)
+            {
+                parcoursId = first.Id.ToString();
+                // Fill niveau from parcours when available
+                if (string.IsNullOrWhiteSpace(dto.Niveau)) dto.Niveau = first.Niveau;
+            }
+        }
+
+        // If Jour is missing, derive from StartTime
+        if (string.IsNullOrWhiteSpace(dto.Jour))
+        {
+            try
+            {
+                dto.Jour = dto.StartTime.ToString("dddd", new CultureInfo("fr-FR"));
+            }
+            catch
+            {
+                dto.Jour = null;
+            }
+        }
+
         var entity = new EmploiDuTemps
         {
             Title = dto.Title,
@@ -36,13 +109,14 @@ public class EmploiService : IEmploiService
             Salle = dto.Salle,
             Enseignant = dto.Enseignant,
             Type = dto.Type,
-            MentionId = dto.MentionId,
-            ParcoursId = dto.ParcoursId,
+            MentionId = mentionId,
+            ParcoursId = parcoursId,
             Niveau = dto.Niveau,
             Groupe = dto.Groupe,
             Jour = dto.Jour,
             Note = dto.Note
         };
+
         await _repository.AddAsync(entity);
         await _repository.SaveChangesAsync();
         return MapToDto(entity);
@@ -53,6 +127,65 @@ public class EmploiService : IEmploiService
         var entity = await _repository.GetByIdAsync(id);
         if (entity == null) return null;
 
+        // Inference logic for update as well
+        string? mentionId = dto.MentionId ?? entity.MentionId;
+        string? parcoursId = dto.ParcoursId ?? entity.ParcoursId;
+
+        // Try detect parcours code in Title if needed
+        if (string.IsNullOrWhiteSpace(parcoursId) && !string.IsNullOrWhiteSpace(dto.Title))
+        {
+            var parts = dto.Title.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
+            {
+                var matches = await _parcoursRepository.FindAsync(p => p.Code.ToLower() == part.ToLower());
+                var first = matches.FirstOrDefault();
+                if (first != null)
+                {
+                    parcoursId = first.Id.ToString();
+                    mentionId = first.MentionId;
+                    if (string.IsNullOrWhiteSpace(dto.Niveau)) dto.Niveau = first.Niveau;
+                    break;
+                }
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(parcoursId) && string.IsNullOrWhiteSpace(mentionId))
+        {
+            var matches = await _parcoursRepository.FindAsync(p => p.Id.ToString() == parcoursId || p.Code.ToLower() == parcoursId.ToLower());
+            var first = matches.FirstOrDefault();
+            if (first != null)
+            {
+                parcoursId = first.Id.ToString();
+                mentionId = first.MentionId;
+                if (string.IsNullOrWhiteSpace(dto.Niveau)) dto.Niveau = first.Niveau;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(mentionId) && string.IsNullOrWhiteSpace(parcoursId))
+        {
+            IEnumerable<Parcours> candidates;
+            if (!string.IsNullOrWhiteSpace(dto.Niveau))
+            {
+                candidates = await _parcoursRepository.FindAsync(p => p.MentionId == mentionId && p.Niveau == dto.Niveau);
+            }
+            else
+            {
+                candidates = await _parcoursRepository.FindAsync(p => p.MentionId == mentionId);
+            }
+            var first = candidates.FirstOrDefault();
+            if (first != null)
+            {
+                parcoursId = first.Id.ToString();
+                if (string.IsNullOrWhiteSpace(dto.Niveau)) dto.Niveau = first.Niveau;
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.Jour))
+        {
+            try { dto.Jour = dto.StartTime.ToString("dddd", new CultureInfo("fr-FR")); }
+            catch { dto.Jour = entity.Jour; }
+        }
+
         entity.Title = dto.Title;
         entity.Description = dto.Description;
         entity.StartTime = dto.StartTime;
@@ -60,8 +193,8 @@ public class EmploiService : IEmploiService
         entity.Salle = dto.Salle;
         entity.Enseignant = dto.Enseignant;
         entity.Type = dto.Type;
-        entity.MentionId = dto.MentionId;
-        entity.ParcoursId = dto.ParcoursId;
+        entity.MentionId = mentionId;
+        entity.ParcoursId = parcoursId;
         entity.Niveau = dto.Niveau;
         entity.Groupe = dto.Groupe;
         entity.Jour = dto.Jour;
